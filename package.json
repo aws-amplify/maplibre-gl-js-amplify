@@ -1,0 +1,41 @@
+{
+  "name": "maplibre-gl-js-amplify",
+  "version": "1.0.0",
+  "description": "MapLibre Plugin to Support Amplify Geo Integration",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
+  "scripts": {
+    "build": "npm run clean && npm run compile",
+		"clean": "rimraf dist",
+		"compile": "npm run tsc",
+		"tsc": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thaddmt/maplibre-gl-js-amplify.git"
+  },
+  "keywords": [
+    "Amplify"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thaddmt/maplibre-gl-js-amplify/issues"
+  },
+  "homepage": "https://github.com/thaddmt/maplibre-gl-js-amplify#readme",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.25.0",
+    "@typescript-eslint/parser": "^4.25.0",
+    "eslint": "^7.16.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.23.3",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0",
+    "prettier": "^2.3.0",
+    "typescript": "^4.3.2"
+  }
+}
