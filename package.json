@@ -9,9 +9,9 @@
   ],
   "scripts": {
     "build": "npm run clean && npm run compile",
-		"clean": "rimraf dist",
-		"compile": "npm run tsc",
-		"tsc": "tsc"
+    "clean": "rimraf dist",
+    "compile": "npm run tsc",
+    "tsc": "tsc"
   },
   "repository": {
     "type": "git",
@@ -27,8 +27,11 @@
   },
   "homepage": "https://github.com/thaddmt/maplibre-gl-js-amplify#readme",
   "devDependencies": {
+    "@types/maplibre-gl": "^1.13.1",
+    "@types/node": "^15.6.1",
     "@typescript-eslint/eslint-plugin": "^4.25.0",
     "@typescript-eslint/parser": "^4.25.0",
+    "aws-amplify": "^4.0.3",
     "eslint": "^7.16.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-standard": "^16.0.3",
@@ -37,5 +40,9 @@
     "eslint-plugin-promise": "^5.1.0",
     "prettier": "^2.3.0",
     "typescript": "^4.3.2"
+  },
+  "peerDependencies": {
+    "aws-amplify": "^4.0.3",
+    "maplibre-gl": "^1.14.0"
   }
 }
