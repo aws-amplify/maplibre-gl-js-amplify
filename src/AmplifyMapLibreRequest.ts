@@ -2,6 +2,15 @@ import { Signer } from "aws-amplify";
 import { ICredentials } from "@aws-amplify/core";
 import { RequestParameters } from "maplibre-gl";
 
+/**
+ * An object for encapsulating an Amplify Geo transform request and Amplify credentials
+ * @class AmplifyMapLibreRequest
+ * @param {ICredentials} currentCredentials Amplify credentials used for signing transformRequests
+ * @param {String} region AWS region
+ * @return {AmplifyMapLibreRequest} `this`
+ *
+ */
+
 export default class AmplifyMapLibreRequest {
   credentials: ICredentials;
   region: string;
@@ -10,6 +19,12 @@ export default class AmplifyMapLibreRequest {
     this.region = region || "us-west-2";
   }
 
+  /**
+   * A callback function that can be passed to a maplibre map object that is run before the map makes a request for an external URL. This transform request is used to sign the request with AWS Sigv4 Auth. [https://maplibre.org/maplibre-gl-js-docs/api/map/](https://maplibre.org/maplibre-gl-js-docs/api/map/)
+   * @param {string} url The function to use as a render function. This function accepts a single [Carmen GeoJSON](https://github.com/mapbox/carmen/blob/master/carmen-geojson.md) object as input and returns a string.
+   * @param {string} resourceType The function to use as a render function. This function accepts a single [Carmen GeoJSON](https://github.com/mapbox/carmen/blob/master/carmen-geojson.md) object as input and returns a string.
+   * @returns {RequestParameters} [https://maplibre.org/maplibre-gl-js-docs/api/properties/#requestparameters](https://maplibre.org/maplibre-gl-js-docs/api/properties/#requestparameters)
+   */
   transformRequest = (url: string, resourceType: string): RequestParameters => {
     if (resourceType === "Style" && !url.includes("://")) {
       url = `https://maps.geo.${this.region}.amazonaws.com/maps/v0/maps/${url}/style-descriptor`;
