@@ -1,24 +1,24 @@
 import { Auth, Signer } from "aws-amplify";
 import { ICredentials } from "@aws-amplify/core";
-import { Map as maplibreMap, RequestParameters } from "maplibre-gl";
+import {
+  Map as maplibreMap,
+  RequestParameters,
+  MapboxOptions,
+} from "maplibre-gl";
 
-interface CreateMapOptions {
-  container: string;
-  center?: [number, number];
-  zoom?: number;
-  style: string;
+interface CreateMapOptions extends MapboxOptions {
   region?: string;
 }
 export default class AmplifyMapLibreRequest {
   credentials: ICredentials;
   region: string;
-  constructor(currentCredentials: ICredentials, region?: string) {
+  constructor(currentCredentials: ICredentials, region: string) {
     this.credentials = currentCredentials;
-    this.region = region || "us-west-2"; // FIXME: Set this to Amazon Location Services region set by CLI?
+    this.region = region;
     this.refreshCredentials();
   }
 
-  static createMap = async ({
+  static createMapLibreMap = async ({
     container,
     center,
     zoom,
@@ -44,10 +44,8 @@ export default class AmplifyMapLibreRequest {
   refreshCredentials = async (): Promise<void> => {
     this.credentials = await Auth.currentCredentials();
     const expiration = new Date(this.credentials.expiration);
-    setTimeout(
-      this.refreshCredentials,
-      expiration.getTime() - new Date().getTime()
-    );
+    const timeout = expiration.getTime() - new Date().getTime() - 10000; // Adds a 10 second buffer time before the next refresh
+    setTimeout(this.refreshCredentials, timeout);
   };
 
   transformRequest = (url: string, resourceType: string): RequestParameters => {
