@@ -1,0 +1,18 @@
+version: 2.1
+jobs:
+  build:
+    docker:
+      - image: cypress/base:12
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD # context / project UI env-var reference
+    working_directory: ~/maplibre-gl-js-amplify
+    steps:
+      - checkout # check out the code in the project directory
+      - run: yarn ci:test # run the `echo` command
+      - store_artifacts:
+          path: ~/maplibre-gl-js-amplify/cypress/videos
+      - store_artifacts:
+          path: ~/maplibre-gl-js-amplify/cypress/screenshots
+      - store_artifacts:
+          path: ~/maplibre-gl-js-amplify/cypress/integration/__image_snapshots__
