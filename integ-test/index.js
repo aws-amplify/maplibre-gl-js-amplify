@@ -27,7 +27,8 @@ async function createMap() {
     zoom: 10,
     style: "test-maps-1",
     transformRequest: new AmplifyMapLibreRequest(
-      await Auth.currentCredentials()
+      await Auth.currentCredentials(),
+      "us-west-2"
     ).transformRequest,
   });
 
