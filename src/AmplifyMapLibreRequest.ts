@@ -1,5 +1,5 @@
-import { Auth, Signer } from "aws-amplify";
-import { ICredentials } from "@aws-amplify/core";
+import { Auth, Hub } from "aws-amplify";
+import { ICredentials, Signer } from "@aws-amplify/core";
 import {
   Map as maplibreMap,
   RequestParameters,
@@ -24,7 +24,16 @@ export default class AmplifyMapLibreRequest {
   constructor(currentCredentials: ICredentials, region: string) {
     this.credentials = currentCredentials;
     this.region = region;
-    this.refreshCredentials();
+
+    Hub.listen("auth", (data) => {
+      switch (data.payload.event) {
+        case "signIn":
+        case "signOut":
+        case "tokenRefresh":
+          this.refreshCredentials();
+          break;
+      }
+    });
   }
 
   static createMapLibreMap = async ({
@@ -52,9 +61,6 @@ export default class AmplifyMapLibreRequest {
 
   refreshCredentials = async (): Promise<void> => {
     this.credentials = await Auth.currentCredentials();
-    const expiration = new Date(this.credentials.expiration);
-    const timeout = expiration.getTime() - new Date().getTime() - 10000; // Adds a 10 second buffer time before the next refresh
-    setTimeout(this.refreshCredentials, timeout);
   };
 
   /**

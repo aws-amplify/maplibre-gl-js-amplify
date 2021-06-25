@@ -64,7 +64,7 @@
   dependencies:
     "@aws-amplify/core" "4.1.1"
 
-"@aws-amplify/core@4.1.1":
+"@aws-amplify/core@4.1.1", "@aws-amplify/core@^4.1.1":
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/@aws-amplify/core/-/core-4.1.1.tgz#01a509da5f22832c841b020e2ec2af4de6a40ccd"
   integrity sha512-Bery/Yo+PGjBr50JIbJLyXEePP2wU56aFQz1r+oA/7713BnFm/AMWwFCQ3Ih19jdBitEDlsEjQ9a+5y5l9Emiw==
