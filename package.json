@@ -64,7 +64,6 @@
     "webpack-dev-server": "^3.11.2"
   },
   "peerDependencies": {
-    "@aws-amplify/core": "^4.1.1",
     "aws-amplify": "^4.0.3",
     "maplibre-gl": "^1.14.0"
   }
