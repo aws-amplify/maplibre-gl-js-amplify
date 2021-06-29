@@ -21,9 +21,11 @@ interface CreateMapOptions extends MapboxOptions {
 export default class AmplifyMapLibreRequest {
   credentials: ICredentials;
   region: string;
+  retryCount: number;
   constructor(currentCredentials: ICredentials, region: string) {
     this.credentials = currentCredentials;
     this.region = region;
+    this.retryCount = 0;
 
     Hub.listen("auth", (data) => {
       switch (data.payload.event) {
@@ -60,7 +62,15 @@ export default class AmplifyMapLibreRequest {
   };
 
   refreshCredentials = async (): Promise<void> => {
-    this.credentials = await Auth.currentCredentials();
+    try {
+      this.credentials = await Auth.currentCredentials();
+    } catch (e) {
+      console.error(`Failed to refresh credentials: ${e}`);
+      if (this.retryCount < 5) {
+        setTimeout(this.refreshCredentials, Math.pow(2, this.retryCount) * 1000);
+        this.retryCount = this.retryCount + 1;
+      }
+    }
   };
 
   /**
