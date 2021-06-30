@@ -21,11 +21,10 @@ interface CreateMapOptions extends MapboxOptions {
 export default class AmplifyMapLibreRequest {
   credentials: ICredentials;
   region: string;
-  retryCount: number;
   constructor(currentCredentials: ICredentials, region: string) {
     this.credentials = currentCredentials;
     this.region = region;
-    this.retryCount = 0;
+    this.refreshCredentialsWithRetry()
 
     Hub.listen("auth", (data) => {
       switch (data.payload.event) {
@@ -71,8 +70,13 @@ export default class AmplifyMapLibreRequest {
   };
 
   refreshCredentialsWithRetry = async (): Promise<void> => {
-    const MAX_DELAY_MS = 5 * 60 * 1000;
-    await jitteredExponentialRetry(this.refreshCredentials, [], MAX_DELAY_MS);
+    const MAX_DELAY_MS = 5 * 60 * 1000; // 5 minutes
+    jitteredExponentialRetry(this.refreshCredentials, [], MAX_DELAY_MS);
+
+    // Refresh credentials on a timer because HubEvents do not trigger on credential refresh currently
+    const expiration = new Date(this.credentials.expiration);
+    const timeout = expiration.getTime() - new Date().getTime() - 10000; // Adds a 10 second buffer time before the next refresh
+    setTimeout(this.refreshCredentialsWithRetry, timeout);
   };
 
   /**
