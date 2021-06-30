@@ -1,5 +1,5 @@
 import { Auth, Hub } from "aws-amplify";
-import { ICredentials, Signer } from "@aws-amplify/core";
+import { ICredentials, Signer, jitteredExponentialRetry } from "@aws-amplify/core";
 import {
   Map as maplibreMap,
   RequestParameters,
@@ -32,7 +32,7 @@ export default class AmplifyMapLibreRequest {
         case "signIn":
         case "signOut":
         case "tokenRefresh":
-          this.refreshCredentials();
+          this.refreshCredentialsWithRetry();
           break;
       }
     });
@@ -66,11 +66,13 @@ export default class AmplifyMapLibreRequest {
       this.credentials = await Auth.currentCredentials();
     } catch (e) {
       console.error(`Failed to refresh credentials: ${e}`);
-      if (this.retryCount < 5) {
-        setTimeout(this.refreshCredentials, Math.pow(2, this.retryCount) * 1000);
-        this.retryCount = this.retryCount + 1;
-      }
+      throw (e);
     }
+  };
+
+  refreshCredentialsWithRetry = async (): Promise<void> => {
+    const MAX_DELAY_MS = 5 * 60 * 1000;
+    await jitteredExponentialRetry(this.refreshCredentials, [], MAX_DELAY_MS);
   };
 
   /**
