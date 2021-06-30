@@ -73,7 +73,7 @@ export default class AmplifyMapLibreRequest {
 
   refreshCredentialsWithRetry = async (): Promise<void> => {
     const MAX_DELAY_MS = 5 * 60 * 1000; // 5 minutes
-    jitteredExponentialRetry(this.refreshCredentials, [], MAX_DELAY_MS);
+    await jitteredExponentialRetry(this.refreshCredentials, [], MAX_DELAY_MS);
 
     // Refresh credentials on a timer because HubEvents do not trigger on credential refresh currently
     this.activeTimeout && clearTimeout(this.activeTimeout);
