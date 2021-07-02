@@ -1,3 +1,4 @@
 import AmplifyMapLibreRequest from "./AmplifyMapLibreRequest";
+import { drawPoints } from "./utility";
 
-export { AmplifyMapLibreRequest };
+export { AmplifyMapLibreRequest, drawPoints };
