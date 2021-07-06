@@ -52,7 +52,7 @@
     "eslint-plugin-promise": "^5.1.0",
     "html-webpack-plugin": "^5.3.1",
     "jest": "^27.0.3",
-    "maplibre-gl": "^1.14.0",
+    "maplibre-gl": "^1.15.0",
     "node-polyfill-webpack-plugin": "^1.1.2",
     "prettier": "^2.3.0",
     "start-server-and-test": "^1.12.5",
@@ -65,6 +65,6 @@
   },
   "peerDependencies": {
     "aws-amplify": "^4.0.3",
-    "maplibre-gl": "^1.14.0"
+    "maplibre-gl": "^1.15.0"
   }
 }
