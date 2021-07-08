@@ -1,4 +1,16 @@
 import AmplifyMapLibreRequest from "../src/AmplifyMapLibreRequest";
+import { Auth } from "aws-amplify";
+
+Auth.currentCredentials = jest.fn().mockImplementation(() => {
+  return {
+    accessKeyId: "accessKeyId",
+    sessionToken: "sessionTokenId",
+    secretAccessKey: "secretAccessKey",
+    identityId: "identityId",
+    authenticated: true,
+    expiration: new Date(),
+  };
+});
 
 describe("AmplifyMapLibreRequest", () => {
   test("Constructor test", () => {
@@ -10,7 +22,7 @@ describe("AmplifyMapLibreRequest", () => {
       authenticated: true,
       expiration: new Date(),
     };
-    const amplifyRequest = new AmplifyMapLibreRequest(mockCreds);
+    const amplifyRequest = new AmplifyMapLibreRequest(mockCreds, "us-west-2");
     expect(amplifyRequest.credentials).toBe(mockCreds);
     expect(amplifyRequest.region).toBe("us-west-2");
     expect(typeof amplifyRequest.transformRequest).toBe("function");
@@ -25,7 +37,7 @@ describe("AmplifyMapLibreRequest", () => {
       authenticated: true,
       expiration: new Date(),
     };
-    const amplifyRequest = new AmplifyMapLibreRequest(mockCreds);
+    const amplifyRequest = new AmplifyMapLibreRequest(mockCreds, "us-west-2");
     expect(amplifyRequest.transformRequest("https://example.com", "any")).toBe(
       undefined
     );
@@ -40,7 +52,7 @@ describe("AmplifyMapLibreRequest", () => {
       authenticated: true,
       expiration: new Date(),
     };
-    const amplifyRequest = new AmplifyMapLibreRequest(mockCreds);
+    const amplifyRequest = new AmplifyMapLibreRequest(mockCreds, "us-west-2");
     const request = amplifyRequest.transformRequest("example.com", "Style");
     expect(request.url).toContain("maps.geo");
     expect(request.url).toContain("X-Amz-Signature");
