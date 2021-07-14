@@ -56,5 +56,6 @@ describe("AmplifyMapLibreRequest", () => {
     const request = amplifyRequest.transformRequest("example.com", "Style");
     expect(request.url).toContain("maps.geo");
     expect(request.url).toContain("X-Amz-Signature");
+    expect(request.headers).toHaveProperty("X-Amz-User-Agent");
   });
 });
