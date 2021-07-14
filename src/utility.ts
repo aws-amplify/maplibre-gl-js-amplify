@@ -12,6 +12,15 @@ type Longitude = number;
 
 type Coordinates = [Latitude, Longitude];
 
+const COLOR_BLUE = "#51bbd6";
+const COLOR_YELLOW = "#f1f075";
+const COLOR_PINK = "#f28cb1";
+const COLOR_PURPLE = "#4668F2";
+const COLOR_WHITE = "#fff";
+
+const FONT_1 = "DIN Offc Pro Medium";
+const FONT_2 = "Arial Unicode MS Bold";
+
 export interface DrawPointsOptions {
   cluster?: true;
   clusterMaxZoom?: number;
@@ -32,8 +41,8 @@ export interface DrawPointsOutput {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function isCoordinatesArray(array: any): array is Coordinates {
-  return typeof array[0][0] === "number";
+function isCoordinatesArray(array: unknown): array is Coordinates[] {
+  return Array.isArray(array[0]) && typeof array[0][0] === "number";
 }
 
 export function drawPoints(
@@ -111,11 +120,11 @@ function drawClusterLayer(
     "circle-color": [
       "step",
       ["get", "point_count"],
-      "#51bbd6", // Blue, 20px circles when point count is less than 100
+      COLOR_BLUE, // 20px circles when point count is less than 100
       100,
-      "#f1f075", // Yellow, 30px circles when point count is between 100 and 750
+      COLOR_YELLOW, // 30px circles when point count is between 100 and 750
       750,
-      "#f28cb1", // Pink, 40px circles when point count is greater than or equal to 750
+      COLOR_PINK, // 40px circles when point count is greater than or equal to 750
     ],
     "circle-radius": ["step", ["get", "point_count"], 20, 100, 30, 750, 40],
     ...options.clusterPaint,
@@ -137,7 +146,7 @@ function drawClusterLayer(
   if (options.showCount) {
     const layoutOptions = {
       "text-field": "{point_count_abbreviated}",
-      "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+      "text-font": [FONT_1, FONT_2],
       "text-size": 12,
       ...options.symbolLayout,
     };
@@ -164,10 +173,10 @@ function drawUnclusteredLayer(
 ): { unclusteredLayerId: string } {
   const unclusteredLayerId = `${sourceName}-layer-unclustered-point`;
   const paintOptions = {
-    "circle-color": "#4668F2",
+    "circle-color": COLOR_PURPLE,
     "circle-radius": 16,
     "circle-stroke-width": 4,
-    "circle-stroke-color": "#fff",
+    "circle-stroke-color": COLOR_WHITE,
     ...options.unclusteredPaint,
   };
   const defaultUnclusteredPoint: CircleLayer = {
