@@ -101,7 +101,7 @@ export default class AmplifyMapLibreRequest {
           secret_key: this.credentials.secretAccessKey,
           session_token: this.credentials.sessionToken,
         }),
-        headers: { "X-Amz-User-Agent": getAmplifyUserAgent() },
+        headers: { "x-amz-user-agent": getAmplifyUserAgent() },
       };
     }
   };
