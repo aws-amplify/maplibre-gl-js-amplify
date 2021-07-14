@@ -1,5 +1,5 @@
 import { Auth, Hub } from "aws-amplify";
-import { ICredentials, Signer, jitteredExponentialRetry } from "@aws-amplify/core";
+import { ICredentials, Signer, jitteredExponentialRetry, getAmplifyUserAgent } from "@aws-amplify/core";
 import {
   Map as maplibreMap,
   RequestParameters,
@@ -101,6 +101,7 @@ export default class AmplifyMapLibreRequest {
           secret_key: this.credentials.secretAccessKey,
           session_token: this.credentials.sessionToken,
         }),
+        headers: { "x-amz-user-agent": getAmplifyUserAgent() },
       };
     }
   };
