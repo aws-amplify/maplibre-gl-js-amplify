@@ -89,6 +89,9 @@ export default class AmplifyMapLibreRequest {
    * @returns {RequestParameters} [https://maplibre.org/maplibre-gl-js-docs/api/properties/#requestparameters](https://maplibre.org/maplibre-gl-js-docs/api/properties/#requestparameters)
    */
   transformRequest = (url: string, resourceType: string): RequestParameters => {
+    if (!this.region) {
+      throw new Error("Region is not set, please set an AWS region value like 'us-west-2'`")
+    }
     if (resourceType === "Style" && !url.includes("://")) {
       url = `https://maps.geo.${this.region}.amazonaws.com/maps/v0/maps/${url}/style-descriptor`;
     }
