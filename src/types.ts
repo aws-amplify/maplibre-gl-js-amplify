@@ -80,3 +80,11 @@ export interface ClusterOptions {
 export interface PopupRenderFunction {
   (selectedFeature: Feature): string;
 }
+
+export interface ImageMarker {
+  width: number;
+  height: number;
+  data: Uint8Array;
+  onAdd: () => void;
+  render: () => boolean;
+}
