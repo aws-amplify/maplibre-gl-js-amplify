@@ -88,3 +88,9 @@ export interface ImageMarker {
   onAdd: () => void;
   render: () => boolean;
 }
+
+export interface CreateMarkerOptions {
+  fillColor?: string;
+  strokeColor?: string;
+  lineWidth?: number;
+}

@@ -1,21 +1,21 @@
 import { Point } from "geojson";
 import { Map as maplibreMap, Popup, SymbolLayer } from "maplibre-gl";
-import { UnclusteredOptions } from "./types";
+import { Coordinates, UnclusteredOptions } from "./types";
 import { ACTIVE_MARKER_COLOR, COLOR_WHITE, MARKER_COLOR } from "./constants";
 import { createMarker } from "./createMarker";
 import { getPopupRenderFunction } from "./popupRender";
+import { isCoordinates } from "./utils";
+
+const HIDE_TIP = "amplify-tip";
 
 export function drawUnclusteredLayer(
   sourceName: string,
   map: maplibreMap,
-  options: UnclusteredOptions
+  { showMarkerPopup = false, ...options }: UnclusteredOptions
 ): { unclusteredLayerId: string } {
   const unclusteredLayerId = `${sourceName}-layer-unclustered-point`;
 
-  const markerOptions = {
-    showMarkerPopup: !!options.showMarkerPopup,
-    popupRender: getPopupRenderFunction(unclusteredLayerId, options),
-  };
+  const popupRender = getPopupRenderFunction(unclusteredLayerId, options);
 
   addUnclusteredMarkerImages(map, options);
 
@@ -33,17 +33,21 @@ export function drawUnclusteredLayer(
   /**
    * Add css to header to hide default popup tip
    */
-  if (markerOptions.showMarkerPopup) {
-    const style = document.createElement("style");
-    document.head.append(style);
-    style.textContent = ".mapboxgl-popup-tip { display: none; }";
+  if (showMarkerPopup) {
+    const element = document.getElementById(HIDE_TIP);
+    if (!element) {
+      const style = document.createElement("style");
+      style.setAttribute("id", HIDE_TIP);
+      document.head.append(style);
+      style.textContent = ".mapboxgl-popup-tip { display: none; }";
+    }
   }
 
   /**
    * Set active state on markers when clicked
    */
   map.on("click", unclusteredLayerId, function (e) {
-    if (options.onClick) options.onClick(e);
+    if (typeof options.onClick === "function") options.onClick(e);
 
     map.setLayoutProperty(unclusteredLayerId, "icon-image", [
       "match",
@@ -54,15 +58,17 @@ export function drawUnclusteredLayer(
     ]);
 
     // If popup option is set show a popup on click
-    if (markerOptions.showMarkerPopup) {
+    if (showMarkerPopup) {
       const selectedFeature = e.features[0];
       const coordinates = (selectedFeature.geometry as Point).coordinates;
 
-      new Popup()
-        .setLngLat(coordinates as [number, number])
-        .setHTML(markerOptions.popupRender(selectedFeature))
-        .setOffset(15)
-        .addTo(map);
+      if (isCoordinates(coordinates)) {
+        new Popup()
+          .setLngLat(coordinates as Coordinates)
+          .setHTML(popupRender(selectedFeature))
+          .setOffset(15)
+          .addTo(map);
+      }
     }
   });
 

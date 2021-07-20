@@ -1,14 +1,10 @@
 import { COLOR_WHITE, MARKER_COLOR } from "./constants";
-import { ImageMarker } from "./types";
+import { CreateMarkerOptions, ImageMarker } from "./types";
 
-export function createMarker(options?: {
-  fillColor?: string;
-  strokeColor?: string;
-  lineWidth?: number;
-}): ImageMarker {
-  const fillColor = options ? options.fillColor : MARKER_COLOR;
-  const strokeColor = options ? options.strokeColor : COLOR_WHITE;
-  const lineWidth = options ? options.lineWidth : 4;
+export function createMarker(options?: CreateMarkerOptions): ImageMarker {
+  const fillColor = options?.fillColor ? options.fillColor : MARKER_COLOR;
+  const strokeColor = options?.strokeColor ? options.strokeColor : COLOR_WHITE;
+  const lineWidth = options?.lineWidth ? options.lineWidth : 4;
   return {
     width: 64,
     height: 64,

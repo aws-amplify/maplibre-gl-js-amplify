@@ -1,9 +1,23 @@
 import { Feature } from "geojson";
+import { AnySourceImpl, GeoJSONSource } from "maplibre-gl";
 import { Coordinates } from "./types";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function isCoordinates(array: unknown): array is Coordinates {
+  return (
+    Array.isArray(array) &&
+    typeof array[0] === "number" &&
+    typeof array[1] === "number"
+  );
+}
+
 export function isCoordinatesArray(array: unknown): array is Coordinates[] {
-  return Array.isArray(array[0]) && typeof array[0][0] === "number";
+  return isCoordinates(array[0]);
+}
+
+export function isGeoJsonSource(
+  source: AnySourceImpl
+): source is GeoJSONSource {
+  return source.type === "geojson";
 }
 
 export const strHasLength = (str: unknown): str is string =>

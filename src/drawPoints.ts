@@ -65,7 +65,7 @@ export function drawPoints(
       features,
     },
     cluster: showCluster,
-    clusterMaxZoom: clusterOptions.clusterMaxZoom || 14,
+    clusterMaxZoom: clusterOptions.clusterMaxZoom ?? 14,
     generateId: true,
   });
 

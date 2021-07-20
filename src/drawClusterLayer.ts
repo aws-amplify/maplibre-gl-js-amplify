@@ -2,13 +2,13 @@ import { Point } from "geojson";
 import {
   CircleLayer,
   CirclePaint,
-  GeoJSONSource,
   LngLatLike,
   Map as maplibreMap,
   SymbolLayer,
 } from "maplibre-gl";
 import { ClusterOptions } from "./types";
 import { COLOR_WHITE, FONT_1, MARKER_COLOR } from "./constants";
+import { isGeoJsonSource } from "./utils";
 
 export function drawClusterLayer(
   sourceName: string,
@@ -39,13 +39,13 @@ export function drawClusterLayer(
     "circle-color": [
       "step",
       ["get", "point_count"],
-      markerColor, // 60px circles when point count is less than 50
+      markerColor,
       smallThreshold,
-      markerColor, // 100px circles when point count is between 50 and 100
+      markerColor,
       mediumThreshold,
-      markerColor, // 140px circles when point count is between 100 and 500
+      markerColor,
       largeThreshold,
-      markerColor, // 180px circles when point count is greater than 500
+      markerColor,
     ],
     "circle-radius": [
       "step",
@@ -77,23 +77,23 @@ export function drawClusterLayer(
    * Inspect cluster on click
    */
   map.on("click", clusterLayerId, function (e) {
-    if (onClick) onClick(e);
+    if (typeof onClick === "function") onClick(e);
 
     const features = map.queryRenderedFeatures(e.point, {
       layers: [clusterLayerId],
     });
     const clusterId = features[0].properties.cluster_id;
-    (map.getSource(sourceName) as GeoJSONSource).getClusterExpansionZoom(
-      clusterId,
-      function (err, zoom) {
+    const source = map.getSource(sourceName);
+    if (isGeoJsonSource(source)) {
+      source.getClusterExpansionZoom(clusterId, function (err, zoom) {
         if (err) return;
 
         map.easeTo({
           center: (features[0].geometry as Point).coordinates as LngLatLike,
           zoom: zoom,
         });
-      }
-    );
+      });
+    }
   });
 
   /**
