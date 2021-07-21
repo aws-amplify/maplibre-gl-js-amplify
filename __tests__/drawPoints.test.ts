@@ -1,4 +1,5 @@
 import { Map as maplibreMap } from "maplibre-gl";
+import { MAP_STYLES } from "../src/constants";
 import { drawPoints } from "../src/drawPoints";
 
 jest.mock("maplibre-gl");
@@ -13,7 +14,8 @@ describe("drawPoints", () => {
         [-122.849, 49.1913],
       ],
       map,
-      {}
+      {},
+      MAP_STYLES.ESRI_NAVIGATION
     );
 
     const mockInstance = (maplibreMap as jest.Mock).mock.instances[0];
