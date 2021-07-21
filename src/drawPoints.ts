@@ -4,7 +4,7 @@ import { getFeaturesFromData } from "./utils";
 import { ClusterOptions, Coordinates, UnclusteredOptions } from "./types";
 import { drawClusterLayer } from "./drawClusterLayer";
 import { drawUnclusteredLayer } from "./drawUnclusteredLayer";
-import { AWS_MAP_STYLES } from "./constants";
+import { MAP_STYLES } from "./constants";
 
 /**
  * @param {boolean} showCluster Default: true, determines whether or not points close together should be clustered into a single point
@@ -30,7 +30,7 @@ export interface DrawPointsOutput {
  * @param {Coordinate[] || Feature[]} data An array of coordinate data or GeoJSON Features used as the data source for maplibre
  * @param {maplibreMap} map A maplibre map on which the points will be drawn
  * @param {Object} options An object containing options for changing the styles and features of the points rendered to the map, see the options for more details on available settings
- * @param {String} mapStyle A string containing the AWS location service map style data used to draw this map
+ * @param {String} mapStyle A string containing the map style data used to draw this map
  * @returns {DrawPointsOutput} An object the string id's of the sources and layers used to draw the points to the map
  */
 export function drawPoints(
@@ -42,7 +42,7 @@ export function drawPoints(
     clusterOptions = {},
     unclusteredOptions: unclusteredMarkerOptions = {},
   }: DrawPointsOptions,
-  mapStyle: AWS_MAP_STYLES
+  mapStyle: MAP_STYLES
 ): DrawPointsOutput {
   if (
     !map ||

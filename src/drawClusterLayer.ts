@@ -7,7 +7,7 @@ import {
   SymbolLayer,
 } from "maplibre-gl";
 import { ClusterOptions } from "./types";
-import { COLOR_WHITE, MARKER_COLOR, AWS_MAP_STYLES } from "./constants";
+import { COLOR_WHITE, MARKER_COLOR, MAP_STYLES } from "./constants";
 import { isGeoJsonSource } from "./utils";
 import { FONT_DEFAULT_BY_STYLE } from "./constants";
 
@@ -31,7 +31,7 @@ export function drawClusterLayer(
     clusterCountLayout,
     fontColor = COLOR_WHITE,
   }: ClusterOptions,
-  mapStyle: AWS_MAP_STYLES
+  mapStyle: MAP_STYLES
 ): { clusterLayerId: string; clusterSymbolLayerId: string } {
   const clusterLayerId = `${sourceName}-layer-clusters`;
   const clusterSymbolLayerId = `${sourceName}-layer-cluster-count`;
