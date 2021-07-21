@@ -7,8 +7,9 @@ import {
   SymbolLayer,
 } from "maplibre-gl";
 import { ClusterOptions } from "./types";
-import { COLOR_WHITE, FONT_1, MARKER_COLOR } from "./constants";
+import { COLOR_WHITE, MARKER_COLOR, AWS_MAP_STYLES } from "./constants";
 import { isGeoJsonSource } from "./utils";
+import { FONT_DEFAULT_BY_STYLE } from "./constants";
 
 export function drawClusterLayer(
   sourceName: string,
@@ -29,7 +30,8 @@ export function drawClusterLayer(
     showCount,
     clusterCountLayout,
     fontColor = COLOR_WHITE,
-  }: ClusterOptions
+  }: ClusterOptions,
+  mapStyle: AWS_MAP_STYLES
 ): { clusterLayerId: string; clusterSymbolLayerId: string } {
   const clusterLayerId = `${sourceName}-layer-clusters`;
   const clusterSymbolLayerId = `${sourceName}-layer-cluster-count`;
@@ -100,12 +102,17 @@ export function drawClusterLayer(
    * Symbol Layer for cluster point count
    */
   if (showCount) {
-    const layoutOptions = {
-      "text-field": "{point_count_abbreviated}", //FIXME: This field does not seem to work with amazon location services maps
-      "text-font": [FONT_1],
+    const defaultLayoutOptions = {
+      "text-field": "{point_count_abbreviated}",
       "text-size": 24,
-      ...clusterCountLayout,
     };
+
+    if (mapStyle) {
+      defaultLayoutOptions["text-font"] = [FONT_DEFAULT_BY_STYLE[mapStyle]];
+    }
+
+    const layoutOptions = { ...defaultLayoutOptions, ...clusterCountLayout };
+
     const paintOptions = {
       "text-color": fontColor,
     };
