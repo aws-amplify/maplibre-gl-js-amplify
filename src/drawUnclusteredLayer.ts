@@ -30,7 +30,7 @@ export function drawUnclusteredLayer(
   };
   map.addLayer({ ...defaultUnclusteredPoint });
 
-  /**
+  /*
    * Add css to header to hide default popup tip
    */
   if (showMarkerPopup) {
@@ -43,7 +43,7 @@ export function drawUnclusteredLayer(
     }
   }
 
-  /**
+  /*
    * Set active state on markers when clicked
    */
   map.on("click", unclusteredLayerId, function (e) {
@@ -75,9 +75,8 @@ export function drawUnclusteredLayer(
   return { unclusteredLayerId };
 }
 
-/**
+/*
  * Adds marker images to the maplibre canvas to be used for rendering unclustered points
- * @param map
  */
 function addUnclusteredMarkerImages(
   map: maplibreMap,

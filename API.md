@@ -6,6 +6,8 @@
     *   [Parameters][2]
     *   [transformRequest][3]
         *   [Parameters][4]
+*   [drawPoints][5]
+    *   [Parameters][6]
 
 ## AmplifyMapLibreRequest
 
@@ -14,20 +16,38 @@ An object for encapsulating an Amplify Geo transform request and Amplify credent
 ### Parameters
 
 *   `currentCredentials` **ICredentials** Amplify credentials used for signing transformRequests
-*   `region` **[String][5]** AWS region
+*   `region` **[String][7]** AWS region
 
-Returns **[AmplifyMapLibreRequest][6]** `this`
+Returns **[AmplifyMapLibreRequest][8]** `this`
 
 ### transformRequest
 
-A callback function that can be passed to a maplibre map object that is run before the map makes a request for an external URL. This transform request is used to sign the request with AWS Sigv4 Auth. [https://maplibre.org/maplibre-gl-js-docs/api/map/][7]
+A callback function that can be passed to a maplibre map object that is run before the map makes a request for an external URL. This transform request is used to sign the request with AWS Sigv4 Auth. [https://maplibre.org/maplibre-gl-js-docs/api/map/][9]
 
 #### Parameters
 
-*   `url` **[string][5]** The function to use as a render function. This function accepts a single [Carmen GeoJSON][8] object as input and returns a string.
-*   `resourceType` **[string][5]** The function to use as a render function. This function accepts a single [Carmen GeoJSON][8] object as input and returns a string.
+*   `url` **[string][7]** The function to use as a render function. This function accepts a single [Carmen GeoJSON][10] object as input and returns a string.
+*   `resourceType` **[string][7]** The function to use as a render function. This function accepts a single [Carmen GeoJSON][10] object as input and returns a string.
 
-Returns **RequestParameters** [https://maplibre.org/maplibre-gl-js-docs/api/properties/#requestparameters][9]
+Returns **RequestParameters** [https://maplibre.org/maplibre-gl-js-docs/api/properties/#requestparameters][11]
+
+## drawPoints
+
+DrawPoints utility function for adding points to a map based on coordinate data or a FeatureCollection. Will add clustered points and styled markers by default with options for popups and other styles
+
+### Parameters
+
+*   `sourceName` **[String][7]** A user defined name used for determining the maplibre data source and the maplibre layers
+*   `data` **([Array][12]\<Coordinate> | [Array][12]\<Feature>)** An array of coordinate data or GeoJSON Features used as the data source for maplibre
+*   `map` **maplibreMap** A maplibre map on which the points will be drawn
+*   `options` **[Object][13]** An object containing options for changing the styles and features of the points rendered to the map, see the options for more details on available settings
+
+    *   `options.showCluster` **[String][7]** Determines whether or not points close together should be clustered into a single point (optional, default `true`)
+    *   `options.clusterOptions` **[String][7]** Object for determining cluster options, see [ClusterOptions][14] for more details (optional, default `{}`)
+    *   `options.unclusteredOptions` **[String][7]** Object for determining cluster options, see [UnclusteredOptions][15] for more details (optional, default `{}`)
+*   `mapStyle` **[String][7]** A string containing the map style data used to draw this map
+
+Returns **DrawPointsOutput** An object the string id's of the sources and layers used to draw the points to the map
 
 [1]: #amplifymaplibrerequest
 
@@ -37,12 +57,24 @@ Returns **RequestParameters** [https://maplibre.org/maplibre-gl-js-docs/api/prop
 
 [4]: #parameters-1
 
-[5]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[5]: #drawpoints
 
-[6]: #amplifymaplibrerequest
+[6]: #parameters-2
 
-[7]: https://maplibre.org/maplibre-gl-js-docs/api/map/
+[7]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
 
-[8]: https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
+[8]: #amplifymaplibrerequest
 
-[9]: https://maplibre.org/maplibre-gl-js-docs/api/properties/#requestparameters
+[9]: https://maplibre.org/maplibre-gl-js-docs/api/map/
+
+[10]: https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
+
+[11]: https://maplibre.org/maplibre-gl-js-docs/api/properties/#requestparameters
+
+[12]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+
+[13]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+
+[14]: https://github.com/aws-amplify/maplibre-gl-js-amplify/blob/main/src/types.ts#L43
+
+[15]: https://github.com/aws-amplify/maplibre-gl-js-amplify/blob/main/src/types.ts#L8
