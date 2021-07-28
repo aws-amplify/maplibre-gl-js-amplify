@@ -28,13 +28,17 @@ export interface DrawPointsOutput {
  * DrawPoints utility function for adding points to a map based on coordinate data or a FeatureCollection. Will add clustered points and styled markers by default with options for popups and other styles
  * @param {String} sourceName A user defined name used for determining the maplibre data source and the maplibre layers
  * @param {Coordinate[] | Feature[]} data An array of coordinate data or GeoJSON Features used as the data source for maplibre
- * @param {maplibreMap} map A maplibre map on which the points will be drawn
+ * @param {maplibre-gl-js-Map} map A maplibre-gl-js [map](https://maplibre.org/maplibre-gl-js-docs/api/map/) on which the points will be drawn
  * @param {Object} options An object containing options for changing the styles and features of the points rendered to the map, see the options for more details on available settings
  * @param {String} options.showCluster Determines whether or not points close together should be clustered into a single point
  * @param {String} options.clusterOptions Object for determining cluster options, see [ClusterOptions](https://github.com/aws-amplify/maplibre-gl-js-amplify/blob/main/src/types.ts#L43) for more details
- * @param {String} options.unclusteredOptions Object for determining cluster options, see [UnclusteredOptions](https://github.com/aws-amplify/maplibre-gl-js-amplify/blob/main/src/types.ts#L8) for more details
- * @param {String} mapStyle A string containing the map style data used to draw this map
- * @returns {DrawPointsOutput} An object the string id's of the sources and layers used to draw the points to the map
+ * @param {String} options.unclusteredOptions Object for determining unclustered point options, see [UnclusteredOptions](https://github.com/aws-amplify/maplibre-gl-js-amplify/blob/main/src/types.ts#L8) for more details
+ * @param {String} mapStyle The map style returned from Amplify Geo that is currently being used. This is used to determine the default fonts used by maplibre-gl-js.
+ * @returns {DrawPointsOutput} output An object containing the string id's of the sources and layers used to draw the points to the map. This includes the sourceId, clusterLayerId, clusterSymbolLayerId, unclusteredLayerId.
+ * @property {String} sourceId
+ * @property {String} clusterLayerId
+ * @property {String} clusterSymbolLayerId
+ * @property {String} unclusteredLayerId
  */
 export function drawPoints(
   sourceName: string,
