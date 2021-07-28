@@ -33,12 +33,12 @@ export interface DrawPointsOutput {
  * @param {String} options.showCluster Determines whether or not points close together should be clustered into a single point
  * @param {String} options.clusterOptions Object for determining cluster options, see [ClusterOptions](https://github.com/aws-amplify/maplibre-gl-js-amplify/blob/main/src/types.ts#L43) for more details
  * @param {String} options.unclusteredOptions Object for determining unclustered point options, see [UnclusteredOptions](https://github.com/aws-amplify/maplibre-gl-js-amplify/blob/main/src/types.ts#L8) for more details
- * @param {String} mapStyle The map style returned from Amplify Geo that is currently being used. This is used to determine the default fonts used by maplibre-gl-js.
+ * @param {MAP_STYLE} mapStyle A required parameter that indicates the map style returned from Amazon Location services. This is used to determine the default fonts to be used with maplibre-gl-js. View existing styles [here](https://github.com/aws-amplify/maplibre-gl-js-amplify/blob/main/src/constants.ts#L8)
  * @returns {DrawPointsOutput} output An object containing the string id's of the sources and layers used to draw the points to the map. This includes the sourceId, clusterLayerId, clusterSymbolLayerId, unclusteredLayerId.
- * @property {String} sourceId
- * @property {String} clusterLayerId
- * @property {String} clusterSymbolLayerId
- * @property {String} unclusteredLayerId
+ * @property {String} sourceId The [source](https://maplibre.org/maplibre-gl-js-docs/api/sources/) used to contain all of the coordinate/feature data
+ * @property {String} clusterLayerId The [layer](https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/) used for creating and styling the points that are clustered together
+ * @property {String} clusterSymbolLayerId The [layer](https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#symbol) used for creating styling the number that shows the count of points in a cluster
+ * @property {String} unclusteredLayerId The [layer](https://maplibre.org/maplibre-gl-js-docs/style-spec/layers) used for creating and styling the individual points on the map and the popup when clicking on a point
  */
 export function drawPoints(
   sourceName: string,

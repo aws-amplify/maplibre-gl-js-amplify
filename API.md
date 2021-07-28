@@ -46,14 +46,14 @@ DrawPoints utility function for adding points to a map based on coordinate data 
     *   `options.showCluster` **[String][8]** Determines whether or not points close together should be clustered into a single point (optional, default `true`)
     *   `options.clusterOptions` **[String][8]** Object for determining cluster options, see [ClusterOptions][15] for more details (optional, default `{}`)
     *   `options.unclusteredOptions` **[String][8]** Object for determining unclustered point options, see [UnclusteredOptions][16] for more details (optional, default `{}`)
-*   `mapStyle` **[String][8]** The map style returned from Amplify Geo that is currently being used. This is used to determine the default fonts used by maplibre-gl-js.
+*   `mapStyle` **MAP_STYLE** A required parameter that indicates the map style returned from Amazon Location services. This is used to determine the default fonts to be used with maplibre-gl-js. View existing styles [here][17]
 
 ### Properties
 
-*   `sourceId` **[String][8]** 
-*   `clusterLayerId` **[String][8]** 
-*   `clusterSymbolLayerId` **[String][8]** 
-*   `unclusteredLayerId` **[String][8]** 
+*   `sourceId` **[String][8]** The [source][18] used to contain all of the coordinate/feature data
+*   `clusterLayerId` **[String][8]** The [layer][19] used for creating and styling the points that are clustered together
+*   `clusterSymbolLayerId` **[String][8]** The [layer][20] used for creating styling the number that shows the count of points in a cluster
+*   `unclusteredLayerId` **[String][8]** The [layer][21] used for creating and styling the individual points on the map and the popup when clicking on a point
 
 Returns **DrawPointsOutput** output An object containing the string id's of the sources and layers used to draw the points to the map. This includes the sourceId, clusterLayerId, clusterSymbolLayerId, unclusteredLayerId.
 
@@ -88,3 +88,13 @@ Returns **DrawPointsOutput** output An object containing the string id's of the 
 [15]: https://github.com/aws-amplify/maplibre-gl-js-amplify/blob/main/src/types.ts#L43
 
 [16]: https://github.com/aws-amplify/maplibre-gl-js-amplify/blob/main/src/types.ts#L8
+
+[17]: https://github.com/aws-amplify/maplibre-gl-js-amplify/blob/main/src/constants.ts#L8
+
+[18]: https://maplibre.org/maplibre-gl-js-docs/api/sources/
+
+[19]: https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/
+
+[20]: https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#symbol
+
+[21]: https://maplibre.org/maplibre-gl-js-docs/style-spec/layers
