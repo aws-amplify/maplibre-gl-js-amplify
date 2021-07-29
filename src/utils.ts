@@ -40,3 +40,7 @@ export const getFeaturesFromData = (
   }
   return features;
 };
+
+export const urlEncodePeriods = (str: string): string => {
+  return str.replace(/\./g, "%2E");
+}
