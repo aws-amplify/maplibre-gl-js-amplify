@@ -10,13 +10,8 @@
   "scripts": {
     "build": "npm run clean && npm run compile",
     "clean": "rimraf dist",
-    "ci:test": "yarn && yarn build && start-server-and-test integ:start http-get://localhost:8080 cypress:run",
     "compile": "npm run tsc",
     "docs": "npm run build && documentation build dist/index.js --format=md > API.md",
-    "cypress:open": "cypress open",
-    "cypress:run": "cypress run",
-    "integ:start": "webpack serve --open",
-    "integ:test": "yarn cypress:run",
     "test": "jest",
     "tsc": "tsc"
   },
@@ -42,8 +37,6 @@
     "@typescript-eslint/eslint-plugin": "^4.25.0",
     "@typescript-eslint/parser": "^4.25.0",
     "aws-amplify": "^4.0.3",
-    "cypress": "^7.5.0",
-    "cypress-plugin-snapshots": "^1.4.4",
     "documentation": "^13.2.5",
     "eslint": "^7.16.0",
     "eslint-config-prettier": "^8.3.0",
