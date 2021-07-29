@@ -1,5 +1,6 @@
-import { Auth, Hub } from "aws-amplify";
 import {
+  Amplify,
+  Hub,
   ICredentials,
   Signer,
   jitteredExponentialRetry,
@@ -53,7 +54,7 @@ export default class AmplifyMapLibreRequest {
     region,
   }: CreateMapOptions): Promise<maplibreMap> => {
     const amplifyRequest = new AmplifyMapLibreRequest(
-      await Auth.currentCredentials(),
+      await Amplify.Auth.currentCredentials(),
       region
     );
     const transformRequest = amplifyRequest.transformRequest;
@@ -70,7 +71,7 @@ export default class AmplifyMapLibreRequest {
 
   refreshCredentials = async (): Promise<void> => {
     try {
-      this.credentials = await Auth.currentCredentials();
+      this.credentials = await Amplify.Auth.currentCredentials();
     } catch (e) {
       console.error(`Failed to refresh credentials: ${e}`);
       throw e;

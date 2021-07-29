@@ -41,7 +41,6 @@
     "@types/node": "^15.6.1",
     "@typescript-eslint/eslint-plugin": "^4.25.0",
     "@typescript-eslint/parser": "^4.25.0",
-    "aws-amplify": "^4.0.3",
     "cypress": "^7.5.0",
     "cypress-plugin-snapshots": "^1.4.4",
     "documentation": "^13.2.5",
