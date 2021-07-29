@@ -1,7 +1,8 @@
 import AmplifyMapLibreRequest from "../src/AmplifyMapLibreRequest";
-import { Auth } from "aws-amplify";
+import { Amplify } from "@aws-amplify/core";
 
-Auth.currentCredentials = jest.fn().mockImplementation(() => {
+Amplify.Auth = {};
+Amplify.Auth.currentCredentials = jest.fn().mockImplementation(() => {
   return {
     accessKeyId: "accessKeyId",
     sessionToken: "sessionTokenId",
