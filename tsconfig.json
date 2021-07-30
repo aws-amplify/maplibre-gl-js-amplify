@@ -4,10 +4,15 @@
         "target": "es6",
         "moduleResolution": "node",
         "declaration": true,
+        "sourceMap": true,  
         "esModuleInterop": true,
         "outDir": "./dist"
     },
     "include": [
         "src/**/*"
+    ],
+    "exclude": [
+        "dist",
+        "node_modules"
     ]
 }
