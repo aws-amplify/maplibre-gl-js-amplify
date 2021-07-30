@@ -42,7 +42,7 @@ export function drawPoints(
     clusterOptions = {},
     unclusteredOptions: unclusteredMarkerOptions = {},
   }: DrawPointsOptions,
-  mapStyle: MAP_STYLES
+  mapStyle?: MAP_STYLES
 ): DrawPointsOutput {
   if (
     !map ||

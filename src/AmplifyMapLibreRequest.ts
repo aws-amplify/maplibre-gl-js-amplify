@@ -6,6 +6,7 @@ import {
   jitteredExponentialRetry,
   getAmplifyUserAgent,
 } from "@aws-amplify/core";
+import { Geo } from "@aws-amplify/geo";
 import {
   Map as maplibreMap,
   RequestParameters,
@@ -62,7 +63,7 @@ export default class AmplifyMapLibreRequest {
       container,
       center,
       zoom,
-      style,
+      style: style || Geo.getDefaultMap().mapName, // Amplify uses the name of the map in the maplibre style field,
       transformRequest,
     });
 
