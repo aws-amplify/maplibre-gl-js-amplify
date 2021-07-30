@@ -1,3 +1,4 @@
+import { Geo } from "@aws-amplify/geo";
 import { Point } from "geojson";
 import {
   CircleLayer,
@@ -31,7 +32,7 @@ export function drawClusterLayer(
     clusterCountLayout,
     fontColor = COLOR_WHITE,
   }: ClusterOptions,
-  mapStyle: MAP_STYLES
+  mapStyle?: MAP_STYLES
 ): { clusterLayerId: string; clusterSymbolLayerId: string } {
   const clusterLayerId = `${sourceName}-layer-clusters`;
   const clusterSymbolLayerId = `${sourceName}-layer-cluster-count`;
@@ -107,8 +108,11 @@ export function drawClusterLayer(
       "text-size": 24,
     };
 
-    if (mapStyle) {
-      defaultLayoutOptions["text-font"] = [FONT_DEFAULT_BY_STYLE[mapStyle]];
+    const locationServicesStyle = mapStyle || Geo.getDefaultMap().style;
+    if (locationServicesStyle) {
+      defaultLayoutOptions["text-font"] = [
+        FONT_DEFAULT_BY_STYLE[locationServicesStyle],
+      ];
     }
 
     const layoutOptions = { ...defaultLayoutOptions, ...clusterCountLayout };
