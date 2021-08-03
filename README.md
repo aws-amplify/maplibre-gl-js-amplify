@@ -14,6 +14,8 @@ A plugin for [maplibre-gl-js](https://github.com/maplibre/maplibre-gl-js) for in
 yarn add maplibre-gl-js-amplify
 ```
 
+#### Using AmplifyMapLibreRequest to Display a Map
+
 ```js
 import { AmplifyMapLibreRequest } from "maplibre-gl-js-amplify";
 import Amplify from "aws-amplify";
@@ -27,6 +29,23 @@ Amplify.configure(awsconfig);
         zoom: 11,
         region: "us-west-2"
   })
+```
+
+#### Using AmplifyGeocoder with [maplibre-gl-geocoder](https://github.com/maplibre/maplibre-gl-geocoder)
+
+```js
+import Amplify from "aws-amplify";
+import awsconfig from './aws-exports';
+import maplibregl from "maplibre-gl";
+import MaplibreGeocoder from "@maplibre/maplibre-gl-geocoder";
+import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
+
+Amplify.configure(awsconfig);
+...
+  const geocoder = new MaplibreGeocoder(AmplifyGeocoder, {
+    maplibregl: maplibregl,
+  });
+  map.addControl(geocoder);
 ```
 
 ### Deeper dive

@@ -2,10 +2,11 @@
 
 ### Table of Contents
 
-*   [AmplifyMapLibreRequest][1]
-    *   [Parameters][2]
-    *   [transformRequest][3]
-        *   [Parameters][4]
+- [AmplifyMapLibreRequest][1]
+  - [Parameters][2]
+  - [transformRequest][3]
+    - [Parameters][4]
+- [AmplifyGeocoder][11]
 
 ## AmplifyMapLibreRequest
 
@@ -13,8 +14,8 @@ An object for encapsulating an Amplify Geo transform request and Amplify credent
 
 ### Parameters
 
-*   `currentCredentials` **ICredentials** Amplify credentials used for signing transformRequests
-*   `region` **[String][5]** AWS region
+- `currentCredentials` **ICredentials** Amplify credentials used for signing transformRequests
+- `region` **[String][5]** AWS region
 
 Returns **[AmplifyMapLibreRequest][6]** `this`
 
@@ -24,25 +25,23 @@ A callback function that can be passed to a maplibre map object that is run befo
 
 #### Parameters
 
-*   `url` **[string][5]** The function to use as a render function. This function accepts a single [Carmen GeoJSON][8] object as input and returns a string.
-*   `resourceType` **[string][5]** The function to use as a render function. This function accepts a single [Carmen GeoJSON][8] object as input and returns a string.
+- `url` **[string][5]** The function to use as a render function. This function accepts a single [Carmen GeoJSON][8] object as input and returns a string.
+- `resourceType` **[string][5]** The function to use as a render function. This function accepts a single [Carmen GeoJSON][8] object as input and returns a string.
 
 Returns **RequestParameters** [https://maplibre.org/maplibre-gl-js-docs/api/properties/#requestparameters][9]
 
+## AmplifyGeocoder
+
+An object wrapping Amplify Geo search APIs and returns `forwardGeocode` and `reverseGeocode` methods which are used by [maplibre-gl-geocoder][10] to perform search
+
 [1]: #amplifymaplibrerequest
-
 [2]: #parameters
-
 [3]: #transformrequest
-
 [4]: #parameters-1
-
 [5]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
-
 [6]: #amplifymaplibrerequest
-
 [7]: https://maplibre.org/maplibre-gl-js-docs/api/map/
-
 [8]: https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
-
 [9]: https://maplibre.org/maplibre-gl-js-docs/api/properties/#requestparameters
+[10]: https://github.com/maplibre/maplibre-gl-geocoder
+[11]: #amplifygeocoder
