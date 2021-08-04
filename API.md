@@ -6,7 +6,7 @@
   - [Parameters][2]
   - [transformRequest][3]
     - [Parameters][4]
-- [AmplifyGeocoder][11]
+- [AmplifyGeocoderAPI][11]
 
 ## AmplifyMapLibreRequest
 
@@ -30,7 +30,7 @@ A callback function that can be passed to a maplibre map object that is run befo
 
 Returns **RequestParameters** [https://maplibre.org/maplibre-gl-js-docs/api/properties/#requestparameters][9]
 
-## AmplifyGeocoder
+## AmplifyGeocoderAPI
 
 An object wrapping Amplify Geo search APIs and returns `forwardGeocode` and `reverseGeocode` methods which are used by [maplibre-gl-geocoder][10] to perform search
 
@@ -44,4 +44,4 @@ An object wrapping Amplify Geo search APIs and returns `forwardGeocode` and `rev
 [8]: https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
 [9]: https://maplibre.org/maplibre-gl-js-docs/api/properties/#requestparameters
 [10]: https://github.com/maplibre/maplibre-gl-geocoder
-[11]: #amplifygeocoder
+[11]: #amplifygeocoderapi

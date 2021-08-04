@@ -31,10 +31,11 @@ Amplify.configure(awsconfig);
   })
 ```
 
-#### Using AmplifyGeocoder with [maplibre-gl-geocoder](https://github.com/maplibre/maplibre-gl-geocoder)
+#### Using AmplifyGeocoderAPI with [maplibre-gl-geocoder](https://github.com/maplibre/maplibre-gl-geocoder)
 
 ```js
 import Amplify from "aws-amplify";
+import { AmplifyGeocoderAPI } from "maplibre-gl-js-amplify";
 import awsconfig from './aws-exports';
 import maplibregl from "maplibre-gl";
 import MaplibreGeocoder from "@maplibre/maplibre-gl-geocoder";
@@ -42,7 +43,7 @@ import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
 
 Amplify.configure(awsconfig);
 ...
-  const geocoder = new MaplibreGeocoder(AmplifyGeocoder, {
+  const geocoder = new MaplibreGeocoder(AmplifyGeocoderAPI, {
     maplibregl: maplibregl,
   });
   map.addControl(geocoder);

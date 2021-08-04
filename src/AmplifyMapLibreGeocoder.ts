@@ -1,6 +1,6 @@
 import { Geo } from "@aws-amplify/geo";
 
-export const AmplifyGeocoder = {
+export const AmplifyGeocoderAPI = {
   forwardGeocode: async (config) => {
     const features = [];
     try {
