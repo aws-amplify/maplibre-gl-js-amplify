@@ -1,9 +1,9 @@
-import { AmplifyGeocoder } from "../src/AmplifyMapLibreGeocoder";
+import { AmplifyGeocoderAPI } from "../src/AmplifyMapLibreGeocoder";
 import { Geo } from "@aws-amplify/geo";
 
 jest.mock("@aws-amplify/geo");
 
-describe("AmplifyGeocoder", () => {
+describe("AmplifyGeocoderAPI", () => {
   beforeEach(() => {
     (Geo.searchByText as jest.Mock).mockClear();
     (Geo.searchByCoordinates as jest.Mock).mockClear();
@@ -25,7 +25,7 @@ describe("AmplifyGeocoder", () => {
         street: "1st Street",
       },
     ]);
-    const response = await AmplifyGeocoder.forwardGeocode(config);
+    const response = await AmplifyGeocoderAPI.forwardGeocode(config);
     expect(Geo.searchByText).toHaveBeenCalledTimes(1);
     expect(response.features).toHaveLength(1);
     expect(response.features[0].geometry).toBeDefined();
@@ -36,7 +36,7 @@ describe("AmplifyGeocoder", () => {
       query: "a map query",
     };
     (Geo.searchByText as jest.Mock).mockReturnValueOnce([]);
-    const response = await AmplifyGeocoder.forwardGeocode(config);
+    const response = await AmplifyGeocoderAPI.forwardGeocode(config);
     expect(Geo.searchByText).toHaveBeenCalledTimes(1);
     expect(response.features).toHaveLength(0);
   });
@@ -46,7 +46,7 @@ describe("AmplifyGeocoder", () => {
       query: "a map query",
     };
     (Geo.searchByText as jest.Mock).mockReturnValueOnce(undefined);
-    const response = await AmplifyGeocoder.forwardGeocode(config);
+    const response = await AmplifyGeocoderAPI.forwardGeocode(config);
     expect(Geo.searchByText).toHaveBeenCalledTimes(1);
     expect(response.features).toHaveLength(0);
   });
@@ -56,7 +56,7 @@ describe("AmplifyGeocoder", () => {
       query: "a map query",
     };
     (Geo.searchByText as jest.Mock).mockRejectedValueOnce("an error");
-    const response = await AmplifyGeocoder.forwardGeocode(config);
+    const response = await AmplifyGeocoderAPI.forwardGeocode(config);
     expect(Geo.searchByText).toHaveBeenCalledTimes(1);
     expect(response.features).toHaveLength(0);
   });
@@ -75,7 +75,7 @@ describe("AmplifyGeocoder", () => {
       postalCode: "12345",
       street: "1st Street",
     });
-    const response = await AmplifyGeocoder.reverseGeocode(config);
+    const response = await AmplifyGeocoderAPI.reverseGeocode(config);
     expect(Geo.searchByCoordinates).toHaveBeenCalledTimes(1);
     expect(response.features).toHaveLength(1);
     expect(response.features[0].geometry).toBeDefined();
@@ -86,7 +86,7 @@ describe("AmplifyGeocoder", () => {
       query: "-123, 45",
     };
     (Geo.searchByCoordinates as jest.Mock).mockReturnValueOnce({});
-    const response = await AmplifyGeocoder.reverseGeocode(config);
+    const response = await AmplifyGeocoderAPI.reverseGeocode(config);
     expect(Geo.searchByCoordinates).toHaveBeenCalledTimes(1);
     expect(response.features).toHaveLength(0);
   });
@@ -96,7 +96,7 @@ describe("AmplifyGeocoder", () => {
       query: "-123, 45",
     };
     (Geo.searchByCoordinates as jest.Mock).mockReturnValueOnce(undefined);
-    const response = await AmplifyGeocoder.reverseGeocode(config);
+    const response = await AmplifyGeocoderAPI.reverseGeocode(config);
     expect(Geo.searchByCoordinates).toHaveBeenCalledTimes(1);
     expect(response.features).toHaveLength(0);
   });
@@ -106,7 +106,7 @@ describe("AmplifyGeocoder", () => {
       query: "-123, 45",
     };
     (Geo.searchByCoordinates as jest.Mock).mockRejectedValueOnce("an error");
-    const response = await AmplifyGeocoder.reverseGeocode(config);
+    const response = await AmplifyGeocoderAPI.reverseGeocode(config);
     expect(Geo.searchByCoordinates).toHaveBeenCalledTimes(1);
     expect(response.features).toHaveLength(0);
   });
