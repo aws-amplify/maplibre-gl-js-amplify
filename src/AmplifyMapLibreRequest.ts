@@ -48,7 +48,7 @@ export default class AmplifyMapLibreRequest {
   }
 
   static createMapLibreMap = async (options: CreateMapOptions): Promise<maplibreMap> => {
-    const { region, ...maplibreOption } = options
+    const { region, ...maplibreOption } = options;
     const amplifyRequest = new AmplifyMapLibreRequest(
       await Amplify.Auth.currentCredentials(),
       region
