@@ -1,0 +1,22 @@
+.maplibregl-ctrl-geocoder {
+  text-align: initial;
+}
+
+.mapboxgl-popup-tip {
+  display: none;
+}
+
+.maplibre-ctrl-geocoder--suggestion {
+  background: #fff;
+  border: 2px solid #0000001f;
+  color: #000;
+  border-radius: 4px;
+  padding: 20px;
+  word-wrap: break-word;
+  margin: -10px -10px -15px;
+  text-align: initial;
+}
+
+.maplibre-ctrl-geocoder--suggestion-title {
+  font-weight: bold;
+}
