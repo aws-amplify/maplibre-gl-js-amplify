@@ -17,13 +17,13 @@ yarn add maplibre-gl-js-amplify
 #### Using AmplifyMapLibreRequest to Display a Map
 
 ```js
-import { AmplifyMapLibreRequest } from "maplibre-gl-js-amplify";
+import { AmplifyMapLibreRequest, createMap } from "maplibre-gl-js-amplify";
 import Amplify from "aws-amplify";
 import awsconfig from './aws-exports';
 
 Amplify.configure(awsconfig);
 ...
-  const map = await AmplifyMapLibreRequest.createMapLibreMap({
+  const map = await createMap({
         container: "map", // An HTML Element or HTML element ID to render the map in https://maplibre.org/maplibre-gl-js-docs/api/map/
         center: [-123.1187, 49.2819],
         zoom: 11,
