@@ -47,6 +47,24 @@ export default class AmplifyMapLibreRequest {
     });
   }
 
+  static createMapLibreMap = async (
+    options: CreateMapOptions
+  ): Promise<maplibreMap> => {
+    const { region, ...maplibreOption } = options;
+    const amplifyRequest = new AmplifyMapLibreRequest(
+      await Amplify.Auth.currentCredentials(),
+      region
+    );
+    const transformRequest = amplifyRequest.transformRequest;
+    const map = new maplibreMap({
+      ...maplibreOption,
+      style: options.style || Geo.getDefaultMap().mapName, // Amplify uses the name of the map in the maplibre style field,
+      transformRequest,
+    });
+
+    return map;
+  };
+
   refreshCredentials = async (): Promise<void> => {
     try {
       this.credentials = await Amplify.Auth.currentCredentials();
@@ -99,25 +117,8 @@ export default class AmplifyMapLibreRequest {
   };
 }
 
-export const createMap = async ({
-  container,
-  center,
-  zoom,
-  style,
-  region,
-}: CreateMapOptions): Promise<maplibreMap> => {
-  const amplifyRequest = new AmplifyMapLibreRequest(
-    await Amplify.Auth.currentCredentials(),
-    region
-  );
-  const transformRequest = amplifyRequest.transformRequest;
-  const map = new maplibreMap({
-    container,
-    center,
-    zoom,
-    style: style || Geo.getDefaultMap().mapName, // Amplify uses the name of the map in the maplibre style field,
-    transformRequest,
-  });
-
-  return map;
+export const createMap = async (
+  options: CreateMapOptions
+): Promise<maplibreMap> => {
+  return AmplifyMapLibreRequest.createMapLibreMap(options);
 };

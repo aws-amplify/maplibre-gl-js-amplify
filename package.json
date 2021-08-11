@@ -1,6 +1,6 @@
 {
   "name": "maplibre-gl-js-amplify",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "MapLibre Plugin to Support Amplify Geo Integration",
   "main": "dist/index.js",
   "unpkg": "dist/maplibre-gl-js-amplify.umd.min.js",
@@ -9,11 +9,12 @@
     "/dist"
   ],
   "scripts": {
-    "build": "npm run clean && npm run compile && npm run bundle:umd && npm run bundle:umd:min",
+    "build": "npm run clean && npm run copy:files && npm run compile && npm run bundle:umd && npm run bundle:umd:min",
     "bundle:umd": "rollup dist/index.js --file dist/maplibre-gl-js-amplify.umd.js --format umd --name maplibreAmplify --config",
     "bundle:umd:min": "terser --ecma 6 --compress --mangle -o dist/maplibre-gl-js-amplify.umd.min.js -- dist/maplibre-gl-js-amplify.umd.js && gzip -9 -c dist/maplibre-gl-js-amplify.umd.min.js > dist/maplibre-gl-js-amplify.umd.min.js.gz",
     "clean": "rimraf dist",
     "compile": "npm run tsc",
+    "copy:files": "mkdir -p dist/ && cp src/amplify-geocoder.css dist/",
     "test": "jest",
     "tsc": "tsc"
   },
@@ -31,8 +32,8 @@
   },
   "homepage": "https://github.com/aws-amplify/maplibre-gl-js-amplify#readme",
   "devDependencies": {
-    "@aws-amplify/core": "^4.1.1",
-    "@aws-amplify/geo": "^0.0.2-geo.6646",
+    "@aws-amplify/core": "geo",
+    "@aws-amplify/geo": "geo",
     "@types/geojson": "^7946.0.7",
     "@types/jest": "^26.0.23",
     "@types/maplibre-gl": "^1.13.1",
@@ -56,8 +57,8 @@
     "wait-on": "^5.3.0"
   },
   "peerDependencies": {
-    "@aws-amplify/core": "^4.1.1",
-    "@aws-amplify/geo": "^0.0.2-geo.6646",
+    "@aws-amplify/core": "geo",
+    "@aws-amplify/geo": "geo",
     "maplibre-gl": "^1.14.0"
   }
 }
