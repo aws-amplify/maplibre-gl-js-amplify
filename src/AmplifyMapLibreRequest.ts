@@ -6,7 +6,7 @@ import {
   jitteredExponentialRetry,
   getAmplifyUserAgent,
 } from "@aws-amplify/core";
-import { Geo } from "@aws-amplify/geo";
+import { Geo, AmazonLocationServiceMapStyle } from "@aws-amplify/geo";
 import {
   Map as maplibreMap,
   RequestParameters,
@@ -47,16 +47,20 @@ export default class AmplifyMapLibreRequest {
     });
   }
 
-  static createMapLibreMap = async (options: CreateMapOptions): Promise<maplibreMap> => {
+  static createMapLibreMap = async (
+    options: CreateMapOptions
+  ): Promise<maplibreMap> => {
     const { region, ...maplibreOption } = options;
+    const defaultMap = Geo.getDefaultMap() as AmazonLocationServiceMapStyle;
+
     const amplifyRequest = new AmplifyMapLibreRequest(
       await Amplify.Auth.currentCredentials(),
-      region
+      region || defaultMap.region
     );
     const transformRequest = amplifyRequest.transformRequest;
     const map = new maplibreMap({
       ...maplibreOption,
-      style: options.style || Geo.getDefaultMap().mapName, // Amplify uses the name of the map in the maplibre style field,
+      style: options.style || defaultMap.mapName, // Amplify uses the name of the map in the maplibre style field,
       transformRequest,
     });
 
