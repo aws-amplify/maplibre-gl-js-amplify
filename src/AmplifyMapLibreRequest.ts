@@ -47,23 +47,16 @@ export default class AmplifyMapLibreRequest {
     });
   }
 
-  static createMapLibreMap = async ({
-    container,
-    center,
-    zoom,
-    style,
-    region,
-  }: CreateMapOptions): Promise<maplibreMap> => {
+  static createMapLibreMap = async (options: CreateMapOptions): Promise<maplibreMap> => {
+    const { region, ...maplibreOption } = options;
     const amplifyRequest = new AmplifyMapLibreRequest(
       await Amplify.Auth.currentCredentials(),
       region
     );
     const transformRequest = amplifyRequest.transformRequest;
     const map = new maplibreMap({
-      container,
-      center,
-      zoom,
-      style: style || Geo.getDefaultMap().mapName, // Amplify uses the name of the map in the maplibre style field,
+      ...maplibreOption,
+      style: options.style || Geo.getDefaultMap().mapName, // Amplify uses the name of the map in the maplibre style field,
       transformRequest,
     });
 
