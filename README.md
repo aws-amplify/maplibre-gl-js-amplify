@@ -17,7 +17,7 @@ yarn add maplibre-gl-js-amplify
 #### Using AmplifyMapLibreRequest to Display a Map
 
 ```js
-import { AmplifyMapLibreRequest, createMap } from "maplibre-gl-js-amplify";
+import { createMap } from "maplibre-gl-js-amplify";
 import Amplify from "aws-amplify";
 import awsconfig from './aws-exports';
 
