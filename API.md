@@ -49,14 +49,14 @@ DrawPoints utility function for adding points to a map based on coordinate data 
     *   `options.unclusteredOptions` **[String][8]** Object for determining unclustered point options, see [UnclusteredOptions][16] for more details (optional, default `{}`)
 *   `mapStyle` **MAP_STYLE** A required parameter that indicates the map style returned from Amazon Location services. This is used to determine the default fonts to be used with maplibre-gl-js. View existing styles [here][17]
 
+Returns **DrawPointsOutput** output An object containing the string id's of the sources and layers used to draw the points to the map. This includes the sourceId, clusterLayerId, clusterSymbolLayerId, unclusteredLayerId.
+
 ### Properties
 
 *   `sourceId` **[String][8]** The [source][18] used to contain all of the coordinate/feature data
 *   `clusterLayerId` **[String][8]** The [layer][19] used for creating and styling the points that are clustered together
 *   `clusterSymbolLayerId` **[String][8]** The [layer][20] used for creating styling the number that shows the count of points in a cluster
 *   `unclusteredLayerId` **[String][8]** The [layer][21] used for creating and styling the individual points on the map and the popup when clicking on a point
-
-Returns **DrawPointsOutput** output An object containing the string id's of the sources and layers used to draw the points to the map. This includes the sourceId, clusterLayerId, clusterSymbolLayerId, unclusteredLayerId.
 
 ## AmplifyGeocoderAPI
 
