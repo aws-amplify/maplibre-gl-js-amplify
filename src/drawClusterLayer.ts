@@ -76,7 +76,7 @@ export function drawClusterLayer(
     ...defaultClusterLayer,
   });
 
-  /**
+  /*
    * Inspect cluster on click
    */
   map.on("click", clusterLayerId, function (e) {
@@ -99,7 +99,7 @@ export function drawClusterLayer(
     }
   });
 
-  /**
+  /*
    * Symbol Layer for cluster point count
    */
   if (showCount) {

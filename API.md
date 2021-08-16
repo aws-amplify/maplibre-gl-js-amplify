@@ -2,10 +2,13 @@
 
 ### Table of Contents
 
-- [AmplifyMapLibreRequest][1]
-  - [Parameters][2]
-  - [transformRequest][3]
-    - [Parameters][4]
+*   [AmplifyMapLibreRequest][1]
+    *   [Parameters][2]
+    *   [transformRequest][3]
+        *   [Parameters][4]
+*   [drawPoints][5]
+    *   [Parameters][6]
+    *   [Properties][7]
 - [AmplifyGeocoderAPI][11]
 
 ## AmplifyMapLibreRequest
@@ -14,34 +17,88 @@ An object for encapsulating an Amplify Geo transform request and Amplify credent
 
 ### Parameters
 
-- `currentCredentials` **ICredentials** Amplify credentials used for signing transformRequests
-- `region` **[String][5]** AWS region
+*   `currentCredentials` **ICredentials** Amplify credentials used for signing transformRequests
+*   `region` **[String][8]** AWS region
 
-Returns **[AmplifyMapLibreRequest][6]** `this`
+Returns **[AmplifyMapLibreRequest][9]** `this`
 
 ### transformRequest
 
-A callback function that can be passed to a maplibre map object that is run before the map makes a request for an external URL. This transform request is used to sign the request with AWS Sigv4 Auth. [https://maplibre.org/maplibre-gl-js-docs/api/map/][7]
+A callback function that can be passed to a maplibre map object that is run before the map makes a request for an external URL. This transform request is used to sign the request with AWS Sigv4 Auth. [https://maplibre.org/maplibre-gl-js-docs/api/map/][10]
 
 #### Parameters
 
-- `url` **[string][5]** The function to use as a render function. This function accepts a single [Carmen GeoJSON][8] object as input and returns a string.
-- `resourceType` **[string][5]** The function to use as a render function. This function accepts a single [Carmen GeoJSON][8] object as input and returns a string.
+*   `url` **[string][8]** The function to use as a render function. This function accepts a single [Carmen GeoJSON][11] object as input and returns a string.
+*   `resourceType` **[string][8]** The function to use as a render function. This function accepts a single [Carmen GeoJSON][11] object as input and returns a string.
 
-Returns **RequestParameters** [https://maplibre.org/maplibre-gl-js-docs/api/properties/#requestparameters][9]
+Returns **RequestParameters** [https://maplibre.org/maplibre-gl-js-docs/api/properties/#requestparameters][12]
+
+## drawPoints
+
+DrawPoints utility function for adding points to a map based on coordinate data or a FeatureCollection. Will add clustered points and styled markers by default with options for popups and other styles
+
+### Parameters
+
+*   `sourceName` **[String][8]** A user defined name used for determining the maplibre data source and the maplibre layers
+*   `data` **([Array][13]\<Coordinate> | [Array][13]\<Feature>)** An array of coordinate data or GeoJSON Features used as the data source for maplibre
+*   `map` **maplibre-gl-js-Map** A maplibre-gl-js [map][10] on which the points will be drawn
+*   `options` **[Object][14]** An object containing options for changing the styles and features of the points rendered to the map, see the options for more details on available settings
+
+    *   `options.showCluster` **[String][8]** Determines whether or not points close together should be clustered into a single point (optional, default `true`)
+    *   `options.clusterOptions` **[String][8]** Object for determining cluster options, see [ClusterOptions][15] for more details (optional, default `{}`)
+    *   `options.unclusteredOptions` **[String][8]** Object for determining unclustered point options, see [UnclusteredOptions][16] for more details (optional, default `{}`)
+*   `mapStyle` **MAP_STYLE** A required parameter that indicates the map style returned from Amazon Location services. This is used to determine the default fonts to be used with maplibre-gl-js. View existing styles [here][17]
+
+Returns **DrawPointsOutput** output An object containing the string id's of the sources and layers used to draw the points to the map. This includes the sourceId, clusterLayerId, clusterSymbolLayerId, unclusteredLayerId.
+
+### Properties
+
+*   `sourceId` **[String][8]** The [source][18] used to contain all of the coordinate/feature data
+*   `clusterLayerId` **[String][8]** The [layer][19] used for creating and styling the points that are clustered together
+*   `clusterSymbolLayerId` **[String][8]** The [layer][20] used for creating styling the number that shows the count of points in a cluster
+*   `unclusteredLayerId` **[String][8]** The [layer][21] used for creating and styling the individual points on the map and the popup when clicking on a point
 
 ## AmplifyGeocoderAPI
 
-An object wrapping Amplify Geo search APIs and returns `forwardGeocode` and `reverseGeocode` methods which are used by [maplibre-gl-geocoder][10] to perform search
+An object wrapping Amplify Geo search APIs and returns `forwardGeocode` and `reverseGeocode` methods which are used by [maplibre-gl-geocoder][22] to perform search
 
 [1]: #amplifymaplibrerequest
 [2]: #parameters
 [3]: #transformrequest
 [4]: #parameters-1
-[5]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
-[6]: #amplifymaplibrerequest
-[7]: https://maplibre.org/maplibre-gl-js-docs/api/map/
-[8]: https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
-[9]: https://maplibre.org/maplibre-gl-js-docs/api/properties/#requestparameters
-[10]: https://github.com/maplibre/maplibre-gl-geocoder
-[11]: #amplifygeocoderapi
+
+[5]: #drawpoints
+
+[6]: #parameters-2
+
+[7]: #properties
+
+[8]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+
+[9]: #amplifymaplibrerequest
+
+[10]: https://maplibre.org/maplibre-gl-js-docs/api/map/
+
+[11]: https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
+
+[12]: https://maplibre.org/maplibre-gl-js-docs/api/properties/#requestparameters
+
+[13]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+
+[14]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+
+[15]: https://github.com/aws-amplify/maplibre-gl-js-amplify/blob/main/src/types.ts#L43
+
+[16]: https://github.com/aws-amplify/maplibre-gl-js-amplify/blob/main/src/types.ts#L8
+
+[17]: https://github.com/aws-amplify/maplibre-gl-js-amplify/blob/main/src/constants.ts#L8
+
+[18]: https://maplibre.org/maplibre-gl-js-docs/api/sources/
+
+[19]: https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/
+
+[20]: https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#symbol
+
+[21]: https://maplibre.org/maplibre-gl-js-docs/style-spec/layers
+
+[22]: https://github.com/maplibre/maplibre-gl-geocoder
