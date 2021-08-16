@@ -18,7 +18,7 @@ export type Coordinates = [Latitude, Longitude];
  * @param {number} popupBorderRadius Default: 4, pixel border radius
  * @param {number} popupPadding Default: 20, padding of the popup
  * @param {string} popupFontColor Default: #000, font color in the border
- * @param {function} popupRender Override the default popup render function with fn that returns any html
+ * @param {function} popupRender Override the default popup render function with fn that returns any html. The default render function uses the Carmen GeoJSON place_name attribute to construct a popup
  * @param {callback} onClick Function that is called when clicking on the unclustered layer
  */
 export interface UnclusteredOptions {

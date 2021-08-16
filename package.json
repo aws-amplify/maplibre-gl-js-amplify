@@ -1,6 +1,6 @@
 {
   "name": "maplibre-gl-js-amplify",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "MapLibre Plugin to Support Amplify Geo Integration",
   "main": "dist/index.js",
   "unpkg": "dist/maplibre-gl-js-amplify.umd.min.js",
@@ -15,6 +15,7 @@
     "clean": "rimraf dist",
     "compile": "npm run tsc",
     "copy:files": "mkdir -p dist/ && cp src/amplify-geocoder.css dist/",
+    "prepublish": "npm run build",
     "test": "jest",
     "tsc": "tsc"
   },
