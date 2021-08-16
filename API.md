@@ -9,6 +9,7 @@
 *   [drawPoints][5]
     *   [Parameters][6]
     *   [Properties][7]
+- [AmplifyGeocoderAPI][11]
 
 ## AmplifyMapLibreRequest
 
@@ -57,12 +58,13 @@ DrawPoints utility function for adding points to a map based on coordinate data 
 
 Returns **DrawPointsOutput** output An object containing the string id's of the sources and layers used to draw the points to the map. This includes the sourceId, clusterLayerId, clusterSymbolLayerId, unclusteredLayerId.
 
+## AmplifyGeocoderAPI
+
+An object wrapping Amplify Geo search APIs and returns `forwardGeocode` and `reverseGeocode` methods which are used by [maplibre-gl-geocoder][22] to perform search
+
 [1]: #amplifymaplibrerequest
-
 [2]: #parameters
-
 [3]: #transformrequest
-
 [4]: #parameters-1
 
 [5]: #drawpoints
@@ -98,3 +100,5 @@ Returns **DrawPointsOutput** output An object containing the string id's of the 
 [20]: https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/#symbol
 
 [21]: https://maplibre.org/maplibre-gl-js-docs/style-spec/layers
+
+[22]: https://github.com/maplibre/maplibre-gl-geocoder

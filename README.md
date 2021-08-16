@@ -14,22 +14,39 @@ A plugin for [maplibre-gl-js](https://github.com/maplibre/maplibre-gl-js) for in
 yarn add maplibre-gl-js-amplify
 ```
 
+#### Using AmplifyMapLibreRequest to Display a Map
+
 ```js
 import { AmplifyMapLibreRequest } from "maplibre-gl-js-amplify";
-import Amplify, { Auth } from "aws-amplify";
+import Amplify from "aws-amplify";
+import awsconfig from './aws-exports';
+
 Amplify.configure(awsconfig);
 ...
-  const map = new Map({
-    container: "map",
-    center: [-123.1187, 49.2819],
-    zoom: 10,
-    style: "location-map-name",
-    transformRequest: new AmplifyMapLibreRequest(
-      await Auth.currentCredentials(),
-      "us-west-2"
-    ).transformRequest,
-  });
+  const map = await AmplifyMapLibreRequest.createMapLibreMap({
+        container: "map", // An HTML Element or HTML element ID to render the map in https://maplibre.org/maplibre-gl-js-docs/api/map/
+        center: [-123.1187, 49.2819],
+        zoom: 11,
+        region: "us-west-2"
+  })
+```
 
+#### Using AmplifyGeocoderAPI with [maplibre-gl-geocoder](https://github.com/maplibre/maplibre-gl-geocoder)
+
+```js
+import Amplify from "aws-amplify";
+import { AmplifyGeocoderAPI } from "maplibre-gl-js-amplify";
+import awsconfig from './aws-exports';
+import maplibregl from "maplibre-gl";
+import MaplibreGeocoder from "@maplibre/maplibre-gl-geocoder";
+import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
+
+Amplify.configure(awsconfig);
+...
+  const geocoder = new MaplibreGeocoder(AmplifyGeocoderAPI, {
+    maplibregl: maplibregl,
+  });
+  map.addControl(geocoder);
 ```
 
 ### Deeper dive

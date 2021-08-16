@@ -1,7 +1,8 @@
 import AmplifyMapLibreRequest from "../src/AmplifyMapLibreRequest";
-import { Auth } from "aws-amplify";
+import { Amplify } from "@aws-amplify/core";
 
-Auth.currentCredentials = jest.fn().mockImplementation(() => {
+Amplify.Auth = {};
+Amplify.Auth.currentCredentials = jest.fn().mockImplementation(() => {
   return {
     accessKeyId: "accessKeyId",
     sessionToken: "sessionTokenId",
@@ -56,6 +57,6 @@ describe("AmplifyMapLibreRequest", () => {
     const request = amplifyRequest.transformRequest("example.com", "Style");
     expect(request.url).toContain("maps.geo");
     expect(request.url).toContain("X-Amz-Signature");
-    expect(request.headers).toHaveProperty("x-amz-user-agent");
+    expect(request.url).toContain("x-amz-user-agent");
   });
 });

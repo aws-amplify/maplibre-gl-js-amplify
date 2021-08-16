@@ -1,10 +1,18 @@
-import { Auth, Hub } from "aws-amplify";
-import { ICredentials, Signer, jitteredExponentialRetry, getAmplifyUserAgent } from "@aws-amplify/core";
+import {
+  Amplify,
+  Hub,
+  ICredentials,
+  Signer,
+  jitteredExponentialRetry,
+  getAmplifyUserAgent,
+} from "@aws-amplify/core";
+import { Geo, AmazonLocationServiceMapStyle } from "@aws-amplify/geo";
 import {
   Map as maplibreMap,
   RequestParameters,
   MapboxOptions,
 } from "maplibre-gl";
+import { urlEncodePeriods } from "./utils";
 
 interface CreateMapOptions extends MapboxOptions {
   region?: string;
@@ -39,23 +47,20 @@ export default class AmplifyMapLibreRequest {
     });
   }
 
-  static createMapLibreMap = async ({
-    container,
-    center,
-    zoom,
-    style,
-    region,
-  }: CreateMapOptions): Promise<maplibreMap> => {
+  static createMapLibreMap = async (
+    options: CreateMapOptions
+  ): Promise<maplibreMap> => {
+    const { region, ...maplibreOption } = options;
+    const defaultMap = Geo.getDefaultMap() as AmazonLocationServiceMapStyle;
+
     const amplifyRequest = new AmplifyMapLibreRequest(
-      await Auth.currentCredentials(),
-      region
+      await Amplify.Auth.currentCredentials(),
+      region || defaultMap.region
     );
     const transformRequest = amplifyRequest.transformRequest;
     const map = new maplibreMap({
-      container,
-      center,
-      zoom,
-      style,
+      ...maplibreOption,
+      style: options.style || defaultMap.mapName, // Amplify uses the name of the map in the maplibre style field,
       transformRequest,
     });
 
@@ -64,10 +69,10 @@ export default class AmplifyMapLibreRequest {
 
   refreshCredentials = async (): Promise<void> => {
     try {
-      this.credentials = await Auth.currentCredentials();
+      this.credentials = await Amplify.Auth.currentCredentials();
     } catch (e) {
       console.error(`Failed to refresh credentials: ${e}`);
-      throw (e);
+      throw e;
     }
   };
 
@@ -79,7 +84,10 @@ export default class AmplifyMapLibreRequest {
     this.activeTimeout && clearTimeout(this.activeTimeout);
     const expiration = new Date(this.credentials.expiration);
     const timeout = expiration.getTime() - new Date().getTime() - 10000; // Adds a 10 second buffer time before the next refresh
-    this.activeTimeout = window.setTimeout(this.refreshCredentialsWithRetry, timeout);
+    this.activeTimeout = window.setTimeout(
+      this.refreshCredentialsWithRetry,
+      timeout
+    );
   };
 
   /**
@@ -95,13 +103,17 @@ export default class AmplifyMapLibreRequest {
 
     if (url.includes("amazonaws.com")) {
       // only sign AWS requests (with the signature as part of the query string)
+      const urlWithUserAgent =
+        url +
+        `?x-amz-user-agent=${encodeURIComponent(
+          urlEncodePeriods(getAmplifyUserAgent())
+        )}`;
       return {
-        url: Signer.signUrl(url, {
+        url: Signer.signUrl(urlWithUserAgent, {
           access_key: this.credentials.accessKeyId,
           secret_key: this.credentials.secretAccessKey,
           session_token: this.credentials.sessionToken,
         }),
-        headers: { "x-amz-user-agent": getAmplifyUserAgent() },
       };
     }
   };

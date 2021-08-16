@@ -9,10 +9,6 @@ jobs:
     working_directory: ~/maplibre-gl-js-amplify
     steps:
       - checkout # check out the code in the project directory
-      - run: yarn ci:test # run the `echo` command
-      - store_artifacts:
-          path: ~/maplibre-gl-js-amplify/cypress/videos
-      - store_artifacts:
-          path: ~/maplibre-gl-js-amplify/cypress/screenshots
-      - store_artifacts:
-          path: ~/maplibre-gl-js-amplify/cypress/integration/__image_snapshots__
+      - run: yarn
+      - run: yarn build
+      - run: yarn test
