@@ -1,4 +1,6 @@
 import { Geo } from "@aws-amplify/geo";
+import MaplibreGeocoder from "@maplibre/maplibre-gl-geocoder";
+import { createDefaultIcon } from "./createMarker";
 
 export const AmplifyGeocoderAPI = {
   forwardGeocode: async (config) => {
@@ -55,3 +57,10 @@ export const AmplifyGeocoderAPI = {
     return { features };
   },
 };
+
+export function createAmplifyGeocoder(options): unknown {
+  return new MaplibreGeocoder(AmplifyGeocoderAPI, {
+    marker: { element: createDefaultIcon() },
+    ...options,
+  });
+}

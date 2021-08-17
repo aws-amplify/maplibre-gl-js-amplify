@@ -35,6 +35,7 @@
   "devDependencies": {
     "@aws-amplify/core": "geo",
     "@aws-amplify/geo": "geo",
+    "@maplibre/maplibre-gl-geocoder": "^1.0.0",
     "@types/geojson": "^7946.0.7",
     "@types/jest": "^26.0.23",
     "@types/maplibre-gl": "^1.13.1",
@@ -62,6 +63,7 @@
   "peerDependencies": {
     "@aws-amplify/core": "geo",
     "@aws-amplify/geo": "geo",
-    "maplibre-gl": "^1.14.0"
+    "maplibre-gl": "^1.14.0",
+    "@maplibre/maplibre-gl-geocoder": "^1.0.0"
   }
 }
