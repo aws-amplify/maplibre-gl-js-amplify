@@ -8,7 +8,7 @@ import {
 } from "@aws-amplify/core";
 import { Geo, AmazonLocationServiceMapStyle } from "@aws-amplify/geo";
 import {
-  Map as maplibreMap,
+  Map as MaplibreMap,
   RequestParameters,
   MapboxOptions,
 } from "maplibre-gl";
@@ -16,6 +16,7 @@ import { urlEncodePeriods } from "./utils";
 
 interface CreateMapOptions extends MapboxOptions {
   region?: string;
+  mapConstructor?: typeof MaplibreMap;
 }
 /**
  * An object for encapsulating an Amplify Geo transform request and Amplify credentials
@@ -49,8 +50,8 @@ export default class AmplifyMapLibreRequest {
 
   static createMapLibreMap = async (
     options: CreateMapOptions
-  ): Promise<maplibreMap> => {
-    const { region, ...maplibreOption } = options;
+  ): Promise<MaplibreMap> => {
+    const { region, mapConstructor = MaplibreMap, ...maplibreOption } = options;
     const defaultMap = Geo.getDefaultMap() as AmazonLocationServiceMapStyle;
 
     const amplifyRequest = new AmplifyMapLibreRequest(
@@ -58,7 +59,7 @@ export default class AmplifyMapLibreRequest {
       region || defaultMap.region
     );
     const transformRequest = amplifyRequest.transformRequest;
-    const map = new maplibreMap({
+    const map = new mapConstructor({
       ...maplibreOption,
       style: options.style || defaultMap.mapName, // Amplify uses the name of the map in the maplibre style field,
       transformRequest,
@@ -118,3 +119,9 @@ export default class AmplifyMapLibreRequest {
     }
   };
 }
+
+export const createMap = async (
+  options: CreateMapOptions
+): Promise<MaplibreMap> => {
+  return AmplifyMapLibreRequest.createMapLibreMap(options);
+};
