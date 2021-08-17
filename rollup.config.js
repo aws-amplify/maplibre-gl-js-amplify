@@ -1,3 +1,5 @@
+import svg from "rollup-plugin-svg";
+
 export default {
   external: ["maplibre-gl", "@aws-amplify/core"],
   output: {
@@ -6,4 +8,5 @@ export default {
       "@aws-amplify/core": "aws_amplify_core",
     },
   },
+  plugins: [svg()],
 };
