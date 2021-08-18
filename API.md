@@ -66,7 +66,7 @@ An object wrapping Amplify Geo search APIs and returns `forwardGeocode` and `rev
 
 ## createDefaultIcon
 
-A method that returns an Icon in the form of an [HTMLImageElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement). That can be passed to the marker element in [maplibre-gl-geocoder][22]. Example:
+A method that returns an Icon in the form of an [HTMLImageElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement) that can be passed to the marker element in [maplibre-gl-geocoder][22]. Example:
 
 ```js
 import { AmplifyGeocoderAPI, createDefaultIcon } from "maplibre-gl-js-amplify";
