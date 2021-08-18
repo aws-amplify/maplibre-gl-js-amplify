@@ -4,7 +4,7 @@ import {
   AmplifyGeocoderAPI,
   createAmplifyGeocoder,
 } from "./AmplifyMapLibreGeocoder";
-import { createDefaultIcon } from "./createMarker";
+import { createDefaultIcon } from "./createDefaultIcon";
 
 export {
   AmplifyMapLibreRequest,

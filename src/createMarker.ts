@@ -1,6 +1,5 @@
 import { COLOR_WHITE, MARKER_COLOR, LOCATION_MARKER } from "./constants";
 import { CreateMarkerOptions, ImageMarker } from "./types";
-import icon from "./public/marker.svg";
 
 export function createMarker(options?: CreateMarkerOptions): ImageMarker {
   const fillColor = options?.fillColor ? options.fillColor : MARKER_COLOR;
@@ -32,10 +31,4 @@ export function createMarker(options?: CreateMarkerOptions): ImageMarker {
       return true;
     },
   };
-}
-
-export function createDefaultIcon(): HTMLImageElement {
-  const customIcon = new Image(24, 24);
-  customIcon.src = icon;
-  return customIcon;
 }

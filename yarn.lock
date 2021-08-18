@@ -1669,10 +1669,10 @@
   resolved "https://registry.npmjs.org/@mapbox/whoots-js/-/whoots-js-3.1.0.tgz#497c67a1cef50d1a2459ba60f315e448d2ad87fe"
   integrity sha512-Es6WcD0nO5l+2BOQS4uLfNPYQaNDfbot3X1XUoloz+x0mPDS3eeORZJl06HXjwBG1fOGwCRnzK88LMdxKRrd6Q==
 
-"@maplibre/maplibre-gl-geocoder@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@maplibre/maplibre-gl-geocoder/-/maplibre-gl-geocoder-1.0.0.tgz#1b1bbe88f1b8785ee9912ea5da4cbbc8385fc681"
-  integrity sha512-xvKoY5/TNVXfRo01xU50rwUwIn/eb0xLC+2gkf1FYgCWpwEewz63TVAGTR4qp7uHSGuyBb2X/84CKJXPP7nOTQ==
+"@maplibre/maplibre-gl-geocoder@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@maplibre/maplibre-gl-geocoder/-/maplibre-gl-geocoder-1.1.0.tgz#b573ffe7949f961391e53e12654c0dc46660cf99"
+  integrity sha512-x24aLxJRRX8OPOic083OfuRdOqWuqtqlMQKfPNkmjR/30pUCiUWLE3tGnS2gHDqytg2ZdNT+dZuMjg4NbiUmdA==
   dependencies:
     lodash.debounce "^4.0.6"
     nanoid "^2.0.1"
