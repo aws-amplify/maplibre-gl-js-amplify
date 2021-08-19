@@ -48,7 +48,7 @@ export function drawPoints(
     showCluster = true,
     clusterOptions = {},
     unclusteredOptions: unclusteredMarkerOptions = {},
-  }: DrawPointsOptions,
+  }: DrawPointsOptions = {},
   mapStyle?: MAP_STYLES
 ): DrawPointsOutput {
   if (
