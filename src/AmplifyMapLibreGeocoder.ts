@@ -1,4 +1,8 @@
 import { Geo } from "@aws-amplify/geo";
+import MaplibreGeocoder from "@maplibre/maplibre-gl-geocoder";
+import maplibregl from "maplibre-gl";
+import { createDefaultIcon } from "./createDefaultIcon";
+import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
 
 export const AmplifyGeocoderAPI = {
   forwardGeocode: async (config) => {
@@ -55,3 +59,11 @@ export const AmplifyGeocoderAPI = {
     return { features };
   },
 };
+
+export function createAmplifyGeocoder(options): unknown {
+  return new MaplibreGeocoder(AmplifyGeocoderAPI, {
+    maplibregl: maplibregl,
+    showResultMarkers: { element: createDefaultIcon() },
+    ...options,
+  });
+}

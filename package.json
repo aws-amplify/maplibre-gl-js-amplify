@@ -14,7 +14,7 @@
     "bundle:umd:min": "terser --ecma 6 --compress --mangle -o dist/maplibre-gl-js-amplify.umd.min.js -- dist/maplibre-gl-js-amplify.umd.js && gzip -9 -c dist/maplibre-gl-js-amplify.umd.min.js > dist/maplibre-gl-js-amplify.umd.min.js.gz",
     "clean": "rimraf dist",
     "compile": "npm run tsc",
-    "copy:files": "mkdir -p dist/ && cp src/amplify-geocoder.css dist/",
+    "copy:files": "mkdir -p dist/public/ && cp src/public/* dist/public/",
     "prepublish": "npm run build",
     "test": "jest",
     "tsc": "tsc"
@@ -48,9 +48,11 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",
     "jest": "^27.0.3",
+    "jest-transform-stub": "^2.0.0",
     "maplibre-gl": "^1.14.0",
     "prettier": "^2.3.0",
     "rollup": "^2.55.1",
+    "rollup-plugin-svg": "^2.0.0",
     "start-server-and-test": "^1.12.5",
     "terser": "^5.7.1",
     "ts-jest": "^27.0.2",
@@ -61,5 +63,8 @@
     "@aws-amplify/core": "geo",
     "@aws-amplify/geo": "geo",
     "maplibre-gl": "^1.14.0"
+  },
+  "dependencies": {
+    "@maplibre/maplibre-gl-geocoder": "^1.1.0"
   }
 }
