@@ -3,6 +3,9 @@ import svg from "rollup-plugin-svg";
 export default {
   external: ["maplibre-gl", "@aws-amplify/core", "@aws-amplify/geo"],
   output: {
+    name: "AmplifyMapLibre",
+    format: "umd",
+    file: "dist/maplibre-gl-js-amplify.umd.js",
     globals: {
       "maplibre-gl": "maplibregl",
       "@aws-amplify/core": "aws_amplify_core",
