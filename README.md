@@ -1,6 +1,6 @@
 ## Maplibre GL JS Amplify
 
-A plugin for [maplibre-gl-js](https://github.com/maplibre/maplibre-gl-js) for integration with [Amplify Geo](https://docs.mapbox.com/api/search/#geocoding).
+A plugin for [maplibre-gl-js](https://github.com/maplibre/maplibre-gl-js) for integration with [Amplify Geo](https://docs.amplify.aws/lib/geo/getting-started/q/platform/js/).
 
 ### Reporting Bugs/Feature Requests
 
