@@ -23,6 +23,5 @@ export function createDefaultIcon(): SVGSVGElement {
   customIcon.appendChild(iconCircle);
   customIcon.appendChild(iconPath);
 
-  console.log(customIcon);
   return customIcon;
 }
