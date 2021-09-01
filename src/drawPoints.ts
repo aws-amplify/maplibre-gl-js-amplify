@@ -1,7 +1,12 @@
 import { Feature } from "geojson";
 import { Map as maplibreMap } from "maplibre-gl";
 import { getFeaturesFromData } from "./utils";
-import { ClusterOptions, Coordinates, UnclusteredOptions } from "./types";
+import {
+  ClusterOptions,
+  Coordinates,
+  UnclusteredOptions,
+  NamedLocation,
+} from "./types";
 import { drawClusterLayer } from "./drawClusterLayer";
 import { drawUnclusteredLayer } from "./drawUnclusteredLayer";
 import { MAP_STYLES } from "./constants";
@@ -42,7 +47,7 @@ export interface DrawPointsOutput {
  */
 export function drawPoints(
   sourceName: string,
-  data: Coordinates[] | Feature[],
+  data: Coordinates[] | Feature[] | NamedLocation[],
   map: maplibreMap,
   {
     showCluster = true,

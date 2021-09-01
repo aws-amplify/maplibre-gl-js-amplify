@@ -23,19 +23,25 @@ export function getPopupRenderFunction(
       const placeName = selectedFeature.properties.place_name.split(",");
       title = placeName[0];
       address = placeName.splice(1, placeName.length).join(",");
+    } else if (
+      strHasLength(selectedFeature.properties.title) ||
+      strHasLength(selectedFeature.properties.address)
+    ) {
+      title = selectedFeature.properties.title;
+      address = selectedFeature.properties.address;
     } else {
       title = "Coordinates";
       address = (selectedFeature.geometry as Point).coordinates;
     }
 
-    return `
-      <div class="${unclusteredLayerId}-popup" style="background: ${background}; border: ${borderWidth}px solid ${borderColor}; color: ${fontColor}; border-radius: ${radius}px; padding: ${padding}px; word-wrap: break-word; margin: -10px -10px -15px;">
-        <div class="${unclusteredLayerId}-popup-title" style="font-weight: ${fontWeight};">
-          ${title}
-        </div>
-        <div class="${unclusteredLayerId}-popup-address">
-          ${address}
-        </div>
-      </div>`;
+    const titleHtml = `<div class="${unclusteredLayerId}-popup-title" style="font-weight: ${fontWeight};">${title}</div>`;
+    const addressHtml = `<div class="${unclusteredLayerId}-popup-address">${address}</div>`;
+
+    let popupHtml = `<div class="${unclusteredLayerId}-popup" style="background: ${background}; border: ${borderWidth}px solid ${borderColor}; color: ${fontColor}; border-radius: ${radius}px; padding: ${padding}px; word-wrap: break-word; margin: -10px -10px -15px;">`;
+    if (title) popupHtml += titleHtml;
+    if (address) popupHtml += addressHtml;
+    popupHtml += "</div>";
+
+    return popupHtml;
   };
 }

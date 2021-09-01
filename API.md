@@ -41,7 +41,10 @@ DrawPoints utility function for adding points to a map based on coordinate data 
 ### Parameters
 
 - `sourceName` **[String][8]** A user defined name used for determining the maplibre data source and the maplibre layers
-- `data` **([Array][13]\<Coordinate> | [Array][13]\<Feature>)** An array of coordinate data or GeoJSON Features used as the data source for maplibre
+- `data` **([Array][13]\<Coordinate> | [Array][13]\<Feature> | [Array][13]\<NamedLocation>)** An array of [coordinate](https://github.com/aws-amplify/maplibre-gl-js-amplify/blob/main/src/types.ts#L6) data, [GeoJSON Features][11], or [Named Locations](https://github.com/aws-amplify/maplibre-gl-js-amplify/blob/main/src/types.ts#L6) used as the data source for maplibre
+  - Coordinate data is an array of `Latitude` followed by `Longitude`
+  - GeoJSON Features should be an array of [Carmen GeoJSON Features][11]
+  - Named Locations is an array of objects containing the required field `coordinates` (same as the Coordinate data above) and the optional fields `title` and `address`. The `title` field will be bolded and on a separate line from the `address` field.
 - `map` **maplibre-gl-js-Map** A maplibre-gl-js [map][10] on which the points will be drawn
 - `options` **[Object][14]** An object containing options for changing the styles and features of the points rendered to the map, see the options for more details on available settings
 

@@ -1,5 +1,7 @@
 ## master
 
+- Updated `drawPoints` method to take new type `NamedLocation` data so that the title for each data point can be set
+
 ## 1.0.7
 
 ### Features / Improvements 🚀
