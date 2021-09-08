@@ -11,7 +11,7 @@
   "scripts": {
     "build": "npm run clean && npm run copy:files && npm run compile && npm run bundle:umd && npm run bundle:umd:min",
     "bundle:umd": "rollup dist/index.js --config",
-    "bundle:umd:min": "terser --ecma 6 --compress --mangle -o dist/maplibre-gl-js-amplify.umd.min.js -- dist/maplibre-gl-js-amplify.umd.js && gzip -9 -c dist/maplibre-gl-js-amplify.umd.min.js > dist/maplibre-gl-js-amplify.umd.min.js.gz",
+    "bundle:umd:min": "terser --ecma 6 --compress --mangle --source-map \"content='dist/maplibre-gl-js-amplify.umd.js.map'\" -o dist/maplibre-gl-js-amplify.umd.min.js -- dist/maplibre-gl-js-amplify.umd.js && gzip -9 -c dist/maplibre-gl-js-amplify.umd.min.js > dist/maplibre-gl-js-amplify.umd.min.js.gz",
     "clean": "rimraf dist",
     "compile": "npm run tsc",
     "copy:files": "mkdir -p dist/public/ && cp src/public/* dist/public/",
