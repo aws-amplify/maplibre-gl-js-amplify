@@ -1,6 +1,6 @@
 import { Feature } from "geojson";
 import { AnySourceImpl, GeoJSONSource } from "maplibre-gl";
-import { Coordinates } from "./types";
+import { Coordinates, NamedLocation } from "./types";
 
 export function isCoordinates(array: unknown): array is Coordinates {
   return (
@@ -14,6 +14,19 @@ export function isCoordinatesArray(array: unknown): array is Coordinates[] {
   return isCoordinates(array[0]);
 }
 
+export function isNamedLocation(object: unknown): object is NamedLocation {
+  return (
+    object &&
+    Array.isArray((object as NamedLocation).coordinates) &&
+    typeof (object as NamedLocation).coordinates[0] === "number" &&
+    typeof (object as NamedLocation).coordinates[1] === "number"
+  );
+}
+
+export function isNamedLocationArray(array: unknown): array is NamedLocation[] {
+  return isNamedLocation(array[0]);
+}
+
 export function isGeoJsonSource(
   source: AnySourceImpl
 ): source is GeoJSONSource {
@@ -24,7 +37,7 @@ export const strHasLength = (str: unknown): str is string =>
   typeof str === "string" && str.length > 0;
 
 export const getFeaturesFromData = (
-  data: Coordinates[] | Feature[]
+  data: Coordinates[] | Feature[] | NamedLocation[]
 ): Feature[] => {
   let features;
   if (isCoordinatesArray(data)) {
@@ -35,6 +48,14 @@ export const getFeaturesFromData = (
         properties: { place_name: `Coordinates,${point}` },
       };
     });
+  } else if (isNamedLocationArray(data)) {
+    features = data.map((location) => {
+      return {
+        type: "Feature",
+        geometry: { type: "Point", coordinates: location.coordinates },
+        properties: { title: location.title, address: location.address },
+      };
+    });
   } else {
     features = data;
   }
@@ -43,4 +64,4 @@ export const getFeaturesFromData = (
 
 export const urlEncodePeriods = (str: string): string => {
   return str.replace(/\./g, "%2E");
-}
+};

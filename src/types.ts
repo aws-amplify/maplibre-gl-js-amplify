@@ -5,6 +5,12 @@ export type Longitude = number;
 
 export type Coordinates = [Latitude, Longitude];
 
+export type NamedLocation = {
+  coordinates: Coordinates;
+  title?: string;
+  address?: string;
+};
+
 /**
  * @param {string} defaultColor Default: #5d8aff, color of a point
  * @param {string} defaultBorderColor Default: #fff, color of the points border
