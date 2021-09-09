@@ -9,7 +9,7 @@ export const LOCATION_MARKER =
 export const OLD_MARKER =
   "M30 16C30 18.5747 29.1348 21.3832 27.7111 24.2306C26.2947 27.0635 24.3846 29.8177 22.4383 32.2506C20.4964 34.678 18.5493 36.7473 17.0858 38.2108C16.6828 38.6138 16.3174 38.9699 16 39.2739C15.6826 38.9699 15.3172 38.6138 14.9142 38.2108C13.4507 36.7473 11.5036 34.678 9.56174 32.2506C7.61543 29.8177 5.70531 27.0635 4.28885 24.2306C2.86518 21.3832 2 18.5747 2 16C2 8.26801 8.26801 2 16 2C23.732 2 30 8.26801 30 16Z";
 
-// Map styles exist due to an issue with AWS Location Services not supporting the default set of maplibre fonts
+// Map styles exist due to an issue with Amazon Location Service not supporting the default set of maplibre fonts
 export enum MAP_STYLES {
   ESRI_TOPOGRAPHIC = "VectorEsriTopographic",
   ESRI_STREETS = "VectorEsriStreets",
