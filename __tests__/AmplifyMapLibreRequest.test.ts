@@ -44,7 +44,7 @@ describe("AmplifyMapLibreRequest", () => {
     );
   });
 
-  test("transformRequest queries amazon location services for Style requests and adds sigv4 auth", () => {
+  test("transformRequest queries Amazon Location Service for Style requests and adds sigv4 auth", () => {
     const mockCreds = {
       accessKeyId: "accessKeyId",
       sessionToken: "sessionTokenId",

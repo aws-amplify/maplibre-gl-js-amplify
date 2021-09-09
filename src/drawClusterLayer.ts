@@ -108,10 +108,10 @@ export function drawClusterLayer(
       "text-size": 24,
     };
 
-    const locationServicesStyle = mapStyle || Geo.getDefaultMap().style;
-    if (locationServicesStyle) {
+    const locationServiceStyle = mapStyle || Geo.getDefaultMap().style;
+    if (locationServiceStyle) {
       defaultLayoutOptions["text-font"] = [
-        FONT_DEFAULT_BY_STYLE[locationServicesStyle],
+        FONT_DEFAULT_BY_STYLE[locationServiceStyle],
       ];
     }
 

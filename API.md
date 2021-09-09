@@ -57,7 +57,7 @@ DrawPoints utility function for adding points to a map based on coordinate data 
     - `options.unclusteredOptions.popupRender` **function** Optional, overrides the [default popup render](https://github.com/aws-amplify/maplibre-gl-js-amplify/blob/main/src/popupRender.ts#L18) function with function that accepts a Carmen GeoJSON feature and returns an HTML string
     - See [UnclusteredOptions][16] for more details
 
-- `mapStyle` **MAP_STYLE** A required parameter that indicates the map style returned from Amazon Location services. This is used to determine the default fonts to be used with maplibre-gl-js. View existing styles [here][17]
+- `mapStyle` **MAP_STYLE** A required parameter that indicates the map style returned from Amazon Location Service. This is used to determine the default fonts to be used with maplibre-gl-js. View existing styles [here][17]
 
 Returns **DrawPointsOutput** output An object containing the string id's of the sources and layers used to draw the points to the map. This includes the sourceId, clusterLayerId, clusterSymbolLayerId, unclusteredLayerId.
 
