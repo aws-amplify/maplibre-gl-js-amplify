@@ -15,7 +15,7 @@ export function drawUnclusteredLayer(
 ): { unclusteredLayerId: string } {
   const unclusteredLayerId = `${sourceName}-layer-unclustered-point`;
 
-  const popupRender = getPopupRenderFunction(unclusteredLayerId, options);
+  const popupRender = options.popupRender ? options.popupRender : getPopupRenderFunction(unclusteredLayerId, options);
 
   addUnclusteredMarkerImages(map, options);
 
