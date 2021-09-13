@@ -83,8 +83,8 @@ workflows:
   integration_test:
     jobs:
       - build
-      - unit_test
-        requires:
+      - unit_test:
+          requires:
             - build
       - integ_setup:
           requires:
