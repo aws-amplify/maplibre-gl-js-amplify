@@ -30,13 +30,13 @@ jobs:
       - attach_workspace:
           at: /root
       - run: yarn test
-  
+
   integ_setup:
     executor: build-executor
     working_directory: ~/
     steps:
       - run:
-          name: 'Clone Amplify JS Samples repo, install cypress, install react samples authenticator and link amplify packages'
+          name: "Clone Amplify JS Samples repo, install cypress, install react samples authenticator and link amplify packages"
           command: |
             mkdir ~/.ssh/ && echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
             echo $SSH_HOST_PUBLIC_KEY >> ~/.ssh/known_hosts
@@ -53,17 +53,17 @@ jobs:
     working_directory: ~/
     steps:
       - run:
-          name: 'Change directory into build and run link'
+          name: "Change directory into build and run link"
           command: |
             cd ~/maplibre-gl-js-amplify/
             yarn link
       - run:
-          name: 'Link packages into samples staging root'
+          name: "Link packages into samples staging root"
           command: |
             cd ~/amplify-js-samples-staging
             yarn link maplibre-gl-js-amplify
       - run:
-          name: 'Run cypress test << parameters.spec >>'
+          name: "Run cypress test << parameters.spec >>"
           command: |
             cd ~/amplify-js-samples-staging
             yarn ci:test react geo display-map
@@ -84,9 +84,11 @@ workflows:
     jobs:
       - build
       - unit_test
-      - integ_setup
+      - integ_setup:
           filters:
             <<: *releasable_branches
-      - integ_test
+      - integ_test:
+          requires:
+            - integ_setup
           filters:
             <<: *releasable_branches
