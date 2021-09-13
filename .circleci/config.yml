@@ -8,11 +8,11 @@ executors:
           username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_ACCESS_TOKEN
     resource_class: large
+    working_directory: ~/maplibre-gl-js-amplify
 
 jobs:
   build:
     executor: build-executor
-    working_directory: ~/
     steps:
       - checkout
       - run: yarn
@@ -29,7 +29,6 @@ jobs:
 
   unit_test:
     executor: build-executor
-    working_directory: ~/maplibre-gl-js-amplify
     steps:
       - attach_workspace:
           at: /root
