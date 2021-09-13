@@ -63,7 +63,7 @@ jobs:
             cd ~/amplify-js-samples-staging
             yarn link maplibre-gl-js-amplify
       - run:
-          name: "Run cypress test << parameters.spec >>"
+          name: "Run cypress test"
           command: |
             cd ~/amplify-js-samples-staging
             yarn ci:test react geo display-map
