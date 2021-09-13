@@ -84,11 +84,16 @@ workflows:
     jobs:
       - build
       - unit_test
+        requires:
+            - build
       - integ_setup:
+          requires:
+            - build
           filters:
             <<: *releasable_branches
       - integ_test:
           requires:
+            - build
             - integ_setup
           filters:
             <<: *releasable_branches
