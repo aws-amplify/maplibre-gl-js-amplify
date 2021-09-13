@@ -55,6 +55,8 @@ jobs:
     executor: build-executor
     working_directory: ~/
     steps:
+      - attach_workspace:
+          at: /root
       - run:
           name: "Change directory into build and run link"
           command: |
