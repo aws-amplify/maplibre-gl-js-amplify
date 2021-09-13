@@ -12,12 +12,16 @@ executors:
 jobs:
   build:
     executor: build-executor
-    working_directory: ~/maplibre-gl-js-amplify
+    working_directory: ~/
     steps:
-      - checkout # check out the code in the project directory
+      - checkout
       - run: yarn
       - run: yarn build
       - run: yarn link
+      - save_cache:
+          key: amplify-maplibre-ssh-deps-{{ .Branch }}
+          paths:
+            - ~/.ssh
       - persist_to_workspace:
           root: /root
           paths:
