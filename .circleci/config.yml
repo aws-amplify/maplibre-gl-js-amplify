@@ -10,6 +10,14 @@ executors:
     resource_class: large
     working_directory: ~/maplibre-gl-js-amplify
 
+  integ-test-executor:
+    docker:
+      - image: cypress/included:5.2.0
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_ACCESS_TOKEN
+    resource_class: large
+
 jobs:
   build:
     executor: build-executor
@@ -46,17 +54,23 @@ jobs:
             git clone $AMPLIFY_JS_SAMPLES_STAGING_URL
             cd amplify-js-samples-staging
             yarn
+      - save_cache:
+          key: maplibre-gl-js-amplify-{{ .Branch }}-{{ checksum "amplify-js-samples-staging/yarn.lock" }}
+          paths:
+            - ~/.cache ## cache both yarn and Cypress
       - persist_to_workspace:
           root: /root
           paths:
             - amplify-js-samples-staging
 
   integ_test:
-    executor: build-executor
+    executor: integ-test-executor
     working_directory: ~/
     steps:
       - attach_workspace:
           at: /root
+      - restore_cache:
+          key: maplibre-gl-js-amplify-{{ .Branch }}-{{ checksum "amplify-js-samples-staging/yarn.lock" }}
       - run:
           name: "Change directory into build and run link"
           command: |
