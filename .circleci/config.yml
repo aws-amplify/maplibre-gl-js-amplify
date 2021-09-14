@@ -94,9 +94,7 @@ jobs:
 releasable_branches: &releasable_branches
   branches:
     only:
-      - release
       - main
-      - integ-test
 
 workflows:
   integration_test:
