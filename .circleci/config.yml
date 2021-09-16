@@ -106,7 +106,7 @@ jobs:
           paths:
             - amplify-js-samples-staging
 
-  integ_test:
+  integ_test_display:
     executor: integ-test-executor
     working_directory: ~/
     steps:
@@ -115,6 +115,11 @@ jobs:
           framework: react
           category: geo
           sample_name: display-map
+
+  integ_test_marker:
+    executor: integ-test-executor
+    working_directory: ~/
+    steps:
       - integ_test_js:
           test_name: "React Geo Marker Map"
           framework: react
@@ -125,6 +130,11 @@ jobs:
           framework: react
           category: geo
           sample_name: cluster-marker-map
+
+  integ_test_search:
+    executor: integ-test-executor
+    working_directory: ~/
+    steps:
       - integ_test_js:
           test_name: "React Geo Search Map"
           framework: react
@@ -154,7 +164,19 @@ workflows:
             - build
           filters:
             <<: *releasable_branches
-      - integ_test:
+      - integ_test_display:
+          requires:
+            - build
+            - integ_setup
+          filters:
+            <<: *releasable_branches
+      - integ_test_marker:
+          requires:
+            - build
+            - integ_setup
+          filters:
+            <<: *releasable_branches
+      - integ_test_search:
           requires:
             - build
             - integ_setup
