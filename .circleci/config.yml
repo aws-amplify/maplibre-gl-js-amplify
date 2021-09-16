@@ -18,6 +18,49 @@ executors:
           password: $DOCKERHUB_ACCESS_TOKEN
     resource_class: large
 
+commands:
+  integ_test_js:
+    parameters:
+      test_name:
+        type: string
+      framework:
+        type: string
+      category:
+        type: string
+      sample_name:
+        type: string
+      spec:
+        # optional - the script will use sample_name by default
+        type: string
+        default: ""
+      browser:
+        type: string
+        default: ""
+    steps:
+      - attach_workspace:
+          at: /root
+      - restore_cache:
+          key: maplibre-gl-js-amplify-{{ .Branch }}-{{ checksum "amplify-js-samples-staging/yarn.lock" }}
+      - run:
+          name: "Change directory into build and run link"
+          command: |
+            cd ~/maplibre-gl-js-amplify/
+            yarn link
+      - run:
+          name: "Link packages into samples staging root"
+          command: |
+            cd ~/amplify-js-samples-staging
+            yarn link maplibre-gl-js-amplify
+      - run:
+          name: "Run cypress test << parameters.test_name >>"
+          command: |
+            cd ~/amplify-js-samples-staging
+            yarn ci:test << parameters.framework >> << parameters.category >> << parameters.sample_name >> << parameters.spec >> << parameters.browser >>
+      - store_artifacts:
+          path: ~/amplify-js-samples-staging/cypress/videos
+      - store_artifacts:
+          path: ~/amplify-js-samples-staging/cypress/screenshots
+
 jobs:
   build:
     executor: build-executor
@@ -67,34 +110,17 @@ jobs:
     executor: integ-test-executor
     working_directory: ~/
     steps:
-      - attach_workspace:
-          at: /root
-      - restore_cache:
-          key: maplibre-gl-js-amplify-{{ .Branch }}-{{ checksum "amplify-js-samples-staging/yarn.lock" }}
-      - run:
-          name: "Change directory into build and run link"
-          command: |
-            cd ~/maplibre-gl-js-amplify/
-            yarn link
-      - run:
-          name: "Link packages into samples staging root"
-          command: |
-            cd ~/amplify-js-samples-staging
-            yarn link maplibre-gl-js-amplify
-      - run:
-          name: "Run cypress test"
-          command: |
-            cd ~/amplify-js-samples-staging
-            yarn ci:test react geo display-map
-      - store_artifacts:
-          path: ~/amplify-js-samples-staging/cypress/videos
-      - store_artifacts:
-          path: ~/amplify-js-samples-staging/cypress/screenshots
+      - integ_test_js:
+          test_name: "React Geo Display Map"
+          framework: react
+          category: geo
+          sample_name: display-map
 
 releasable_branches: &releasable_branches
   branches:
     only:
       - main
+      - integ-test
 
 workflows:
   integration_test:
