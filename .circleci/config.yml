@@ -19,6 +19,23 @@ executors:
     resource_class: large
 
 commands:
+  prepare_test_env:
+    steps:
+      - attach_workspace:
+          at: /root
+      - restore_cache:
+          key: maplibre-gl-js-amplify-{{ .Branch }}-{{ checksum "amplify-js-samples-staging/yarn.lock" }}
+      - run:
+          name: "Change directory into build and run link"
+          command: |
+            cd ~/maplibre-gl-js-amplify/
+            yarn link
+      - run:
+          name: "Link packages into samples staging root"
+          command: |
+            cd ~/amplify-js-samples-staging
+            yarn link maplibre-gl-js-amplify
+
   integ_test_js:
     parameters:
       test_name:
@@ -37,20 +54,6 @@ commands:
         type: string
         default: ""
     steps:
-      - attach_workspace:
-          at: /root
-      - restore_cache:
-          key: maplibre-gl-js-amplify-{{ .Branch }}-{{ checksum "amplify-js-samples-staging/yarn.lock" }}
-      - run:
-          name: "Change directory into build and run link"
-          command: |
-            cd ~/maplibre-gl-js-amplify/
-            yarn link
-      - run:
-          name: "Link packages into samples staging root"
-          command: |
-            cd ~/amplify-js-samples-staging
-            yarn link maplibre-gl-js-amplify
       - run:
           name: "Run cypress test << parameters.test_name >>"
           command: |
@@ -110,6 +113,7 @@ jobs:
     executor: integ-test-executor
     working_directory: ~/
     steps:
+      - prepare_test_env
       - integ_test_js:
           test_name: "React Geo Display Map"
           framework: react
@@ -120,6 +124,7 @@ jobs:
     executor: integ-test-executor
     working_directory: ~/
     steps:
+      - prepare_test_env
       - integ_test_js:
           test_name: "React Geo Marker Map"
           framework: react
@@ -135,6 +140,7 @@ jobs:
     executor: integ-test-executor
     working_directory: ~/
     steps:
+      - prepare_test_env
       - integ_test_js:
           test_name: "React Geo Search Map"
           framework: react
