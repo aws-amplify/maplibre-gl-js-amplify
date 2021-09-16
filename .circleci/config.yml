@@ -115,6 +115,26 @@ jobs:
           framework: react
           category: geo
           sample_name: display-map
+      - integ_test_js:
+          test_name: "React Geo Marker Map"
+          framework: react
+          category: geo
+          sample_name: marker-map
+      - integ_test_js:
+          test_name: "React Geo Cluster Marker Map"
+          framework: react
+          category: geo
+          sample_name: cluster-marker-map
+      - integ_test_js:
+          test_name: "React Geo Search Map"
+          framework: react
+          category: geo
+          sample_name: search-map
+      - integ_test_js:
+          test_name: "React Geo Search Outside Map"
+          framework: react
+          category: geo
+          sample_name: search-outside-map
 
 releasable_branches: &releasable_branches
   branches:
