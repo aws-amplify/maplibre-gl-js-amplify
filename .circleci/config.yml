@@ -99,6 +99,8 @@ jobs:
             echo $SSH_HOST_PUBLIC_KEY >> ~/.ssh/known_hosts
             git clone $AMPLIFY_JS_SAMPLES_STAGING_URL
             cd amplify-js-samples-staging
+            git fetch
+            git checkout geo-integ-update
             yarn
       - save_cache:
           key: maplibre-gl-js-amplify-{{ .Branch }}-{{ checksum "amplify-js-samples-staging/yarn.lock" }}
@@ -172,19 +174,16 @@ workflows:
             <<: *releasable_branches
       - integ_test_display:
           requires:
-            - build
             - integ_setup
           filters:
             <<: *releasable_branches
       - integ_test_marker:
           requires:
-            - build
             - integ_setup
           filters:
             <<: *releasable_branches
       - integ_test_search:
           requires:
-            - build
             - integ_setup
           filters:
             <<: *releasable_branches
