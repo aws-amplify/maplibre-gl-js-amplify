@@ -1,14 +1,189 @@
 version: 2.1
-jobs:
-  build:
+
+executors:
+  build-executor:
     docker:
       - image: cypress/base:12
         auth:
-          username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD # context / project UI env-var reference
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_ACCESS_TOKEN
+    resource_class: large
     working_directory: ~/maplibre-gl-js-amplify
+
+  integ-test-executor:
+    docker:
+      - image: cypress/included:5.2.0
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_ACCESS_TOKEN
+    resource_class: large
+
+commands:
+  prepare_test_env:
     steps:
-      - checkout # check out the code in the project directory
+      - attach_workspace:
+          at: /root
+      - restore_cache:
+          key: maplibre-gl-js-amplify-{{ .Branch }}-{{ checksum "amplify-js-samples-staging/yarn.lock" }}
+      - run:
+          name: "Change directory into build and run link"
+          command: |
+            cd ~/maplibre-gl-js-amplify/
+            yarn link
+      - run:
+          name: "Link packages into samples staging root"
+          command: |
+            cd ~/amplify-js-samples-staging
+            yarn link maplibre-gl-js-amplify
+
+  integ_test_js:
+    parameters:
+      test_name:
+        type: string
+      framework:
+        type: string
+      category:
+        type: string
+      sample_name:
+        type: string
+      spec:
+        # optional - the script will use sample_name by default
+        type: string
+        default: ""
+      browser:
+        type: string
+        default: ""
+    steps:
+      - run:
+          name: "Run cypress test << parameters.test_name >>"
+          command: |
+            cd ~/amplify-js-samples-staging
+            yarn ci:test << parameters.framework >> << parameters.category >> << parameters.sample_name >> << parameters.spec >> << parameters.browser >>
+      - store_artifacts:
+          path: ~/amplify-js-samples-staging/cypress/videos
+      - store_artifacts:
+          path: ~/amplify-js-samples-staging/cypress/screenshots
+
+jobs:
+  build:
+    executor: build-executor
+    steps:
+      - checkout
       - run: yarn
       - run: yarn build
+      - run: yarn link
+      - save_cache:
+          key: amplify-maplibre-ssh-deps-{{ .Branch }}
+          paths:
+            - ~/.ssh
+      - persist_to_workspace:
+          root: /root
+          paths:
+            - maplibre-gl-js-amplify
+
+  unit_test:
+    executor: build-executor
+    steps:
+      - attach_workspace:
+          at: /root
       - run: yarn test
+
+  integ_setup:
+    executor: build-executor
+    working_directory: ~/
+    steps:
+      - run:
+          name: "Clone Amplify JS Samples repo, install cypress, install react samples authenticator and link amplify packages"
+          command: |
+            mkdir ~/.ssh/ && echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
+            echo $SSH_HOST_PUBLIC_KEY >> ~/.ssh/known_hosts
+            git clone $AMPLIFY_JS_SAMPLES_STAGING_URL
+            cd amplify-js-samples-staging
+            git fetch
+            git checkout geo-integ-update
+            yarn
+      - save_cache:
+          key: maplibre-gl-js-amplify-{{ .Branch }}-{{ checksum "amplify-js-samples-staging/yarn.lock" }}
+          paths:
+            - ~/.cache ## cache both yarn and Cypress
+      - persist_to_workspace:
+          root: /root
+          paths:
+            - amplify-js-samples-staging
+
+  integ_test_display:
+    executor: integ-test-executor
+    working_directory: ~/
+    steps:
+      - prepare_test_env
+      - integ_test_js:
+          test_name: "React Geo Display Map"
+          framework: react
+          category: geo
+          sample_name: display-map
+
+  integ_test_marker:
+    executor: integ-test-executor
+    working_directory: ~/
+    steps:
+      - prepare_test_env
+      - integ_test_js:
+          test_name: "React Geo Marker Map"
+          framework: react
+          category: geo
+          sample_name: marker-map
+      - integ_test_js:
+          test_name: "React Geo Cluster Marker Map"
+          framework: react
+          category: geo
+          sample_name: cluster-marker-map
+
+  integ_test_search:
+    executor: integ-test-executor
+    working_directory: ~/
+    steps:
+      - prepare_test_env
+      - integ_test_js:
+          test_name: "React Geo Search Map"
+          framework: react
+          category: geo
+          sample_name: search-map
+      - integ_test_js:
+          test_name: "React Geo Search Outside Map"
+          framework: react
+          category: geo
+          sample_name: search-outside-map
+
+releasable_branches: &releasable_branches
+  branches:
+    only:
+      - main
+      - integ-test
+
+workflows:
+  integration_test:
+    jobs:
+      - build
+      - unit_test:
+          requires:
+            - build
+      - integ_setup:
+          requires:
+            - build
+          filters:
+            <<: *releasable_branches
+      - integ_test_display:
+          requires:
+            - integ_setup
+          filters:
+            <<: *releasable_branches
+      - integ_test_marker:
+          requires:
+            - integ_setup
+          filters:
+            <<: *releasable_branches
+      - integ_test_search:
+          requires:
+            - integ_setup
+          filters:
+            <<: *releasable_branches
