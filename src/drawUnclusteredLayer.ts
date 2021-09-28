@@ -14,8 +14,11 @@ export function drawUnclusteredLayer(
   { showMarkerPopup = false, ...options }: UnclusteredOptions
 ): { unclusteredLayerId: string } {
   const unclusteredLayerId = `${sourceName}-layer-unclustered-point`;
+  let selectedId = null;
 
-  const popupRender = options.popupRender ? options.popupRender : getPopupRenderFunction(unclusteredLayerId, options);
+  const popupRender = options.popupRender
+    ? options.popupRender
+    : getPopupRenderFunction(unclusteredLayerId, options);
 
   addUnclusteredMarkerImages(map, options);
 
@@ -43,16 +46,29 @@ export function drawUnclusteredLayer(
     }
   }
 
+  map.on("click", function () {
+    if (selectedId !== null) {
+      map.setLayoutProperty(
+        unclusteredLayerId,
+        "icon-image",
+        "inactive-marker"
+      );
+      selectedId = null;
+    }
+  });
+
   /*
    * Set active state on markers when clicked
    */
   map.on("click", unclusteredLayerId, function (e) {
     if (typeof options.onClick === "function") options.onClick(e);
 
+    selectedId = e.features[0].id;
+
     map.setLayoutProperty(unclusteredLayerId, "icon-image", [
       "match",
       ["id"],
-      e.features[0].id, // check if the clicked id matches
+      selectedId, // check if the clicked id matches
       "active-marker", //image when id is the clicked feature id
       "inactive-marker", // default
     ]);
