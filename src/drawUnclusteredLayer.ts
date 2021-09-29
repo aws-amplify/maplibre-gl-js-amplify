@@ -15,7 +15,9 @@ export function drawUnclusteredLayer(
 ): { unclusteredLayerId: string } {
   const unclusteredLayerId = `${sourceName}-layer-unclustered-point`;
 
-  const popupRender = options.popupRender ? options.popupRender : getPopupRenderFunction(unclusteredLayerId, options);
+  const popupRender = options.popupRender
+    ? options.popupRender
+    : getPopupRenderFunction(unclusteredLayerId, options);
 
   addUnclusteredMarkerImages(map, options);
 
@@ -70,6 +72,20 @@ export function drawUnclusteredLayer(
           .addTo(map);
       }
     }
+  });
+
+  /*
+   * Set cursor style to pointer when mousing over point layer
+   */
+  map.on("mouseover", unclusteredLayerId, function () {
+    map.getCanvas().style.cursor = "pointer";
+  });
+
+  /*
+   * Reset cursor style when the point layer
+   */
+  map.on("mouseleave", unclusteredLayerId, () => {
+    map.getCanvas().style.cursor = "";
   });
 
   return { unclusteredLayerId };
