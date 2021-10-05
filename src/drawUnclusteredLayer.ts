@@ -96,6 +96,20 @@ export function drawUnclusteredLayer(
     }
   });
 
+  /*
+   * Set cursor style to pointer when mousing over point layer
+   */
+  map.on("mouseover", unclusteredLayerId, function () {
+    map.getCanvas().style.cursor = "pointer";
+  });
+
+  /*
+   * Reset cursor style when the point layer
+   */
+  map.on("mouseleave", unclusteredLayerId, () => {
+    map.getCanvas().style.cursor = "";
+  });
+
   return { unclusteredLayerId };
 }
 
