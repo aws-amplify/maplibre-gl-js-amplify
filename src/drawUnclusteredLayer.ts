@@ -14,6 +14,18 @@ export function drawUnclusteredLayer(
   { showMarkerPopup = false, ...options }: UnclusteredOptions
 ): { unclusteredLayerId: string } {
   const unclusteredLayerId = `${sourceName}-layer-unclustered-point`;
+  let selectedId = null;
+
+  function deselectPoint() {
+    if (selectedId !== null) {
+      map.setLayoutProperty(
+        unclusteredLayerId,
+        "icon-image",
+        "inactive-marker"
+      );
+      selectedId = null;
+    }
+  }
 
   const popupRender = options.popupRender
     ? options.popupRender
@@ -45,16 +57,22 @@ export function drawUnclusteredLayer(
     }
   }
 
+  map.on("click", function () {
+    deselectPoint();
+  });
+
   /*
    * Set active state on markers when clicked
    */
   map.on("click", unclusteredLayerId, function (e) {
     if (typeof options.onClick === "function") options.onClick(e);
 
+    selectedId = e.features[0].id;
+
     map.setLayoutProperty(unclusteredLayerId, "icon-image", [
       "match",
       ["id"],
-      e.features[0].id, // check if the clicked id matches
+      selectedId, // check if the clicked id matches
       "active-marker", //image when id is the clicked feature id
       "inactive-marker", // default
     ]);
@@ -65,11 +83,15 @@ export function drawUnclusteredLayer(
       const coordinates = (selectedFeature.geometry as Point).coordinates;
 
       if (isCoordinates(coordinates)) {
-        new Popup()
+        const popup = new Popup()
           .setLngLat(coordinates as Coordinates)
           .setHTML(popupRender(selectedFeature))
           .setOffset(15)
           .addTo(map);
+
+        popup.on("close", function () {
+          if (selectedId === selectedFeature.id) deselectPoint();
+        });
       }
     }
   });
