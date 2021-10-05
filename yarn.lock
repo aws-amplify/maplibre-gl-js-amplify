@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@aws-amplify/core@4.2.1-geo.20+c54d3dcdd", "@aws-amplify/core@geo":
-  version "4.2.1-geo.20"
-  resolved "https://registry.npmjs.org/@aws-amplify/core/-/core-4.2.1-geo.20.tgz#2b081582fd39879181873ad4706b2c0f0dccde38"
-  integrity sha512-D9b3vY2OmxSh2zg/D4B2re26ZQf0Z2iP2w3/FTdxafoXp8KLgjs38f49QbOrBfZwgm9GNL9GjNvFA3JSqZGipA==
+"@aws-amplify/core@4.3.1", "@aws-amplify/core@^4.3.1":
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/@aws-amplify/core/-/core-4.3.1.tgz#8cb0e3d5ac4942a1410c600e74f8904f4cb328d6"
+  integrity sha512-qYQIs95F/AdBGbUFNXzKp3nAFPpQtivvBGOFQa+plqK/mzV23fh33BxRh/Hc3A+bcfpM8lBDZbIn9LPVRj3VLA==
   dependencies:
     "@aws-crypto/sha256-js" "1.0.0-alpha.0"
     "@aws-sdk/client-cloudwatch-logs" "3.6.1"
@@ -16,12 +16,12 @@
     universal-cookie "^4.0.4"
     zen-observable-ts "0.8.19"
 
-"@aws-amplify/geo@geo":
-  version "0.0.2-geo.6654"
-  resolved "https://registry.npmjs.org/@aws-amplify/geo/-/geo-0.0.2-geo.6654.tgz#41a137065fb7a5b2479ca07f30af8673f1c0d270"
-  integrity sha512-2nCYPGyA1Src7n5dnGx/OM7ZieIuz8VBPyrJ0z339mbdZNWEkoqf3P3WHlMexHYNjR0GjAJO5O/GWHzXxBtJpg==
+"@aws-amplify/geo@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@aws-amplify/geo/-/geo-1.1.1.tgz#caa00c5a6779f2a923d3550e8546e812dc63896a"
+  integrity sha512-sasyp6l+/ZMXcCVWaKyEZiV7hGGzTQV9D3dbU1iqi6/BHEFRfJxnubt3P39XaR672SQ1e8qhFDx36TiL5mePcA==
   dependencies:
-    "@aws-amplify/core" "4.2.1-geo.20+c54d3dcdd"
+    "@aws-amplify/core" "4.3.1"
     "@aws-sdk/client-location" "3.22.0"
     camelcase-keys "6.2.2"
 
