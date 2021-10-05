@@ -81,6 +81,7 @@ export function drawPoints(
     },
     cluster: showCluster,
     clusterMaxZoom: clusterOptions.clusterMaxZoom ?? 14,
+    clusterRadius: clusterOptions.smCircleSize ?? 60,
     generateId: true,
   });
 
