@@ -59,4 +59,19 @@ describe("AmplifyMapLibreRequest", () => {
     expect(request.url).toContain("X-Amz-Signature");
     expect(request.url).toContain("x-amz-user-agent");
   });
+
+  test("transformRequest throws an error when region is undefined", () => {
+    const mockCreds = {
+      accessKeyId: "accessKeyId",
+      sessionToken: "sessionTokenId",
+      secretAccessKey: "secretAccessKey",
+      identityId: "identityId",
+      authenticated: true,
+      expiration: new Date(),
+    };
+    const amplifyRequest = new AmplifyMapLibreRequest(mockCreds, undefined);
+    expect(() =>
+      amplifyRequest.transformRequest("amazon.com", "Style")
+    ).toThrow();
+  });
 });
