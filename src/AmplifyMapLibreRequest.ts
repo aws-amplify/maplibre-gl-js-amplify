@@ -101,7 +101,7 @@ export default class AmplifyMapLibreRequest {
     if (resourceType === "Style" && !url.includes("://")) {
       if (this.region == undefined) {
         throw new Error(
-          "AWS region for map is undefined. Please verify that the region is set in aws-exports file or that you are providing an AWS region parameter to createMapLibreMap"
+          "AWS region for map is undefined. Please verify that the region is set in aws-exports.js or that you are providing an AWS region parameter to createMap"
         );
       }
       url = `https://maps.geo.${this.region}.amazonaws.com/maps/v0/maps/${url}/style-descriptor`;
