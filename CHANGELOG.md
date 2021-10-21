@@ -1,5 +1,7 @@
 ## master
 
+- Added error messaging when region is undefined when creating Amazon Location Service URLs
+
 ## 1.1.0
 
 ### Features / Improvements 🚀
