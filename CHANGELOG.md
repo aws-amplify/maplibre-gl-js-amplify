@@ -1,6 +1,16 @@
 ## master
 
-- Added error messaging when region is undefined when creating Amazon Location Service URLs
+## 1.1.1
+
+### Features / Improvements 🚀
+
+### Bug fixes 🐛
+
+- Added error messaging when region is undefined [#59](https://github.com/aws-amplify/maplibre-gl-js-amplify/pull/59)
+- Fix cluster distances to match cluster circle size [#56](https://github.com/aws-amplify/maplibre-gl-js-amplify/pull/56)
+- Deselecting Point by Clicking outside map [#54](https://github.com/aws-amplify/maplibre-gl-js-amplify/pull/54)
+- update mouse pointer when mousing over marker layer [#55](https://github.com/aws-amplify/maplibre-gl-js-amplify/pull/55)
+- Allow popupRender to work properly [#50](https://github.com/aws-amplify/maplibre-gl-js-amplify/pull/50)
 
 ## 1.1.0
 
