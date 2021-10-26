@@ -63,6 +63,7 @@ export function createAmplifyGeocoder(options): unknown {
   return new MaplibreGeocoder(AmplifyGeocoderAPI, {
     maplibregl: maplibregl,
     showResultMarkers: { element: createDefaultIcon() },
+    marker: { element: createDefaultIcon() },
     ...options,
   });
 }
