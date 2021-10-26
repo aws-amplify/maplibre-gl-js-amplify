@@ -1,6 +1,6 @@
 import { Feature } from "geojson";
 import { AnySourceImpl, GeoJSONSource } from "maplibre-gl";
-import { Coordinates, NamedLocation } from "./types";
+import { Coordinates, NamedLocation, Geofence } from "./types";
 
 export function isCoordinates(array: unknown): array is Coordinates {
   return (
@@ -25,6 +25,18 @@ export function isNamedLocation(object: unknown): object is NamedLocation {
 
 export function isNamedLocationArray(array: unknown): array is NamedLocation[] {
   return isNamedLocation(array[0]);
+}
+
+export function isGeofence(object: unknown): object is Geofence {
+  return (
+    object &&
+    typeof (object as Geofence).id === "string" &&
+    typeof (object as Geofence).geometry === "object"
+  );
+}
+
+export function isGeofenceArray(array: unknown): array is Geofence[] {
+  return Array.isArray(array) && isGeofence(array[0]);
 }
 
 export function isGeoJsonSource(
