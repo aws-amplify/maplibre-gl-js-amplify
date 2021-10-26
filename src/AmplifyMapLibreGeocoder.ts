@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Geo } from "@aws-amplify/geo";
 import MaplibreGeocoder from "@maplibre/maplibre-gl-geocoder";
-import maplibregl from "maplibre-gl";
+import maplibregl, { IControl } from "maplibre-gl";
 import { createDefaultIcon } from "./createDefaultIcon";
 
 export const AmplifyGeocoderAPI = {
@@ -59,7 +60,8 @@ export const AmplifyGeocoderAPI = {
   },
 };
 
-export function createAmplifyGeocoder(options): unknown {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function createAmplifyGeocoder(options?: any): IControl {
   return new MaplibreGeocoder(AmplifyGeocoderAPI, {
     maplibregl: maplibregl,
     showResultMarkers: { element: createDefaultIcon() },
