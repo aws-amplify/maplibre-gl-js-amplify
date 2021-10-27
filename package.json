@@ -2,22 +2,24 @@
   "name": "maplibre-gl-js-amplify",
   "version": "1.1.1",
   "description": "MapLibre Plugin to Support Amplify Geo Integration",
-  "main": "dist/index.js",
+  "main": "./lib/cjs/index.js",
+  "module": "./lib/esm/index.js",
   "unpkg": "dist/maplibre-gl-js-amplify.umd.min.js",
-  "types": "dist/index.d.ts",
+  "types": "lib/esm/index.d.ts",
   "files": [
-    "/dist"
+    "/dist",
+    "/lib"
   ],
   "scripts": {
     "build": "npm run clean && npm run copy:files && npm run compile && npm run bundle:umd && npm run bundle:umd:min",
-    "bundle:umd": "rollup dist/index.js --config",
+    "bundle:umd": "rollup lib/esm/index.js --config",
     "bundle:umd:min": "terser --ecma 6 --compress --mangle --source-map \"content='dist/maplibre-gl-js-amplify.umd.js.map'\" -o dist/maplibre-gl-js-amplify.umd.min.js -- dist/maplibre-gl-js-amplify.umd.js && gzip -9 -c dist/maplibre-gl-js-amplify.umd.min.js > dist/maplibre-gl-js-amplify.umd.min.js.gz",
-    "clean": "rimraf dist",
+    "clean": "rimraf dist && rimraf lib",
     "compile": "npm run tsc",
     "copy:files": "mkdir -p dist/public/ && cp src/public/* dist/public/",
     "prepublish": "npm run build",
     "test": "jest",
-    "tsc": "tsc"
+    "tsc": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json"
   },
   "repository": {
     "type": "git",
@@ -35,6 +37,7 @@
   "devDependencies": {
     "@aws-amplify/core": "^4.3.1",
     "@aws-amplify/geo": "^1.1.1",
+    "@maplibre/maplibre-gl-geocoder": "^1.1.0",
     "@types/geojson": "^7946.0.7",
     "@types/jest": "^26.0.23",
     "@types/maplibre-gl": "^1.13.1",
