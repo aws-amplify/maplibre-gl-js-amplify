@@ -1,5 +1,14 @@
 ## master
 
+## 1.1.2
+
+### Features / Improvements 🚀
+
+### Bug fixes 🐛
+
+- Update types for createAmplifyGeocoder [#63](https://github.com/aws-amplify/maplibre-gl-js-amplify/pull/63)
+- Add cjs modules [#64](https://github.com/aws-amplify/maplibre-gl-js-amplify/pull/64)
+
 ## 1.1.1
 
 ### Features / Improvements 🚀
