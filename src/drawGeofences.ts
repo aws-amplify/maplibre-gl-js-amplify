@@ -2,6 +2,11 @@ import { Feature } from "geojson";
 import { Map as maplibreMap } from "maplibre-gl";
 import { isGeofence } from "./utils";
 import { Geofence, Polygon } from "./types";
+import { COLOR_BLACK } from "./constants";
+
+const FILL_OPACITY = 0.3;
+const BORDER_OPACITY = 0.5;
+const BORDER_WIDTH = 4;
 
 /**
  */
@@ -10,6 +15,7 @@ export interface DrawGeofencesOptions {
   fillOpacity?: number;
   borderColor?: string;
   borderWidth?: number;
+  borderOpacity?: number;
 }
 
 export interface DrawGeofencesOutput {
@@ -68,8 +74,8 @@ export function drawGeofences(
       visibility: "visible",
     },
     paint: {
-      "fill-color": "black", // black color fill
-      "fill-opacity": 0.3,
+      "fill-color": options.fillColor ?? COLOR_BLACK,
+      "fill-opacity": options.fillOpacity ?? FILL_OPACITY,
     },
   });
 
@@ -83,9 +89,9 @@ export function drawGeofences(
       visibility: "visible",
     },
     paint: {
-      "line-color": "black",
-      "line-opacity": 0.5,
-      "line-width": 4,
+      "line-color": options.borderColor ?? COLOR_BLACK,
+      "line-opacity": options.borderOpacity ?? BORDER_OPACITY,
+      "line-width": options.borderWidth ?? BORDER_WIDTH,
     },
   });
 
