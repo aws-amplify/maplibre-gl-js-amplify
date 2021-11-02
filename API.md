@@ -2,15 +2,27 @@
 
 ### Table of Contents
 
+- [createMap](#createmap)
 - [AmplifyMapLibreRequest][1]
-  - [Parameters][2]
-  - [transformRequest][3]
-    - [Parameters][4]
 - [drawPoints][5]
-  - [Parameters][6]
-  - [Properties][7]
 - [AmplifyGeocoderAPI](#amplifygeocoderapi)
 - [createDefaultIcon](#createdefaulticon)
+- [drawGeofences](#drawgeofences)
+
+## createMap
+
+A utility function for creating a MapLibre Map object with an AmplifyMapLibreRequest object hooked into the map's `requestTransformer`
+
+### Create Map Parameters
+
+- `options` **[Object][14]** An object containing options for `createMap`. Extends MapLibre constructor options and select options are listed below. For a full list of constructor options check the MapLibre docs outlined [here](https://maplibre.org/maplibre-gl-js-docs/api/map/)
+  - `options.mapConstructor` **[MaplibreMap](https://maplibre.org/maplibre-gl-js-docs/api/map/)** A map constructor which should be similar in shape to a MapLibre map. This argument allows you to specify at runtime whether the map should be constructed with MapLibre, MapBox, or any other forks of similar projects (optional, default: the peer dependency MapLibre version installed in your project)
+  - `options.region` **[String][8]** AWS region (optional, default: selects the default region set in `aws-exports` or set in the `Amplify.configure` method)
+  - `options.container` **[String][8]** MapLibre option for an HTML element in which MapLibre will render the map, or the element's string id
+  - `options.center` **[Array][13]\<Coordinate>** MapLibre option for the inital geographical centerpoint of the map. If it is not specified in the style, either, it will default to [0, 0] Note: Mapbox GL uses longitude, latitude coordinate order (as opposed to latitude, longitude) to match GeoJSON.
+  - `options.zoom` **[Array][13]\<Coordinate>** MapLibre option for the initial zoom level of the map. If zoom is not specified in the constructor options, Mapbox GL JS will look for it in the map's style object. If it is not specified in the style, either, it will default to 0 .
+
+Returns **[Promise\<MapLibreMap>](https://maplibre.org/maplibre-gl-js-docs/api/map/)** Promise object containing a MapLibre map object
 
 ## AmplifyMapLibreRequest
 
@@ -88,6 +100,27 @@ const geocoder = new MaplibreGeocoder(AmplifyGeocoderAPI, {
 });
 map.addControl(geocoder);
 ```
+
+## drawGeofences
+
+drawGeofences utility function for polygonal shapes geofences to a map based on geojson coordinate data or Geofences objects. Includes limited options for customizing the styles of the border and fill of the polygons.
+
+### Parameters
+
+- `sourceName` **[String][8]** A user defined name prefix used for determining the maplibre data source and the maplibre layers
+- `data` **([Array][13]\<Polygon> | [Array][13]\<Geofence> )** An array of [polygon](https://github.com/aws-amplify/maplibre-gl-js-amplify/blob/main/src/types.ts#L9) data or [Geofence](https://github.com/aws-amplify/maplibre-gl-js-amplify/blob/main/src/types.ts#L11) used as the data source for maplibre
+  - Polygon data is an array of [LinearRing](Array of 4 or more coordinates, where the first and last coordinate are the same to form a closed boundary) where Linear Rings are an array of 4 or more coordinates, where the first and last coordinate are the same to form a closed boundary
+  - Geofences are the object shape of values returned by Amplify Geo or Amazon Location Service
+- `map` **maplibre-gl-js-Map** A maplibre-gl-js [map][10] on which the points will be drawn
+- `options` **[Object][14]** An object containing options for changing the styles and features of the geofences rendered to the map, see the options below for more details on available settings
+
+  - `options.fillColor` **[String][8]** Determines the color to use to fill in the interior of the polygon (optional, default `black`)
+  - `options.fillOpacity` **number** Opacity value between 0 and 1.0 for the interior of the polygon (optional, default `0.3`)
+  - `options.borderColor` **[String][8]** Color of the border line around the polygon (optional, default `black`)
+  - `options.borderWidth` **number** Pixel width of the border (optional, default `4`)
+  - `options.borderOpacity` **number** Opacity value between 0 and 1.0 for the interior of the polygon (optional, default `0.5`)
+
+Returns **DrawGeofencesOutput** output An object containing the string id's of the sources and layers used to draw the points to the map. This includes the sourceId, outlineLayerId, and fillLayerId. Also returns utility functions `show()` and `hide()` which toggle on or off the visibility of the geofences.
 
 [1]: #amplifymaplibrerequest
 [2]: #parameters
