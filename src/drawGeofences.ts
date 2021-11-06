@@ -1,4 +1,4 @@
-import { Feature } from "geojson";
+import { Feature, GeoJsonProperties, Geometry } from "geojson";
 import { Map as maplibreMap } from "maplibre-gl";
 import { isGeofence } from "./utils";
 import { Geofence, Polygon } from "./types";
@@ -16,6 +16,7 @@ export interface DrawGeofencesOptions {
   borderColor?: string;
   borderWidth?: number;
   borderOpacity?: number;
+  visible?: boolean; // default true
 }
 
 export interface DrawGeofencesOutput {
@@ -46,7 +47,7 @@ export function drawGeofences(
   /*
    * Convert data passed in as coordinates into features
    */
-  const features = getGeofenceFeaturesFromData(data);
+  const features = getGeofenceFeatureArrayFromData(data);
 
   /*
    * Data source for features
@@ -61,6 +62,8 @@ export function drawGeofences(
     generateId: true,
   });
 
+  const initialVisiblity = options.visible ?? true ? "visible" : "none";
+
   /*
    * Draw ui layers for source data
    */
@@ -71,7 +74,7 @@ export function drawGeofences(
     type: "fill",
     source: sourceId, // reference the data source
     layout: {
-      visibility: "visible",
+      visibility: initialVisiblity,
     },
     paint: {
       "fill-color": options.fillColor ?? COLOR_BLACK,
@@ -86,7 +89,7 @@ export function drawGeofences(
     type: "line",
     source: sourceId,
     layout: {
-      visibility: "visible",
+      visibility: initialVisiblity,
     },
     paint: {
       "line-color": options.borderColor ?? COLOR_BLACK,
@@ -110,19 +113,25 @@ export function drawGeofences(
   return { sourceId, outlineLayerId, fillLayerId, show, hide };
 }
 
-const getGeofenceFeaturesFromData = (
+export const getGeofenceFeatureArrayFromData = (
   data: Geofence[] | Polygon[]
-): Feature[] => {
+): Array<Feature<Geometry, GeoJsonProperties>> => {
   const features: any = data.map((item: Geofence | Polygon) => {
     const coordinates = isGeofence(item) ? item.geometry.polygon : item;
-    return {
-      type: "Feature",
-      geometry: {
-        type: "Polygon",
-        coordinates,
-      },
-      properties: {},
-    };
+    return getGeofenceFeatureFromData(coordinates);
   });
   return features;
+};
+
+export const getGeofenceFeatureFromData = (
+  polygon: Polygon
+): Feature<Geometry, GeoJsonProperties> => {
+  return {
+    type: "Feature",
+    geometry: {
+      type: "Polygon",
+      coordinates: polygon,
+    },
+    properties: {},
+  };
 };
