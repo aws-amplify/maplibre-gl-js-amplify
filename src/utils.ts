@@ -1,6 +1,9 @@
+import along from "@turf/along";
+import distance from "@turf/distance";
+import { lineString, point } from "@turf/helpers";
 import { Feature } from "geojson";
-import { AnySourceImpl, GeoJSONSource } from "maplibre-gl";
-import { Coordinates, NamedLocation, Geofence } from "./types";
+import { AnySourceImpl, GeoJSONSource, LngLatBounds } from "maplibre-gl";
+import { Coordinates, NamedLocation, Geofence, Polygon } from "./types";
 
 export function isCoordinates(array: unknown): array is Coordinates {
   return (
