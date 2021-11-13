@@ -1,10 +1,41 @@
 import along from "@turf/along";
 import distance from "@turf/distance";
 import { lineString, point } from "@turf/helpers";
+import { Feature, GeoJsonProperties, Geometry } from "geojson";
 import { LngLatBounds } from "maplibre-gl";
-import { Coordinates, Polygon } from "./types";
+import { Coordinates, Geofence, Polygon } from "./types";
+import { isGeofenceArray } from "./utils";
 
 const GEOFENCE_ID_REGEX = /^[-._\w]+$/;
+
+export const getGeofenceFeatureArray = (
+  data: Geofence[] | Polygon[]
+): Feature<Geometry, GeoJsonProperties> => {
+  const coordinates = isGeofenceArray(data)
+    ? data.map((geofence) => geofence.geometry.polygon)
+    : data;
+  return {
+    type: "Feature",
+    geometry: {
+      type: "MultiPolygon",
+      coordinates,
+    },
+    properties: {},
+  };
+};
+
+export const getGeofenceFeatureFromPolygon = (
+  polygon: Polygon
+): Feature<Geometry, GeoJsonProperties> => {
+  return {
+    type: "Feature",
+    geometry: {
+      type: "Polygon",
+      coordinates: polygon,
+    },
+    properties: {},
+  };
+};
 
 // Measures distance between the coordinate bounds and takes two points 1/4 from each coordinate to create a polygon
 export const getPolygonFromBounds = (bounds: LngLatBounds): Polygon => {
@@ -45,4 +76,11 @@ export const isValidGeofenceId = (
   loadedGeofences: any
 ): boolean => {
   return id.match(GEOFENCE_ID_REGEX) && !doesGeofenceExist(id, loadedGeofences);
+};
+
+export const isGeofenceDisplayed = (
+  id: string,
+  displayedGeofences: Geofence[]
+): boolean => {
+  return !!displayedGeofences.find((geofence) => geofence.id === id);
 };
