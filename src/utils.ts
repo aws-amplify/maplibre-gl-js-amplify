@@ -42,6 +42,14 @@ export function isGeofenceArray(array: unknown): array is Geofence[] {
   return Array.isArray(array) && isGeofence(array[0]);
 }
 
+export function isPolygon(object: unknown): object is Polygon {
+  return Array.isArray(object) && isCoordinatesArray((object as Polygon)[0]);
+}
+
+export function isPolygonArray(array: unknown): array is Polygon[] {
+  return Array.isArray(array) && isPolygon(array[0]);
+}
+
 export function isGeoJsonSource(
   source: AnySourceImpl
 ): source is GeoJSONSource {

@@ -1,15 +1,25 @@
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
-import { IControl, LngLatBounds, Map } from "maplibre-gl";
+import { IControl, Map } from "maplibre-gl";
 import {
   CircleMode,
   SimpleSelectMode,
   DirectMode,
 } from "mapbox-gl-draw-circle";
-import { drawGeofences, getGeofenceFeatureFromData } from "./drawGeofences";
+import { drawGeofences, DrawGeofencesOutput } from "./drawGeofences";
 import { Geofence } from "./types";
 import { Feature, Geometry } from "geojson";
 import { debounce } from "debounce";
-import { getPolygonFromBounds, isValidGeofenceId } from "./geofenceUtils";
+import {
+  getPolygonFromBounds,
+  isValidGeofenceId,
+  getGeofenceFeatureFromPolygon,
+  getGeofenceFeatureArray,
+} from "./geofenceUtils";
+import {
+  COLOR_HOVER,
+  GEOFENCE_COLOR,
+  GEOFENCE_BORDER_COLOR,
+} from "./constants";
 
 export interface AmplifyGeofenceControlOptions {
   geofenceCollectionId?: string;
@@ -33,9 +43,11 @@ export class AmplifyGeofenceControl {
       simple_select: SimpleSelectMode,
     },
   });
-  _loadedGeofences?: any;
-  _displayedGeofences?: [any?];
-  _editingGeofenceId?: any;
+  _loadedGeofences?: Record<string, Geofence>;
+  _displayedGeofences?: Geofence[];
+  _drawGeofencesOutput?: DrawGeofencesOutput;
+  _highlightedGeofenceOutput?: DrawGeofencesOutput;
+  _editingGeofenceId?: string;
 
   // HTML Element References
   _container?: HTMLElement;
@@ -48,9 +60,10 @@ export class AmplifyGeofenceControl {
   _polygonModeButton?: HTMLElement;
   _geofenceCircleButton?: HTMLElement;
   _geofenceCreateInput?: HTMLElement;
-  _geofenceListContainer?: HTMLElement;
+  _geofenceList?: HTMLElement;
   _addGeofenceContainer?: HTMLElement;
   _addGeofencebutton?: HTMLButtonElement;
+  _checkboxAll?: HTMLInputElement;
 
   constructor(options: AmplifyGeofenceControlOptions) {
     this.options = options;
@@ -59,12 +72,12 @@ export class AmplifyGeofenceControl {
     this._displayedGeofences = [];
     this._changeMode = this._changeMode.bind(this);
     this._createElement = this._createElement.bind(this);
-    this._renderGeofences = this._renderGeofences.bind(this);
     this._loadAllGeofences = this._loadAllGeofences.bind(this);
+    this._loadGeofence = this._loadGeofence.bind(this);
     this._enableMapboxDraw = this._enableMapboxDraw.bind(this);
     this._disableMapboxDraw = this._disableMapboxDraw.bind(this);
     this._renderEditButton = this._renderEditButton.bind(this);
-    this._renderItemAnchor = this._renderItemAnchor.bind(this);
+    this._renderListItem = this._renderListItem.bind(this);
     this._updateInputRadius = this._updateInputRadius.bind(this);
     this.saveGeofence = this.saveGeofence.bind(this);
   }
@@ -98,13 +111,38 @@ export class AmplifyGeofenceControl {
     this._createGeofenceListContainer();
     this._loadAllGeofences();
 
+    // Draw the geofences source to the map so we can update it on geofences load/creation
+    this._map.on(
+      "load",
+      function () {
+        this._drawGeofencesOutput = drawGeofences(
+          "displayedGeofences",
+          [],
+          this._map,
+          {
+            fillColor: GEOFENCE_COLOR,
+            borderColor: GEOFENCE_BORDER_COLOR,
+            borderOpacity: 1,
+          }
+        );
+        this._highlightedGeofenceOutput = drawGeofences(
+          "highlightedGeofence",
+          [],
+          this._map,
+          {
+            fillColor: GEOFENCE_COLOR,
+            borderColor: GEOFENCE_BORDER_COLOR,
+            borderOpacity: 1,
+            borderWidth: 6,
+          }
+        );
+      }.bind(this)
+    );
+
     return this._container;
   }
 
   saveGeofence(): void {
-    console.log(`Current editing geofenceID: ${this._editingGeofenceId}`);
-    console.log(this._map);
-    console.log(this._mapBoxDraw);
     console.log(
       "Saving a polygon " +
         (this._mapBoxDraw.getAll().features[0].geometry as any).coordinates
@@ -112,14 +150,15 @@ export class AmplifyGeofenceControl {
     console.log(this._mapBoxDraw.get(this._editingGeofenceId));
     const feature = this._mapBoxDraw.get(this._editingGeofenceId);
 
-    // Save geofence api call here
+    // FIXME: Save geofence api call here
     const savedGeofence: Geofence = {
       id: this._editingGeofenceId,
       geometry: { polygon: feature.geometry["coordinates"] },
     };
 
     // render geofence to the map and add it to the list
-    this._renderGeofence(savedGeofence);
+    this._loadGeofence(savedGeofence);
+    this._displayGeofence(savedGeofence.id);
 
     this._disableEditingMode();
   }
@@ -128,11 +167,8 @@ export class AmplifyGeofenceControl {
    Private methods for CRUD Geofences
    **********************************************************************/
 
-  async _loadAllGeofences() {
-    // const results = (await this._geofenceAPI.listGeofences(
-    //   "test-geofence-collection-1"
-    // )) as any;
-
+  async _loadAllGeofences(): Promise<void> {
+    // FIXME: Harded coded response from geofence API, call getGeofences here
     const hardcodeGeofence: Geofence = {
       id: "myHardcodedGeofence",
       geometry: {
@@ -148,110 +184,88 @@ export class AmplifyGeofenceControl {
       },
     };
 
-    // const renderGeofences = this._renderGeofences;
-    // this._map.on("load", function () {
-    //   renderGeofences([hardcodeGeofence]);
-    // });
+    const anotherOne: Geofence = {
+      id: "myHardcodedGeofence2",
+      geometry: {
+        polygon: [
+          [
+            [-119.19118301902287, 35.98013497132733],
+            [-114.65504400762288, 35.98013497132733],
+            [-114.65504400762288, 38.298056457227325],
+            [-119.19118301902287, 38.298056457227325],
+            [-119.19118301902287, 35.98013497132733],
+          ],
+        ],
+      },
+    };
+    const asdf = [];
+    for (let i = 0; i < 1000; i++) {
+      asdf.push({ ...hardcodeGeofence, id: `asdf${i}` });
+      asdf.push({ ...anotherOne, id: `zxcv${i}` });
+    }
+
+    const loadGeofence = this._loadGeofence;
+    asdf.forEach((geofence) => loadGeofence(geofence));
   }
 
-  _renderGeofence(geofence: Geofence): void {
-    const renderedGeofence = drawGeofences(geofence.id, [geofence], this._map, {
-      visible: true,
-    });
-
-    // Create list of results and render on the map
-    const listItem = this._createElement(
-      "li",
-      "amplify-ctrl-list-result-item",
-      this._geofenceListContainer
-    );
-    this._renderEditButton(listItem, geofence, renderedGeofence);
-    this._renderItemAnchor(listItem, geofence, renderedGeofence);
-
-    this._loadedGeofences[geofence.id] = { ...geofence, ...renderedGeofence };
-    this._displayedGeofences.push(renderedGeofence);
+  _loadGeofence(geofence: Geofence): void {
+    // FIXME: Add pagination/infinite scroll here
+    this._renderListItem(geofence);
+    this._loadedGeofences[geofence.id] = geofence;
   }
 
-  _renderGeofences(geofences: Geofence[]): void {
-    geofences.forEach((geofence: Geofence) => {
-      this._renderGeofence(geofence);
-    });
+  _displayGeofence(id: string): void {
+    this._displayedGeofences.push(this._loadedGeofences[id]);
+    this._updateDisplayedGeofences();
+    const checkbox = document.getElementById(`list-item-checkbox-${id}`);
+    if (checkbox) (checkbox as HTMLInputElement).checked = true;
   }
 
-  _renderEditButton(
-    container: HTMLElement,
-    geofence: any,
-    renderedGeofence: any
-  ): void {
-    const editButton = this._createElement(
-      "button",
-      "geofence-edit-button",
-      container
-    );
-    editButton.innerHTML = "Edit";
-    editButton.addEventListener(
-      "click",
-      function () {
-        renderedGeofence.hide();
-        this._enableMapboxDraw();
-
-        if (
-          this._editingGeofenceId &&
-          geofence.id !== this._editingGeofenceId
-        ) {
-          this._mapBoxDraw.delete(this._editingGeofenceId);
-        }
-
-        // render in mapboxdraw
-        const feature = getGeofenceFeatureFromData(geofence.geometry.polygon);
-        const data: Feature = {
-          id: geofence.id,
-          ...feature,
-        };
-        const [featureId] = this._mapBoxDraw.add(data);
-        this._editingGeofenceId = featureId;
-      }.bind(this)
+  _displayAllGeofences(): void {
+    this._displayedGeofences.push(...Object.values(this._loadedGeofences));
+    this._updateDisplayedGeofences();
+    const checkboxes = document.getElementsByClassName(
+      "amplify-ctrl-list-item-checkbox"
+    ) as HTMLCollectionOf<HTMLInputElement>;
+    Array.from(checkboxes).forEach(
+      (checkbox) => (checkbox.checked = this._checkboxAll.checked)
     );
   }
 
-  _renderItemAnchor(
-    container: HTMLElement,
-    geofence: any,
-    renderedGeofence: any
-  ): void {
-    const anchorForListItem = this._createElement(
-      "a",
-      "geofence-result-anchor-item",
-      container
+  _hideGeofence(id: string): void {
+    this._displayedGeofences = this._displayedGeofences.filter(
+      (geofence) => geofence.id !== id
     );
-    anchorForListItem.innerHTML = geofence.id;
-    anchorForListItem.addEventListener(
-      "click",
-      function () {
-        this._disableMapboxDraw();
-        renderedGeofence.show();
-        this._displayedGeofences.push(renderedGeofence);
+    this._updateDisplayedGeofences();
+    const checkbox = document.getElementById(`list-item-checkbox-${id}`);
+    if (checkbox) (checkbox as HTMLInputElement).checked = false;
+  }
 
-        // FIXME: need to deal with multi select here
-        const bounds = new LngLatBounds();
-        geofence.geometry.polygon[0].forEach((bound) => {
-          bounds.extend(bound);
-        });
-        this._map.fitBounds(bounds, { padding: 100 });
-      }.bind(this)
+  _hideAllGeofences(): void {
+    this._displayedGeofences = [];
+    this._updateDisplayedGeofences();
+    const checkboxes = document.getElementsByClassName(
+      "amplify-ctrl-list-item-checkbox"
+    ) as HTMLCollectionOf<HTMLInputElement>;
+    Array.from(checkboxes).forEach(
+      (checkbox) => (checkbox.checked = this._checkboxAll.checked)
     );
   }
 
-  _hideDisplayedGeofences(): void {
-    this._displayedGeofences.forEach((geofence) => {
-      geofence.hide();
-    });
+  _updateDisplayedGeofences(): void {
+    const feature = getGeofenceFeatureArray(this._displayedGeofences);
+    this._drawGeofencesOutput.setData(feature);
   }
 
-  _showDisplayedGeofences(): void {
-    this._displayedGeofences.forEach((geofence) => {
-      geofence.show();
-    });
+  _displayHighlightedGeofence(id: string): void {
+    const geofence = this._loadedGeofences[id];
+    const feature = getGeofenceFeatureFromPolygon(geofence.geometry.polygon);
+    this._highlightedGeofenceOutput.setData(feature);
+    this._highlightedGeofenceOutput.show();
+  }
+
+  _hideHighlightedGeofence(): void {
+    this._highlightedGeofenceOutput.hide();
   }
 
   /**********************************************************************
@@ -315,14 +329,16 @@ export class AmplifyGeofenceControl {
   _enableEditingMode(): void {
     this._enableMapboxDraw();
     this._addGeofencebutton.disabled = true;
-    this._hideDisplayedGeofences();
+    this._drawGeofencesOutput.hide();
+    this._geofenceList.classList.add("amplify-ctrl-geofence-list-noHover");
   }
 
   // Disables add button and selecting items from geofence list
   _disableEditingMode(): void {
     this._disableMapboxDraw();
     this._addGeofencebutton.disabled = false;
-    this._showDisplayedGeofences();
+    this._drawGeofencesOutput.show();
+    this._geofenceList.classList.remove("amplify-ctrl-geofence-list-noHover");
   }
 
   _updateInputRadius(event: Event): void {
@@ -342,7 +358,7 @@ export class AmplifyGeofenceControl {
     const polygon = getPolygonFromBounds(mapBounds);
     const data: Feature = {
       id: this._editingGeofenceId,
-      ...getGeofenceFeatureFromData(polygon),
+      ...getGeofenceFeatureFromPolygon(polygon),
     };
     this._addToMapboxDraw(data);
     this._removeAddGeofenceContainer();
@@ -367,7 +383,11 @@ export class AmplifyGeofenceControl {
     style.setAttribute("className", "geofenceControl");
     document.head.append(style);
     style.textContent =
-      ".amplify-ctrl-geofence-list { position: absolute; height: 100vh; left: 0; top: 0; width: 15%; background: white; z-index: 100; }" +
+      ".amplify-ctrl-geofence-list-container { position: absolute; height: 100vh; left: 0; top: 0; width: 15%; background: white; z-index: 100; }" +
+      ".amplify-ctrl-geofence-list { height: 100%; overflow: scroll; }" +
+      ".amplify-ctrl-geofence-list-noHover { pointer-events: none; }" +
+      ".amplify-ctrl-list-item { display: flex; }" +
+      `.amplify-ctrl-list-item:hover { background: ${COLOR_HOVER}; }` +
       ".amplify-ctrl-add-geofence { position: absolute; background: rgba(0,0,0,0.4); height: 100vh; width: 100vw; top: 0; display: flex; justify-content: center; align-items: center; }" +
       ".amplify-ctrl-add-geofence-prompt { background: white; padding: 20px; }" +
       ".maplibregl-ctrl-full-screen { position: absolute; height: 100vh; width: 100vw; pointer-events: none; }";
@@ -440,28 +460,51 @@ export class AmplifyGeofenceControl {
   }
 
   _createGeofenceListContainer(): void {
-    this._geofenceListContainer = this._createElement(
+    const geofenceListContainer = this._createElement(
       "div",
-      "amplify-ctrl-geofence-list",
+      "amplify-ctrl-geofence-list-container",
       this._container
     );
 
     const title = this._createElement(
       "div",
       "amplify-ctrl-geofence-list-title",
-      this._geofenceListContainer
+      geofenceListContainer
     );
     title.innerHTML = "Geofences";
 
     this._addGeofencebutton = this._createElement(
       "button",
       "geofence-add-button",
-      this._geofenceListContainer
+      geofenceListContainer
     ) as HTMLButtonElement;
     this._addGeofencebutton.innerHTML = "+";
     this._addGeofencebutton.addEventListener("click", () => {
       this._createAddGeofenceContainer();
     });
+
+    this._checkboxAll = this._createElement(
+      "input",
+      "amplify-ctrl-list-item-checkbox-all",
+      geofenceListContainer
+    ) as HTMLInputElement;
+    this._checkboxAll.type = "checkbox";
+    this._checkboxAll.addEventListener(
+      "click",
+      function () {
+        if (this._checkboxAll.checked) {
+          this._displayAllGeofences();
+        } else {
+          this._hideAllGeofences();
+        }
+      }.bind(this)
+    );
+
+    this._geofenceList = this._createElement(
+      "div",
+      "amplify-ctrl-geofence-list",
+      geofenceListContainer
+    );
   }
 
   _createAddGeofenceContainer(): void {
@@ -530,5 +573,86 @@ export class AmplifyGeofenceControl {
 
   _removeAddGeofenceContainer(): void {
     this._removeElement(this._addGeofenceContainer);
+  }
+
+  _renderEditButton(container: HTMLElement, geofence: any): void {
+    const editButton = this._createElement(
+      "button",
+      "geofence-edit-button",
+      container
+    );
+    editButton.innerHTML = "Edit";
+    editButton.addEventListener(
+      "click",
+      function () {
+        this._enableMapboxDraw();
+
+        if (
+          this._editingGeofenceId &&
+          geofence.id !== this._editingGeofenceId
+        ) {
+          this._mapBoxDraw.delete(this._editingGeofenceId);
+        }
+
+        // render in mapboxdraw
+        const feature = getGeofenceFeatureFromPolygon(
+          geofence.geometry.polygon
+        );
+        const data: Feature = {
+          id: geofence.id,
+          ...feature,
+        };
+        const [featureId] = this._mapBoxDraw.add(data);
+        this._editingGeofenceId = featureId;
+      }.bind(this)
+    );
+  }
+
+  _renderListItem(geofence: Geofence): void {
+    const listItem = this._createElement(
+      "li",
+      "amplify-ctrl-list-item",
+      this._geofenceList
+    );
+    listItem.id = `list-item-${geofence.id}`;
+    listItem.addEventListener(
+      "mouseover",
+      function () {
+        this._displayHighlightedGeofence(geofence.id);
+      }.bind(this)
+    );
+    listItem.addEventListener(
+      "mouseout",
+      function () {
+        this._hideHighlightedGeofence();
+      }.bind(this)
+    );
+
+    this._renderEditButton(listItem, geofence);
+
+    const checkbox = this._createElement(
+      "input",
+      "amplify-ctrl-list-item-checkbox",
+      listItem
+    );
+    checkbox.id = `list-item-checkbox-${geofence.id}`;
+    (checkbox as HTMLInputElement).type = "checkbox";
+    checkbox.addEventListener(
+      "click",
+      function () {
+        if ((checkbox as HTMLInputElement).checked) {
+          this._displayGeofence(geofence.id);
+        } else {
+          this._hideGeofence(geofence.id);
+        }
+      }.bind(this)
+    );
+
+    const geofenceTitle = this._createElement(
+      "div",
+      "amplify-ctrl-list-item-title",
+      listItem
+    );
+    geofenceTitle.innerHTML = geofence.id;
   }
 }
