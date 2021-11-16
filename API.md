@@ -79,6 +79,9 @@ Returns **DrawPointsOutput** output An object containing the string id's of the 
 - `clusterLayerId` **[String][8]** The [layer][19] used for creating and styling the points that are clustered together
 - `clusterSymbolLayerId` **[String][8]** The [layer][20] used for creating styling the number that shows the count of points in a cluster
 - `unclusteredLayerId` **[String][8]** The [layer][21] used for creating and styling the individual points on the map and the popup when clicking on a point
+- `show` **[function(): void]** Utility function for setting the all layer's visibilty to "visible"
+- `hide` **[function(): void]** Utility function for setting the all layer's visibilty to "none"
+- `setData` **[function([Array][13]\<Coordinate> | [Array][13]\<Feature> | [Array][13]\<NamedLocation>): void]** Utility function for setting/updating draw data points
 
 ## AmplifyGeocoderAPI
 

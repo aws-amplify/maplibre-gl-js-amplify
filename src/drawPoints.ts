@@ -1,5 +1,5 @@
 import { Feature } from "geojson";
-import { Map as maplibreMap } from "maplibre-gl";
+import { GeoJSONSource, Map as maplibreMap } from "maplibre-gl";
 import { getFeaturesFromData } from "./utils";
 import {
   ClusterOptions,
@@ -27,6 +27,9 @@ export interface DrawPointsOutput {
   clusterLayerId: string;
   clusterSymbolLayerId?: string;
   unclusteredLayerId: string;
+  setData: (data: Coordinates[] | Feature[] | NamedLocation[]) => void;
+  show: () => void;
+  hide: () => void;
 }
 
 /**
@@ -104,5 +107,40 @@ export function drawPoints(
     unclusteredMarkerOptions || {}
   );
 
-  return { sourceId, unclusteredLayerId, clusterLayerId, clusterSymbolLayerId };
+  // utility function for setting layer visibility to none
+  const hide = () => {
+    map.setLayoutProperty(unclusteredLayerId, "visibility", "none");
+    if (clusterLayerId)
+      map.setLayoutProperty(clusterLayerId, "visibility", "none");
+    if (clusterSymbolLayerId)
+      map.setLayoutProperty(clusterSymbolLayerId, "visibility", "none");
+  };
+
+  // utility function for setting layer visibility to visible
+  const show = () => {
+    map.setLayoutProperty(unclusteredLayerId, "visibility", "visible");
+    if (clusterLayerId)
+      map.setLayoutProperty(clusterLayerId, "visibility", "visible");
+    if (clusterSymbolLayerId)
+      map.setLayoutProperty(clusterSymbolLayerId, "visibility", "visible");
+  };
+
+  // utility function updating the data source
+  const setData = (data: Coordinates[] | Feature[] | NamedLocation[]) => {
+    const features = getFeaturesFromData(data);
+    (map.getSource(sourceId) as GeoJSONSource).setData({
+      type: "FeatureCollection",
+      features,
+    });
+  };
+
+  return {
+    sourceId,
+    unclusteredLayerId,
+    clusterLayerId,
+    clusterSymbolLayerId,
+    setData,
+    show,
+    hide,
+  };
 }
