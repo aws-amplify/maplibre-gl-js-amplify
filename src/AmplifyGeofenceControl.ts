@@ -143,11 +143,6 @@ export class AmplifyGeofenceControl {
   }
 
   saveGeofence(): void {
-    console.log(
-      "Saving a polygon " +
-        (this._mapBoxDraw.getAll().features[0].geometry as any).coordinates
-    );
-    console.log(this._mapBoxDraw.get(this._editingGeofenceId));
     const feature = this._mapBoxDraw.get(this._editingGeofenceId);
 
     // FIXME: Save geofence api call here
@@ -161,6 +156,25 @@ export class AmplifyGeofenceControl {
     this._displayGeofence(savedGeofence.id);
 
     this._disableEditingMode();
+  }
+
+  editGeofence(id: string): void {
+    this._enableEditingMode();
+
+    const geofence = this._loadedGeofences[id];
+    if (!geofence) {
+      throw new Error(`Geofence with id ${id} does not exist`);
+    }
+
+    // render in mapboxdraw
+    const feature = getGeofenceFeatureFromPolygon(geofence.geometry.polygon);
+    const data: Feature = {
+      id: geofence.id,
+      ...feature,
+    };
+    this._mapBoxDraw.add(data);
+
+    this._editingGeofenceId = geofence.id;
   }
 
   /**********************************************************************
@@ -210,7 +224,15 @@ export class AmplifyGeofenceControl {
 
   _loadGeofence(geofence: Geofence): void {
     // FIXME: Add pagination/infinite scroll here
-    this._renderListItem(geofence);
+    // If geofence exists remove it from displayed geofences
+    if (this._loadedGeofences[geofence.id]) {
+      this._displayedGeofences = this._displayedGeofences.filter(
+        (fence) => fence.id !== geofence.id
+      );
+    } else {
+      // If geofence doesn't exist render a new list item for it
+      this._renderListItem(geofence);
+    }
     this._loadedGeofences[geofence.id] = geofence;
   }
 
@@ -585,25 +607,7 @@ export class AmplifyGeofenceControl {
     editButton.addEventListener(
       "click",
       function () {
-        this._enableMapboxDraw();
-
-        if (
-          this._editingGeofenceId &&
-          geofence.id !== this._editingGeofenceId
-        ) {
-          this._mapBoxDraw.delete(this._editingGeofenceId);
-        }
-
-        // render in mapboxdraw
-        const feature = getGeofenceFeatureFromPolygon(
-          geofence.geometry.polygon
-        );
-        const data: Feature = {
-          id: geofence.id,
-          ...feature,
-        };
-        const [featureId] = this._mapBoxDraw.add(data);
-        this._editingGeofenceId = featureId;
+        this.editGeofence(geofence.id);
       }.bind(this)
     );
   }
