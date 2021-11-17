@@ -6,7 +6,7 @@ import {
 } from "./AmplifyMapLibreGeocoder";
 import { createDefaultIcon } from "./createDefaultIcon";
 import { drawGeofences } from "./drawGeofences";
-import { AmplifyGeofenceControl } from "./AmplifyGeofenceControl";
+import { AmplifyGeofenceControl } from "./AmplifyGeofenceControl/index";
 
 export {
   AmplifyMapLibreRequest,
