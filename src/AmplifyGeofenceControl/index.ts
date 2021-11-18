@@ -15,7 +15,7 @@ import {
   getGeofenceFeatureArray,
 } from "../geofenceUtils";
 import { GEOFENCE_COLOR, GEOFENCE_BORDER_COLOR } from "../constants";
-import { AmplifyGeofenceControlUI, createElement } from "./ui";
+import { AmplifyGeofenceControlUI, createElement, removeElement } from "./ui";
 
 export interface AmplifyGeofenceControlOptions {
   geofenceCollectionId?: string;
@@ -68,6 +68,7 @@ export class AmplifyGeofenceControl {
     this.updateInputRadius = this.updateInputRadius.bind(this);
     this.saveGeofence = this.saveGeofence.bind(this);
     this.editGeofence = this.editGeofence.bind(this);
+    this.deleteGeofence = this.deleteGeofence.bind(this);
     this.displayAllGeofences = this.displayAllGeofences.bind(this);
     this.hideAllGeofences = this.hideAllGeofences.bind(this);
     this.enableEditingMode = this.enableEditingMode.bind(this);
@@ -175,6 +176,34 @@ export class AmplifyGeofenceControl {
     this._editingGeofenceId = geofence.id;
   }
 
+  deleteGeofence(id: string): void {
+    // FIXME: delete geofence api call here
+    const listItem = document.getElementById(`list-item-${id}`);
+    removeElement(listItem);
+
+    delete this._loadedGeofences[id];
+
+    this._displayedGeofences = this._displayedGeofences.filter(
+      (geofence) => geofence.id !== id
+    );
+
+    this._updateDisplayedGeofences();
+  }
+
+  deleteSelectedGeofences(): void {
+    const idsToDelete = this._displayedGeofences.map((fence) => fence.id);
+    // FIXME: delete geofence api call here
+    idsToDelete.forEach((id) => {
+      const listItem = document.getElementById(`list-item-${id}`);
+      removeElement(listItem);
+      delete this._loadedGeofences[id];
+    });
+
+    this._displayedGeofences = [];
+
+    this._updateDisplayedGeofences();
+  }
+
   /**********************************************************************
    Private methods for CRUD Geofences
    **********************************************************************/
@@ -279,6 +308,10 @@ export class AmplifyGeofenceControl {
 
   displayHighlightedGeofence(id: string): void {
     const geofence = this._loadedGeofences[id];
+    if (!geofence) {
+      console.warn(`Geofence with id ${id} does not exist`);
+      return;
+    }
     const feature = getGeofenceFeatureFromPolygon(geofence.geometry.polygon);
     this._highlightedGeofenceOutput.setData(feature);
     this._highlightedGeofenceOutput.show();
