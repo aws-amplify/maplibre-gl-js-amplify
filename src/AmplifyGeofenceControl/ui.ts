@@ -24,6 +24,7 @@ export function AmplifyGeofenceControlUI(
   geofenceControlContainer: HTMLElement
 ) {
   let _addGeofenceContainer: HTMLElement;
+  let _deleteGeofenceContainer: HTMLElement;
 
   function registerControlPosition(map, positionName): void {
     if (map._controlPositions[positionName]) {
@@ -45,8 +46,8 @@ export function AmplifyGeofenceControlUI(
       ".amplify-ctrl-geofence-list-noHover { pointer-events: none; }" +
       ".amplify-ctrl-list-item { display: flex; }" +
       `.amplify-ctrl-list-item:hover { background: ${COLOR_HOVER}; }` +
-      ".amplify-ctrl-add-geofence { position: absolute; background: rgba(0,0,0,0.4); height: 100vh; width: 100vw; top: 0; display: flex; justify-content: center; align-items: center; }" +
-      ".amplify-ctrl-add-geofence-prompt { background: white; padding: 20px; }" +
+      ".amplify-ctrl-geofence-prompt-container { position: absolute; background: rgba(0,0,0,0.4); height: 100vh; width: 100vw; top: 0; display: flex; justify-content: center; align-items: center; }" +
+      ".amplify-ctrl-geofence-prompt { background: white; padding: 20px; }" +
       ".maplibregl-ctrl-full-screen { position: absolute; height: 100vh; width: 100vw; pointer-events: none; }";
   }
 
@@ -156,13 +157,13 @@ export function AmplifyGeofenceControlUI(
     geofenceControl.enableEditingMode();
     _addGeofenceContainer = createElement(
       "div",
-      "amplify-ctrl-add-geofence",
+      "amplify-ctrl-geofence-prompt-container ",
       geofenceControlContainer
     );
 
     const addGeofencePrompt = createElement(
       "div",
-      "amplify-ctrl-add-geofence-prompt",
+      "amplify-ctrl-geofence-prompt",
       _addGeofenceContainer
     );
 
@@ -228,6 +229,21 @@ export function AmplifyGeofenceControlUI(
     });
   }
 
+  function renderDeleteButton(
+    container: HTMLElement,
+    geofence: Geofence
+  ): void {
+    const deleteButton = createElement(
+      "button",
+      "geofence-delete-button",
+      container
+    );
+    deleteButton.innerHTML = "Delete";
+    deleteButton.addEventListener("click", function () {
+      createConfirmDeleteContainer(geofence.id);
+    });
+  }
+
   function renderListItem(geofence: Geofence, geofenceList: HTMLElement): void {
     const listItem = createElement(
       "li",
@@ -265,6 +281,50 @@ export function AmplifyGeofenceControlUI(
       listItem
     );
     geofenceTitle.innerHTML = geofence.id;
+
+    renderDeleteButton(listItem, geofence);
+  }
+
+  function createConfirmDeleteContainer(geofenceId: string): void {
+    _deleteGeofenceContainer = createElement(
+      "div",
+      "amplify-ctrl-geofence-prompt-container ",
+      geofenceControlContainer
+    );
+
+    const deleteGeofencePrompt = createElement(
+      "div",
+      "amplify-ctrl-geofence-prompt",
+      _deleteGeofenceContainer
+    );
+
+    const title = createElement(
+      "div",
+      "amplify-ctrl-delete-geofence-title",
+      deleteGeofencePrompt
+    );
+    title.innerHTML = "Are you sure you want to delete?";
+
+    const confirmDeleteButton = createElement(
+      "button",
+      "amplify-ctrl-delete-geofence-confirm-button",
+      deleteGeofencePrompt
+    );
+    confirmDeleteButton.innerHTML = "Confirm";
+    confirmDeleteButton.addEventListener("click", function () {
+      geofenceControl.deleteGeofence(geofenceId);
+      removeElement(_deleteGeofenceContainer);
+    });
+
+    const cancelButton = createElement(
+      "button",
+      "amplify-ctrl-delete-geofence-cancel-button",
+      deleteGeofencePrompt
+    );
+    cancelButton.innerHTML = "Cancel";
+    cancelButton.addEventListener("click", () => {
+      removeElement(_deleteGeofenceContainer);
+    });
   }
 
   return {
@@ -278,5 +338,6 @@ export function AmplifyGeofenceControlUI(
     createAddGeofenceContainer,
     createAddGeofencePromptError,
     renderListItem,
+    createConfirmDeleteContainer,
   };
 }
