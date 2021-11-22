@@ -37,6 +37,7 @@
   "devDependencies": {
     "@aws-amplify/core": "^4.3.1",
     "@aws-amplify/geo": "^1.1.1",
+    "@babel/preset-env": "^7.16.4",
     "@maplibre/maplibre-gl-geocoder": "^1.1.0",
     "@types/debounce": "^1.2.1",
     "@types/geojson": "^7946.0.7",
@@ -46,6 +47,7 @@
     "@types/node": "^15.6.1",
     "@typescript-eslint/eslint-plugin": "^4.25.0",
     "@typescript-eslint/parser": "^4.25.0",
+    "babel-jest": "^27.3.1",
     "debounce": "^1.2.1",
     "eslint": "^7.16.0",
     "eslint-config-prettier": "^8.3.0",

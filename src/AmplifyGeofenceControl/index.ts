@@ -25,7 +25,7 @@ export class AmplifyGeofenceControl {
   options: AmplifyGeofenceControlOptions;
   _geofenceCollectionId: string;
   _map: Map;
-  _mapBoxDraw?: MapboxDraw = new MapboxDraw({
+  _mapBoxDraw: MapboxDraw = new MapboxDraw({
     displayControlsDefault: false,
     defaultMode: "simple_select",
     userProperties: true,
@@ -50,14 +50,10 @@ export class AmplifyGeofenceControl {
   _container?: HTMLElement;
   _geofenceCircleButton?: HTMLElement;
   _geofenceCreateInput?: HTMLElement;
-  _geofenceList?: HTMLElement;
   _addGeofenceContainer?: HTMLElement;
-  _addGeofencebutton?: HTMLButtonElement;
-  _checkboxAll?: HTMLInputElement;
 
   constructor(options: AmplifyGeofenceControlOptions) {
-    this.options = options;
-    this._geofenceCollectionId = "fixme"; // this should be retrieved from Geofence API
+    this._geofenceCollectionId = options.geofenceCollectionId ?? "fixme"; // this should be retrieved from Geofence API
     this._loadedGeofences = {};
     this._displayedGeofences = [];
     this.changeMode = this.changeMode.bind(this);
@@ -102,11 +98,7 @@ export class AmplifyGeofenceControl {
     this._ui.createStyleHeader();
 
     this._ui.createGeofenceCreateContainer();
-    const { addGeofencebutton, checkboxAll, geofenceList } =
-      this._ui.createGeofenceListContainer();
-    this._addGeofencebutton = addGeofencebutton;
-    this._checkboxAll = checkboxAll;
-    this._geofenceList = geofenceList;
+    this._ui.createGeofenceListContainer();
 
     // Draw the geofences source to the map so we can update it on geofences load/creation
     this._map.on(
@@ -178,8 +170,7 @@ export class AmplifyGeofenceControl {
 
   deleteGeofence(id: string): void {
     // FIXME: delete geofence api call here
-    const listItem = document.getElementById(`list-item-${id}`);
-    removeElement(listItem);
+    this._ui.removeGeofenceListItem(id);
 
     delete this._loadedGeofences[id];
 
@@ -194,8 +185,7 @@ export class AmplifyGeofenceControl {
     const idsToDelete = this._displayedGeofences.map((fence) => fence.id);
     // FIXME: delete geofence api call here
     idsToDelete.forEach((id) => {
-      const listItem = document.getElementById(`list-item-${id}`);
-      removeElement(listItem);
+      this._ui.removeGeofenceListItem(id);
       delete this._loadedGeofences[id];
     });
 
@@ -258,7 +248,7 @@ export class AmplifyGeofenceControl {
       );
     } else {
       // If geofence doesn't exist render a new list item for it
-      this._ui.renderListItem(geofence, this._geofenceList);
+      this._ui.renderListItem(geofence);
     }
     this._loadedGeofences[geofence.id] = geofence;
   }
@@ -266,8 +256,7 @@ export class AmplifyGeofenceControl {
   displayGeofence(id: string): void {
     this._displayedGeofences.push(this._loadedGeofences[id]);
     this._updateDisplayedGeofences();
-    const checkbox = document.getElementById(`list-item-checkbox-${id}`);
-    if (checkbox) (checkbox as HTMLInputElement).checked = true;
+    this._ui.updateCheckbox(id, true);
   }
 
   displayAllGeofences(): void {
@@ -277,7 +266,7 @@ export class AmplifyGeofenceControl {
       "amplify-ctrl-list-item-checkbox"
     ) as HTMLCollectionOf<HTMLInputElement>;
     Array.from(checkboxes).forEach(
-      (checkbox) => (checkbox.checked = this._checkboxAll.checked)
+      (checkbox) => (checkbox.checked = this._ui.getCheckboxAllValue())
     );
   }
 
@@ -286,8 +275,7 @@ export class AmplifyGeofenceControl {
       (geofence) => geofence.id !== id
     );
     this._updateDisplayedGeofences();
-    const checkbox = document.getElementById(`list-item-checkbox-${id}`);
-    if (checkbox) (checkbox as HTMLInputElement).checked = false;
+    this._ui.updateCheckbox(id, false);
   }
 
   hideAllGeofences(): void {
@@ -297,7 +285,7 @@ export class AmplifyGeofenceControl {
       "amplify-ctrl-list-item-checkbox"
     ) as HTMLCollectionOf<HTMLInputElement>;
     Array.from(checkboxes).forEach(
-      (checkbox) => (checkbox.checked = this._checkboxAll.checked)
+      (checkbox) => (checkbox.checked = this._ui.getCheckboxAllValue())
     );
   }
 
@@ -381,17 +369,17 @@ export class AmplifyGeofenceControl {
   // Disables add button and selecting items from geofence list
   enableEditingMode(): void {
     this._enableMapboxDraw();
-    this._addGeofencebutton.disabled = true;
     this._drawGeofencesOutput.hide();
-    this._geofenceList.classList.add("amplify-ctrl-geofence-list-noHover");
+    this._ui.disableAddGeofenceButton(true);
+    this._ui.disableGeofenceList();
   }
 
   // Disables add button and selecting items from geofence list
   disableEditingMode(): void {
     this._disableMapboxDraw();
-    this._addGeofencebutton.disabled = false;
     this._drawGeofencesOutput.show();
-    this._geofenceList.classList.remove("amplify-ctrl-geofence-list-noHover");
+    this._ui.disableAddGeofenceButton(false);
+    this._ui.enableGeofenceList();
   }
 
   updateInputRadius(event: Event): void {
