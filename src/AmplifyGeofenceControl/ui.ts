@@ -28,6 +28,7 @@ export function AmplifyGeofenceControlUI(
   let _addGeofencebutton: HTMLButtonElement;
   let _checkboxAll: HTMLInputElement;
   let _geofenceList: HTMLElement;
+  let _createContainer: HTMLElement;
 
   function registerControlPosition(map, positionName): void {
     if (map._controlPositions[positionName]) {
@@ -55,7 +56,7 @@ export function AmplifyGeofenceControlUI(
   }
 
   function createGeofenceCreateContainer(): void {
-    const createContainer = createElement(
+    _createContainer = createElement(
       "div",
       "amplify-ctrl-create-prompt",
       geofenceControlContainer
@@ -64,7 +65,7 @@ export function AmplifyGeofenceControlUI(
     const geofenceCreateInput = createElement(
       "input",
       "amplify-ctrl-create-input",
-      createContainer
+      _createContainer
     );
     geofenceCreateInput.addEventListener(
       "keydown",
@@ -74,7 +75,7 @@ export function AmplifyGeofenceControlUI(
     const saveGeofenceButton = createElement(
       "button",
       "amplify-ctrl-create-save-button",
-      createContainer
+      _createContainer
     );
     saveGeofenceButton.addEventListener("click", geofenceControl.saveGeofence);
     saveGeofenceButton.title = "Save Geofence";
@@ -83,12 +84,10 @@ export function AmplifyGeofenceControlUI(
     const circleModeButton = createElement(
       "button",
       "amplify-ctrl-create-circle-button",
-      createContainer
+      _createContainer
     );
     circleModeButton.addEventListener("click", () =>
-      geofenceControl.changeMode("draw_circle", {
-        initialRadiusInKm: 50.0,
-      })
+      geofenceControl.changeMode("draw_circle")
     );
     circleModeButton.title = "Circle Mode";
     circleModeButton.innerHTML = "Circle Mode";
@@ -96,13 +95,17 @@ export function AmplifyGeofenceControlUI(
     const polygonModeButton = createElement(
       "button",
       "amplify-ctrl-create-polygon-button",
-      createContainer
+      _createContainer
     );
     polygonModeButton.addEventListener("click", () =>
       geofenceControl.changeMode("draw_polygon")
     );
     polygonModeButton.title = "Polygon Mode";
     polygonModeButton.innerHTML = "Polygon Mode";
+  }
+
+  function removeAddGeofenceContainer(): void {
+    removeElement(_addGeofenceContainer);
   }
 
   function createGeofenceListContainer() {
@@ -150,8 +153,8 @@ export function AmplifyGeofenceControlUI(
     );
   }
 
-  function removeAddGeofenceContainer(): void {
-    removeElement(_addGeofenceContainer);
+  function removeGeofenceCreateContainer(): void {
+    removeElement(_createContainer);
   }
 
   function createAddGeofenceContainer(): void {
@@ -374,5 +377,6 @@ export function AmplifyGeofenceControlUI(
     enableGeofenceList,
     disableGeofenceList,
     getCheckboxAllValue,
+    removeGeofenceCreateContainer,
   };
 }

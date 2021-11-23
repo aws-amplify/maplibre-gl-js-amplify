@@ -1,17 +1,11 @@
-import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import { Map as maplibreMap } from "maplibre-gl";
 import { AmplifyGeofenceControl } from "../src/AmplifyGeofenceControl";
 import { getGeofenceFeatureFromPolygon } from "../src/geofenceUtils";
 import { AmplifyGeofenceControlUI } from "../src/AmplifyGeofenceControl/ui";
+import { AmplifyMapboxDraw } from "../src/AmplifyGeofenceControl/AmplifyMapboxDraw";
 
 const drawGet = jest.fn();
-jest.mock("@mapbox/mapbox-gl-draw", () => {
-  return jest.fn().mockImplementation(() => {
-    return {
-      get: drawGet,
-    };
-  });
-});
+jest.mock("../src/AmplifyGeofenceControl/AmplifyMapboxDraw");
 
 jest.mock("../src/AmplifyGeofenceControl/ui");
 jest.mock("maplibre-gl");
@@ -38,17 +32,22 @@ describe("AmplifyGeofenceControl", () => {
       };
     });
 
-    drawGet.mockImplementation(() =>
-      getGeofenceFeatureFromPolygon([
-        [
-          [-124.0488709112, 35.9978649131],
-          [-119.5127318998, 35.9978649131],
-          [-119.5127318998, 38.315786399],
-          [-124.0488709112, 38.315786399],
-          [-124.0488709112, 35.9978649131],
-        ],
-      ])
-    );
+    (AmplifyMapboxDraw as jest.Mock).mockImplementation(() => {
+      return {
+        get: () =>
+          getGeofenceFeatureFromPolygon([
+            [
+              [-124.0488709112, 35.9978649131],
+              [-119.5127318998, 35.9978649131],
+              [-119.5127318998, 38.315786399],
+              [-124.0488709112, 38.315786399],
+              [-124.0488709112, 35.9978649131],
+            ],
+          ]),
+        disable: jest.fn(),
+        enable: jest.fn(),
+      };
+    });
   });
 
   test("Constructor test", () => {
@@ -67,6 +66,7 @@ describe("AmplifyGeofenceControl", () => {
       control,
       {} as unknown as HTMLElement
     );
+    control._amplifyDraw = new AmplifyMapboxDraw(control._map, control._ui);
     control._drawGeofencesOutput = mockDrawGeofencesOutput;
 
     control._editingGeofenceId = "foobar";

@@ -1,4 +1,5 @@
 import along from "@turf/along";
+import circle from "@turf/circle";
 import distance from "@turf/distance";
 import { lineString, point } from "@turf/helpers";
 import { Feature, GeoJsonProperties, Geometry } from "geojson";
@@ -6,7 +7,7 @@ import { LngLatBounds } from "maplibre-gl";
 import { Coordinates, Geofence, Polygon } from "./types";
 import { isGeofenceArray } from "./utils";
 
-const GEOFENCE_ID_REGEX = /^[-._\w]+$/;
+const GEOFENCE_ID_REGEX = /^[-._\p{L}\p{N}]+$/iu;
 
 export const getGeofenceFeatureArray = (
   data: Geofence[] | Polygon[]
@@ -62,6 +63,36 @@ export const getPolygonFromBounds = (bounds: LngLatBounds): Polygon => {
   ];
 
   return polygon;
+};
+
+export const getCircleFeatureFromCoords = (
+  center: Coordinates,
+  { bounds, radius }: { bounds?: LngLatBounds; radius?: number }
+): Feature<Geometry, GeoJsonProperties> => {
+  if (!bounds && !radius) {
+    throw new Error("Circle requires a bounds or a radius");
+  }
+
+  const circleRadius = radius ?? getDistanceFromBounds(bounds) / 8;
+  const circleFeature = circle(center, circleRadius);
+
+  return {
+    type: "Feature",
+    properties: {
+      isCircle: true,
+      center,
+    },
+    geometry: {
+      type: "Polygon",
+      coordinates: circleFeature.geometry.coordinates,
+    },
+  };
+};
+
+const getDistanceFromBounds = (bounds: LngLatBounds): number => {
+  const swCoordinate = bounds.getSouthWest().toArray();
+  const neCoordinate = bounds.getNorthEast().toArray();
+  return distance(point(swCoordinate), point(neCoordinate));
 };
 
 export const doesGeofenceExist = (
