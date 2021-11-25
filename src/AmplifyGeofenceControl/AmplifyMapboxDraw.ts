@@ -86,6 +86,10 @@ export class AmplifyMapboxDraw {
     this._ui.createGeofenceCreateContainer();
   }
 
+  /**
+   * Draws a polygonal geofence around the center of the current map view. The polygon defaults to 3/4 the size of the current map bounds
+   * @param id the geofence geojson id
+   */
   drawPolygonGeofence(id: string): void {
     const mapBounds = this._map.getBounds();
     const polygon = getPolygonFromBounds(mapBounds);
@@ -96,6 +100,11 @@ export class AmplifyMapboxDraw {
     this.add(data);
   }
 
+  /**
+   * Draws a cicular geofence around the center of the current map view
+   * @param id the geofence geojson id
+   * @param radius optional parameter for setting the radius of the cicular geofence, default to 1/8th of the current map bounds length
+   */
   drawCircularGeofence(id: string, radius?: number): void {
     const mapBounds = this._map.getBounds();
     const circleFeature = getCircleFeatureFromCoords(
