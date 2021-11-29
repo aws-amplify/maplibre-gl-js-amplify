@@ -1,21 +1,15 @@
-import MapboxDraw from "@mapbox/mapbox-gl-draw";
-import { IControl, Map } from "maplibre-gl";
-import {
-  CircleMode,
-  SimpleSelectMode,
-  DirectMode,
-} from "mapbox-gl-draw-circle";
+import { Map } from "maplibre-gl";
 import { drawGeofences, DrawGeofencesOutput } from "../drawGeofences";
 import { Geofence } from "../types";
-import { Feature, Geometry } from "geojson";
+import { Feature } from "geojson";
 import {
-  getPolygonFromBounds,
   isValidGeofenceId,
   getGeofenceFeatureFromPolygon,
   getGeofenceFeatureArray,
 } from "../geofenceUtils";
 import { GEOFENCE_COLOR, GEOFENCE_BORDER_COLOR } from "../constants";
-import { AmplifyGeofenceControlUI, createElement, removeElement } from "./ui";
+import { AmplifyGeofenceControlUI, createElement } from "./ui";
+import { AmplifyMapboxDraw } from "./AmplifyMapboxDraw";
 
 export interface AmplifyGeofenceControlOptions {
   geofenceCollectionId?: string;
@@ -25,20 +19,7 @@ export class AmplifyGeofenceControl {
   options: AmplifyGeofenceControlOptions;
   _geofenceCollectionId: string;
   _map: Map;
-  _mapBoxDraw: MapboxDraw = new MapboxDraw({
-    displayControlsDefault: false,
-    defaultMode: "simple_select",
-    userProperties: true,
-    controls: {
-      trash: false,
-    },
-    modes: {
-      ...MapboxDraw.modes,
-      draw_circle: CircleMode,
-      direct_select: DirectMode,
-      simple_select: SimpleSelectMode,
-    },
-  });
+  _amplifyDraw: AmplifyMapboxDraw;
   _loadedGeofences?: Record<string, Geofence>;
   _displayedGeofences?: Geofence[];
   _drawGeofencesOutput?: DrawGeofencesOutput;
@@ -59,8 +40,6 @@ export class AmplifyGeofenceControl {
     this.changeMode = this.changeMode.bind(this);
     this._loadAllGeofences = this._loadAllGeofences.bind(this);
     this._loadGeofence = this._loadGeofence.bind(this);
-    this._enableMapboxDraw = this._enableMapboxDraw.bind(this);
-    this._disableMapboxDraw = this._disableMapboxDraw.bind(this);
     this.updateInputRadius = this.updateInputRadius.bind(this);
     this.saveGeofence = this.saveGeofence.bind(this);
     this.editGeofence = this.editGeofence.bind(this);
@@ -94,10 +73,11 @@ export class AmplifyGeofenceControl {
     this._container = createElement("div", "maplibregl-ctrl");
 
     this._ui = AmplifyGeofenceControlUI(this, this._container);
+    this._amplifyDraw = new AmplifyMapboxDraw(map, this._ui);
+
     this._ui.registerControlPosition(map, "full-screen");
     this._ui.createStyleHeader();
 
-    this._ui.createGeofenceCreateContainer();
     this._ui.createGeofenceListContainer();
 
     // Draw the geofences source to the map so we can update it on geofences load/creation
@@ -134,7 +114,7 @@ export class AmplifyGeofenceControl {
   }
 
   saveGeofence(): void {
-    const feature = this._mapBoxDraw.get(this._editingGeofenceId);
+    const feature = this._amplifyDraw.get(this._editingGeofenceId);
 
     // FIXME: Save geofence api call here
     const savedGeofence: Geofence = {
@@ -163,7 +143,7 @@ export class AmplifyGeofenceControl {
       id: geofence.id,
       ...feature,
     };
-    this._mapBoxDraw.add(data);
+    this._amplifyDraw.add(data);
 
     this._editingGeofenceId = geofence.id;
   }
@@ -310,65 +290,23 @@ export class AmplifyGeofenceControl {
   }
 
   /**********************************************************************
-   Methods for controlling mapbox draw
+   Methods for controlling amplify mapbox draw
    **********************************************************************/
 
-  changeMode(mode: string, options?: Record<string, string | number>): void {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //@ts-ignore
-    this._mapBoxDraw.changeMode(mode, options);
-  }
+  changeMode(mode: string): void {
+    // erase existing mapbox draw content
+    this._amplifyDraw.delete(this._editingGeofenceId);
 
-  _enableMapboxDraw(): void {
-    if (this._map.hasControl(this._mapBoxDraw as unknown as IControl)) {
-      return;
+    if (mode === "draw_circle") {
+      this._amplifyDraw.drawCircularGeofence(this._editingGeofenceId);
+    } else {
+      this._amplifyDraw.drawPolygonGeofence(this._editingGeofenceId);
     }
-
-    this._map.addControl(
-      this._mapBoxDraw as unknown as IControl,
-      "bottom-right"
-    );
-    this._map.on("draw.create", (event) => {
-      console.log(
-        `Created a polygon event: ${event.features[0].geometry.coordinates}`
-      );
-    });
-    this._map.on("draw.update", (event) => {
-      console.log(`updated a polygon event: ${event}`);
-      console.log(
-        "updated a polygon " +
-          (this._mapBoxDraw.getAll().features[0].geometry as any).coordinates
-      );
-    });
-    this._map.on("draw.modechange", (event) => {
-      console.log(`Changed mode to ${event.mode}`);
-    });
-    this._map.on("draw.delete", (event) => {
-      console.log(`Deleted something event: ${event}`);
-    });
-  }
-
-  _disableMapboxDraw(): void {
-    if (this._map.hasControl(this._mapBoxDraw as unknown as IControl)) {
-      this._map.removeControl(this._mapBoxDraw as unknown as IControl);
-    }
-  }
-
-  _addToMapboxDraw(
-    data: Feature<
-      Geometry,
-      {
-        [name: string]: any;
-      }
-    >
-  ): void {
-    this.enableEditingMode();
-    this._mapBoxDraw.add(data);
   }
 
   // Disables add button and selecting items from geofence list
   enableEditingMode(): void {
-    this._enableMapboxDraw();
+    this._amplifyDraw.enable();
     this._drawGeofencesOutput.hide();
     this._ui.disableAddGeofenceButton(true);
     this._ui.disableGeofenceList();
@@ -376,7 +314,7 @@ export class AmplifyGeofenceControl {
 
   // Disables add button and selecting items from geofence list
   disableEditingMode(): void {
-    this._disableMapboxDraw();
+    this._amplifyDraw.disable();
     this._drawGeofencesOutput.show();
     this._ui.disableAddGeofenceButton(false);
     this._ui.enableGeofenceList();
@@ -384,7 +322,10 @@ export class AmplifyGeofenceControl {
 
   updateInputRadius(event: Event): void {
     const radius = (event.target as HTMLInputElement).value;
-    this.changeMode("draw_circle", { initialRadiusInKm: parseFloat(radius) });
+    this._amplifyDraw.drawCircularGeofence(
+      this._editingGeofenceId,
+      parseInt(radius)
+    );
   }
 
   addEditableGeofence(id: string, container: HTMLElement): void {
@@ -395,13 +336,7 @@ export class AmplifyGeofenceControl {
     }
     this._editingGeofenceId = id;
 
-    const mapBounds = this._map.getBounds();
-    const polygon = getPolygonFromBounds(mapBounds);
-    const data: Feature = {
-      id: this._editingGeofenceId,
-      ...getGeofenceFeatureFromPolygon(polygon),
-    };
-    this._addToMapboxDraw(data);
+    this._amplifyDraw.drawCircularGeofence(id);
     this._ui.removeAddGeofenceContainer();
   }
 }
