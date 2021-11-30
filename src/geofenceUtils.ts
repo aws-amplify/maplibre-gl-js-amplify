@@ -39,7 +39,10 @@ export const getGeofenceFeatureFromPolygon = (
 };
 
 // Measures distance between the coordinate bounds and takes two points 1/4 from each coordinate to create a polygon
-export const getPolygonFromBounds = (bounds: LngLatBounds): Polygon => {
+export const getPolygonFeatureFromBounds = (
+  id: string,
+  bounds: LngLatBounds
+): Feature<Geometry, GeoJsonProperties> => {
   const swCoordinate = bounds.getSouthWest().toArray();
   const neCoordinate = bounds.getNorthEast().toArray();
   const distanceInMeters = distance(point(swCoordinate), point(neCoordinate));
@@ -62,10 +65,19 @@ export const getPolygonFromBounds = (bounds: LngLatBounds): Polygon => {
     ],
   ];
 
-  return polygon;
+  return {
+    id,
+    type: "Feature",
+    geometry: {
+      type: "Polygon",
+      coordinates: polygon,
+    },
+    properties: {},
+  };
 };
 
 export const getCircleFeatureFromCoords = (
+  id: string,
   center: Coordinates,
   { bounds, radius }: { bounds?: LngLatBounds; radius?: number }
 ): Feature<Geometry, GeoJsonProperties> => {
@@ -77,6 +89,7 @@ export const getCircleFeatureFromCoords = (
   const circleFeature = circle(center, circleRadius);
 
   return {
+    id,
     type: "Feature",
     properties: {
       isCircle: true,
