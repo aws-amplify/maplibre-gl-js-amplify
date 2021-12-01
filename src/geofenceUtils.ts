@@ -1,11 +1,11 @@
 import along from "@turf/along";
 import circle from "@turf/circle";
-import distance from "@turf/distance";
-import { lineString, point } from "@turf/helpers";
+import length from "@turf/length";
+import { lineString } from "@turf/helpers";
 import { Feature, GeoJsonProperties, Geometry } from "geojson";
 import { LngLatBounds } from "maplibre-gl";
 import { Coordinates, Geofence, Polygon } from "./types";
-import { isGeofenceArray } from "./utils";
+import { isGeofenceArray, validateCoordinates } from "./utils";
 
 const GEOFENCE_ID_REGEX = /^[-._\p{L}\p{N}]+$/iu;
 
@@ -39,11 +39,15 @@ export const getGeofenceFeatureFromPolygon = (
 };
 
 // Measures distance between the coordinate bounds and takes two points 1/4 from each coordinate to create a polygon
-export const getPolygonFromBounds = (bounds: LngLatBounds): Polygon => {
+export const getPolygonFeatureFromBounds = (
+  id: string,
+  bounds: LngLatBounds
+): Feature<Geometry, GeoJsonProperties> => {
   const swCoordinate = bounds.getSouthWest().toArray();
   const neCoordinate = bounds.getNorthEast().toArray();
-  const distanceInMeters = distance(point(swCoordinate), point(neCoordinate));
-  const line = lineString([swCoordinate, neCoordinate]);
+  const center = bounds.getCenter().toArray();
+  const line = lineString([swCoordinate, center, neCoordinate]);
+  const distanceInMeters = length(line);
 
   // Gets coordinates 1/4 along the line from each coordinate
   const southWestCoordinate = along(line, distanceInMeters / 4).geometry
@@ -62,10 +66,19 @@ export const getPolygonFromBounds = (bounds: LngLatBounds): Polygon => {
     ],
   ];
 
-  return polygon;
+  return {
+    id,
+    type: "Feature",
+    geometry: {
+      type: "Polygon",
+      coordinates: polygon,
+    },
+    properties: {},
+  };
 };
 
 export const getCircleFeatureFromCoords = (
+  id: string,
   center: Coordinates,
   { bounds, radius }: { bounds?: LngLatBounds; radius?: number }
 ): Feature<Geometry, GeoJsonProperties> => {
@@ -73,10 +86,13 @@ export const getCircleFeatureFromCoords = (
     throw new Error("Circle requires a bounds or a radius");
   }
 
+  validateCoordinates(center);
+
   const circleRadius = radius ?? getDistanceFromBounds(bounds) / 8;
   const circleFeature = circle(center, circleRadius);
 
   return {
+    id,
     type: "Feature",
     properties: {
       isCircle: true,
@@ -92,7 +108,9 @@ export const getCircleFeatureFromCoords = (
 const getDistanceFromBounds = (bounds: LngLatBounds): number => {
   const swCoordinate = bounds.getSouthWest().toArray();
   const neCoordinate = bounds.getNorthEast().toArray();
-  return distance(point(swCoordinate), point(neCoordinate));
+  const center = bounds.getCenter().toArray();
+  const line = lineString([swCoordinate, center, neCoordinate]);
+  return length(line);
 };
 
 export const doesGeofenceExist = (

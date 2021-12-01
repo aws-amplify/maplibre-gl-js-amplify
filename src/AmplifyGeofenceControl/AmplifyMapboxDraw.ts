@@ -8,8 +8,7 @@ import {
 import { Coordinates } from "../types";
 import { Feature, Geometry } from "geojson";
 import {
-  getPolygonFromBounds,
-  getGeofenceFeatureFromPolygon,
+  getPolygonFeatureFromBounds,
   getCircleFeatureFromCoords,
 } from "../geofenceUtils";
 
@@ -92,12 +91,8 @@ export class AmplifyMapboxDraw {
    */
   drawPolygonGeofence(id: string): void {
     const mapBounds = this._map.getBounds();
-    const polygon = getPolygonFromBounds(mapBounds);
-    const data: Feature = {
-      id,
-      ...getGeofenceFeatureFromPolygon(polygon),
-    };
-    this.add(data);
+    const feature = getPolygonFeatureFromBounds(id, mapBounds);
+    this.add(feature);
   }
 
   /**
@@ -108,13 +103,10 @@ export class AmplifyMapboxDraw {
   drawCircularGeofence(id: string, radius?: number): void {
     const mapBounds = this._map.getBounds();
     const circleFeature = getCircleFeatureFromCoords(
+      id,
       this._map.getCenter().toArray() as Coordinates,
       { bounds: mapBounds, radius }
     );
-    const data: Feature = {
-      id,
-      ...circleFeature,
-    };
-    this.add(data);
+    this.add(circleFeature);
   }
 }
