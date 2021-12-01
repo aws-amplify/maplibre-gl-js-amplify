@@ -77,6 +77,8 @@
     "@turf/circle": "^6.5.0",
     "@turf/distance": "^6.5.0",
     "@turf/helpers": "^6.5.0",
+    "@turf/length": "^6.5.0",
+    "@turf/line-slice": "^6.5.0",
     "mapbox-gl-draw-circle": "^1.1.2"
   }
 }

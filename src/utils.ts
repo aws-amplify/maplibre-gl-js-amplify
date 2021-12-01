@@ -85,3 +85,21 @@ export const getFeaturesFromData = (
 export const urlEncodePeriods = (str: string): string => {
   return str.replace(/\./g, "%2E");
 };
+
+export function validateCoordinates(coordinates: Coordinates): void {
+  const [lng, lat] = coordinates;
+  if (!Number.isFinite(lng) || !Number.isFinite(lat)) {
+    throw new Error(`Invalid coordinates: [${lng},${lat}]`);
+  }
+  if (lat < -90 || lat > 90) {
+    const errorString =
+      "Latitude must be between -90 and 90 degrees inclusive.";
+    console.warn(errorString);
+    throw new Error(errorString);
+  } else if (lng < -180 || lng > 180) {
+    const errorString =
+      "Longitude must be between -180 and 180 degrees inclusive.";
+    console.warn(errorString);
+    throw new Error(errorString);
+  }
+}
