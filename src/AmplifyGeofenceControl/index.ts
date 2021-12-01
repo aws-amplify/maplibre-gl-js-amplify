@@ -8,8 +8,9 @@ import {
   getGeofenceFeatureArray,
 } from "../geofenceUtils";
 import { GEOFENCE_COLOR, GEOFENCE_BORDER_COLOR } from "../constants";
-import { AmplifyGeofenceControlUI, createElement } from "./ui";
+import { AmplifyGeofenceControlUI } from "./ui";
 import { AmplifyMapboxDraw } from "./AmplifyMapboxDraw";
+import { createElement } from "../utils";
 
 export interface AmplifyGeofenceControlOptions {
   geofenceCollectionId?: string;
@@ -217,6 +218,7 @@ export class AmplifyGeofenceControl {
 
     const loadGeofence = this._loadGeofence;
     asdf.forEach((geofence) => loadGeofence(geofence));
+    this._ui.updateGeofenceCount(asdf.length);
   }
 
   _loadGeofence(geofence: Geofence): void {

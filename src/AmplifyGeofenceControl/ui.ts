@@ -1,23 +1,7 @@
 import { Geofence } from "../types";
 import { debounce } from "debounce";
 import { COLOR_HOVER } from "../constants";
-
-export function createElement(
-  tagName: string,
-  className?: string,
-  container?: HTMLElement
-): HTMLElement {
-  const el = window.document.createElement(tagName);
-  if (className !== undefined) el.className = className;
-  if (container) container.appendChild(el);
-  return el;
-}
-
-export function removeElement(node: HTMLElement): void {
-  if (node.parentNode) {
-    node.parentNode.removeChild(node);
-  }
-}
+import { createElement, removeElement } from "../utils";
 
 export function AmplifyGeofenceControlUI(
   geofenceControl: any,
@@ -29,6 +13,7 @@ export function AmplifyGeofenceControlUI(
   let _checkboxAll: HTMLInputElement;
   let _geofenceList: HTMLElement;
   let _createContainer: HTMLElement;
+  let _geofenceTitle: HTMLElement;
 
   function registerControlPosition(map, positionName): void {
     if (map._controlPositions[positionName]) {
@@ -45,13 +30,25 @@ export function AmplifyGeofenceControlUI(
     style.setAttribute("className", "geofenceControl");
     document.head.append(style);
     style.textContent =
-      ".amplify-ctrl-geofence-list-container { position: absolute; height: 100vh; left: 0; top: 0; width: 15%; background: white; z-index: 100; }" +
-      ".amplify-ctrl-geofence-list { height: 100%; overflow: scroll; }" +
-      ".amplify-ctrl-geofence-list-noHover { pointer-events: none; }" +
-      ".amplify-ctrl-list-item { display: flex; }" +
+      ".amplify-ctrl-list-container { position: absolute; height: 100vh; left: 0; top: 0; width: 15%; background: white; z-index: 100; font-size: 14px; line-height: 24px; display: flex; flex-direction: column; }" +
+      ".amplify-ctrl-list { height: 100%; overflow: scroll; }" +
+      ".amplify-ctrl-list-noHover { pointer-events: none; }" +
+      ".amplify-ctrl-list-header { display: flex; justify-content: space-between; padding: 12px; height: 32px; align-items: center; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); margin-bottom: 11px; }" +
+      ".amplify-ctrl-list-header-title { font-weight: 600; }" +
+      ".amplify-ctrl-list-header-add-button { border: none; background: none; }" +
+      ".amplify-ctrl-list-item-container { display: flex; flex-direction: column; }" +
+      ".amplify-ctrl-list-item { display: flex; flex-direction: row; }" +
+      ".amplify-ctrl-list-selected-item { display: flex; background: #003560;}" +
+      ".amplify-ctrl-list-selected-item .amplify-ctrl-list-item-checkbox { visibility: hidden; }" +
       `.amplify-ctrl-list-item:hover { background: ${COLOR_HOVER}; }` +
-      ".amplify-ctrl-geofence-prompt-container { position: absolute; background: rgba(0,0,0,0.4); height: 100vh; width: 100vw; top: 0; display: flex; justify-content: center; align-items: center; }" +
-      ".amplify-ctrl-geofence-prompt { background: white; padding: 20px; }" +
+      `.amplify-ctrl-list-item:hover .amplify-ctrl-edit-button { display: block; }` +
+      ".amplify-ctrl-list-item-title { padding-left: 8px; margin-left: 8px; border-left: 1px solid #E9E9E9; }" +
+      ".amplify-ctrl-list-selected-item .amplify-ctrl-list-item-title { border: unset; color: white; }" +
+      ".amplify-ctrl-list-item-controls { display: flex; flex-direction: row; background: #003560; pointer-events: auto; }" +
+      ".amplify-ctrl-list-checkbox-all-container { display: flex; flex-direction: row; align-items: center; }" +
+      `.amplify-ctrl-edit-button { position: absolute; right: 0; display: none; }` +
+      ".amplify-ctrl-prompt-container { position: absolute; background: rgba(0,0,0,0.4); height: 100vh; width: 100vw; top: 0; display: flex; justify-content: center; align-items: center; }" +
+      ".amplify-ctrl-prompt { background: white; padding: 20px; }" +
       ".maplibregl-ctrl-full-screen { position: absolute; height: 100vh; width: 100vw; pointer-events: none; }";
   }
 
@@ -108,50 +105,177 @@ export function AmplifyGeofenceControlUI(
     removeElement(_addGeofenceContainer);
   }
 
+  /************************************************************
+   * Geofence List
+   *************************************************************/
   function createGeofenceListContainer() {
     const geofenceListContainer = createElement(
       "div",
-      "amplify-ctrl-geofence-list-container",
+      "amplify-ctrl-list-container",
       geofenceControlContainer
     );
 
-    const title = createElement(
+    createGeofenceListHeader(geofenceListContainer);
+    createCheckboxAllContainer(geofenceListContainer);
+
+    _geofenceList = createElement(
       "div",
-      "amplify-ctrl-geofence-list-title",
+      "amplify-ctrl-list",
       geofenceListContainer
     );
-    title.innerHTML = "Geofences";
+  }
 
-    _addGeofencebutton = createElement(
-      "button",
-      "geofence-add-button",
+  function createCheckboxAllContainer(geofenceListContainer: HTMLElement) {
+    const container = createElement(
+      "div",
+      "amplify-ctrl-list-checkbox-all-container",
       geofenceListContainer
-    ) as HTMLButtonElement;
-    _addGeofencebutton.innerHTML = "+";
-    _addGeofencebutton.addEventListener("click", () => {
-      createAddGeofenceContainer();
-    });
+    );
 
     _checkboxAll = createElement(
       "input",
-      "amplify-ctrl-list-item-checkbox-all",
-      geofenceListContainer
+      "amplify-ctrl-list-checkbox-all",
+      container
     ) as HTMLInputElement;
     _checkboxAll.type = "checkbox";
     _checkboxAll.addEventListener("click", function () {
       if (_checkboxAll.checked) {
         geofenceControl.displayAllGeofences();
+        checkboxAllText.innerHTML = "Deselect All";
       } else {
         geofenceControl.hideAllGeofences();
+        checkboxAllText.innerHTML = "Select All";
       }
     });
 
-    _geofenceList = createElement(
+    const checkboxAllText = createElement(
       "div",
-      "amplify-ctrl-geofence-list",
+      "amplify-ctrl-list-item-title",
+      container
+    );
+    checkboxAllText.innerHTML = "Select all";
+  }
+
+  function createGeofenceListHeader(geofenceListContainer: HTMLElement) {
+    const header = createElement(
+      "div",
+      "amplify-ctrl-list-header",
       geofenceListContainer
     );
+
+    _geofenceTitle = createElement(
+      "div",
+      "amplify-ctrl-list-header-title",
+      header
+    );
+    _geofenceTitle.innerHTML = "Geofences (0)";
+
+    _addGeofencebutton = createElement(
+      "button",
+      "amplify-ctrl-list-header-add-button",
+      header
+    ) as HTMLButtonElement;
+    _addGeofencebutton.innerHTML = "+";
+    _addGeofencebutton.addEventListener("click", () => {
+      createAddGeofenceContainer();
+    });
   }
+
+  function renderListItem(geofence: Geofence): void {
+    const container = createElement(
+      "li",
+      "amplify-ctrl-list-item-container",
+      _geofenceList
+    );
+    container.id = `list-item-${geofence.id}`;
+    const listItem = createElement("li", "amplify-ctrl-list-item", container);
+    listItem.addEventListener("mouseover", function () {
+      geofenceControl.displayHighlightedGeofence(geofence.id);
+    });
+    listItem.addEventListener("mouseout", function () {
+      geofenceControl.hideHighlightedGeofence();
+    });
+
+    const checkbox = createElement(
+      "input",
+      "amplify-ctrl-list-item-checkbox",
+      listItem
+    );
+    checkbox.id = `list-item-checkbox-${geofence.id}`;
+    (checkbox as HTMLInputElement).type = "checkbox";
+    checkbox.addEventListener("click", function () {
+      if ((checkbox as HTMLInputElement).checked) {
+        geofenceControl.displayGeofence(geofence.id);
+      } else {
+        geofenceControl.hideGeofence(geofence.id);
+      }
+    });
+
+    const geofenceTitle = createElement(
+      "div",
+      "amplify-ctrl-list-item-title",
+      listItem
+    );
+    geofenceTitle.innerHTML = geofence.id;
+
+    const editButton = createElement(
+      "button",
+      "amplify-ctrl-edit-button",
+      listItem
+    );
+    editButton.innerHTML = "Edit";
+    editButton.addEventListener("click", function () {
+      geofenceControl.editGeofence(geofence.id);
+      createEditControls(container, listItem, geofence.id);
+      listItem.classList.remove("amplify-ctrl-list-item");
+      listItem.classList.add("amplify-ctrl-list-selected-item");
+    });
+  }
+
+  function createEditControls(
+    itemContainer: HTMLElement,
+    item: HTMLElement,
+    id: string
+  ): void {
+    const editContainer = createElement(
+      "div",
+      "amplify-ctrl-list-item-controls",
+      itemContainer
+    );
+
+    renderDeleteButton(editContainer, id);
+
+    const cancelButton = createElement(
+      "button",
+      "amplify-ctrl-add-geofence-cancel-button",
+      editContainer
+    );
+    cancelButton.innerHTML = "Cancel";
+    cancelButton.addEventListener("click", () => {
+      geofenceControl.disableEditingMode();
+      item.classList.remove("amplify-ctrl-list-selected-item");
+      item.classList.add("amplify-ctrl-list-item");
+      removeElement(editContainer);
+    });
+
+    const saveGeofenceButton = createElement(
+      "button",
+      "amplify-ctrl-create-save-button",
+      editContainer
+    );
+    saveGeofenceButton.addEventListener("click", () => {
+      geofenceControl.saveGeofence();
+      item.classList.remove("amplify-ctrl-list-selected-item");
+      item.classList.add("amplify-ctrl-list-item");
+      removeElement(editContainer);
+    });
+    saveGeofenceButton.title = "Save Geofence";
+    saveGeofenceButton.innerHTML = "Save Geofence";
+  }
+
+  /************************************************************
+   * Add Geofence Controls
+   *************************************************************/
 
   function removeGeofenceCreateContainer(): void {
     removeElement(_createContainer);
@@ -161,13 +285,13 @@ export function AmplifyGeofenceControlUI(
     geofenceControl.enableEditingMode();
     _addGeofenceContainer = createElement(
       "div",
-      "amplify-ctrl-geofence-prompt-container ",
+      "amplify-ctrl-prompt-container ",
       geofenceControlContainer
     );
 
     const addGeofencePrompt = createElement(
       "div",
-      "amplify-ctrl-geofence-prompt",
+      "amplify-ctrl-prompt",
       _addGeofenceContainer
     );
 
@@ -221,22 +345,11 @@ export function AmplifyGeofenceControlUI(
     errorDiv.innerHTML = error;
   }
 
-  function renderEditButton(container: HTMLElement, geofence: Geofence): void {
-    const editButton = createElement(
-      "button",
-      "geofence-edit-button",
-      container
-    );
-    editButton.innerHTML = "Edit";
-    editButton.addEventListener("click", function () {
-      geofenceControl.editGeofence(geofence.id);
-    });
-  }
+  /************************************************************
+   * Delete Controls
+   *************************************************************/
 
-  function renderDeleteButton(
-    container: HTMLElement,
-    geofence: Geofence
-  ): void {
+  function renderDeleteButton(container: HTMLElement, id: string): void {
     const deleteButton = createElement(
       "button",
       "geofence-delete-button",
@@ -244,61 +357,20 @@ export function AmplifyGeofenceControlUI(
     );
     deleteButton.innerHTML = "Delete";
     deleteButton.addEventListener("click", function () {
-      createConfirmDeleteContainer(geofence.id);
+      createConfirmDeleteContainer(id);
     });
-  }
-
-  function renderListItem(geofence: Geofence): void {
-    const listItem = createElement(
-      "li",
-      "amplify-ctrl-list-item",
-      _geofenceList
-    );
-    listItem.id = `list-item-${geofence.id}`;
-    listItem.addEventListener("mouseover", function () {
-      geofenceControl.displayHighlightedGeofence(geofence.id);
-    });
-    listItem.addEventListener("mouseout", function () {
-      geofenceControl.hideHighlightedGeofence();
-    });
-
-    renderEditButton(listItem, geofence);
-
-    const checkbox = createElement(
-      "input",
-      "amplify-ctrl-list-item-checkbox",
-      listItem
-    );
-    checkbox.id = `list-item-checkbox-${geofence.id}`;
-    (checkbox as HTMLInputElement).type = "checkbox";
-    checkbox.addEventListener("click", function () {
-      if ((checkbox as HTMLInputElement).checked) {
-        geofenceControl.displayGeofence(geofence.id);
-      } else {
-        geofenceControl.hideGeofence(geofence.id);
-      }
-    });
-
-    const geofenceTitle = createElement(
-      "div",
-      "amplify-ctrl-list-item-title",
-      listItem
-    );
-    geofenceTitle.innerHTML = geofence.id;
-
-    renderDeleteButton(listItem, geofence);
   }
 
   function createConfirmDeleteContainer(geofenceId: string): void {
     _deleteGeofenceContainer = createElement(
       "div",
-      "amplify-ctrl-geofence-prompt-container ",
+      "amplify-ctrl-prompt-container ",
       geofenceControlContainer
     );
 
     const deleteGeofencePrompt = createElement(
       "div",
-      "amplify-ctrl-geofence-prompt",
+      "amplify-ctrl-prompt",
       _deleteGeofenceContainer
     );
 
@@ -318,6 +390,7 @@ export function AmplifyGeofenceControlUI(
     confirmDeleteButton.addEventListener("click", function () {
       geofenceControl.deleteGeofence(geofenceId);
       removeElement(_deleteGeofenceContainer);
+      geofenceControl.disableEditingMode();
     });
 
     const cancelButton = createElement(
@@ -330,6 +403,10 @@ export function AmplifyGeofenceControlUI(
       removeElement(_deleteGeofenceContainer);
     });
   }
+
+  /************************************************************
+   * Utility Methods
+   *************************************************************/
 
   function updateCheckbox(geofenceId: string, checked: boolean): void {
     const checkbox = document.getElementById(
@@ -348,15 +425,19 @@ export function AmplifyGeofenceControlUI(
   }
 
   function enableGeofenceList(): void {
-    _geofenceList.classList.remove("amplify-ctrl-geofence-list-noHover");
+    _geofenceList.classList.remove("amplify-ctrl-list-noHover");
   }
 
   function disableGeofenceList(): void {
-    _geofenceList.classList.add("amplify-ctrl-geofence-list-noHover");
+    _geofenceList.classList.add("amplify-ctrl-list-noHover");
   }
 
   function getCheckboxAllValue(): boolean {
     return _checkboxAll.checked;
+  }
+
+  function updateGeofenceCount(count: number): void {
+    _geofenceTitle.innerHTML = `Geofences (${count})`;
   }
 
   return {
@@ -367,10 +448,8 @@ export function AmplifyGeofenceControlUI(
     createGeofenceCreateContainer,
     createGeofenceListContainer,
     removeAddGeofenceContainer,
-    createAddGeofenceContainer,
     createAddGeofencePromptError,
     renderListItem,
-    createConfirmDeleteContainer,
     updateCheckbox,
     removeGeofenceListItem,
     disableAddGeofenceButton,
@@ -378,5 +457,6 @@ export function AmplifyGeofenceControlUI(
     disableGeofenceList,
     getCheckboxAllValue,
     removeGeofenceCreateContainer,
+    updateGeofenceCount,
   };
 }

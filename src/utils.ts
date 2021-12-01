@@ -103,3 +103,20 @@ export function validateCoordinates(coordinates: Coordinates): void {
     throw new Error(errorString);
   }
 }
+
+export function createElement(
+  tagName: string,
+  className?: string,
+  container?: HTMLElement
+): HTMLElement {
+  const el = window.document.createElement(tagName);
+  if (className !== undefined) el.className = className;
+  if (container) container.appendChild(el);
+  return el;
+}
+
+export function removeElement(node: HTMLElement): void {
+  if (node.parentNode) {
+    node.parentNode.removeChild(node);
+  }
+}
