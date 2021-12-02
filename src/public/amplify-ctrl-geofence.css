@@ -1,0 +1,168 @@
+/* List Styles */
+.amplify-ctrl-list-container {
+  position: absolute;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  width: 15%;
+  background: white;
+  z-index: 100;
+  font-size: 14px;
+  line-height: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.amplify-ctrl-list {
+  height: 100%;
+  overflow: scroll;
+}
+
+.amplify-ctrl-list-noHover {
+  pointer-events: none;
+}
+
+.amplify-ctrl-list-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  height: 32px;
+  align-items: center;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 11px;
+  font-weight: 600;
+}
+
+.amplify-ctrl-list-header-add-button {
+  border: none;
+  background: none;
+}
+
+.amplify-ctrl-list-item-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.amplify-ctrl-list-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-left: 8px;
+}
+
+.amplify-ctrl-list-selected-item {
+  display: flex;
+  background: #003560;
+  padding-top: 8px;
+}
+
+.amplify-ctrl-list-selected-item .amplify-ctrl-list-item-checkbox {
+  visibility: hidden;
+}
+
+.amplify-ctrl-list-item:hover {
+  background: #003560;
+  color: white;
+}
+
+.amplify-ctrl-list-item:hover .amplify-ctrl-edit-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.amplify-ctrl-list-item-title {
+  padding: 4px 0px 4px 8px;
+  margin-left: 8px;
+  border-left: 1px solid #e9e9e9;
+}
+
+.amplify-ctrl-list-selected-item .amplify-ctrl-list-item-title {
+  border: unset;
+  color: white;
+}
+
+/* Add Geofence Prompt Styles */
+
+.amplify-ctrl-prompt-container {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.4);
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.amplify-ctrl-prompt {
+  background: white;
+  padding: 15px;
+  border-radius: 4px;
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.12);
+}
+
+.amplify-ctrl-add-geofence-title {
+  text-align: left;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 18px;
+  padding-bottom: 5px;
+}
+
+/* Other Styles */
+
+.amplify-ctrl-list-item-controls {
+  display: flex;
+  flex-direction: row;
+  background: #003560;
+  pointer-events: auto;
+  justify-content: space-around;
+  padding-bottom: 8px;
+}
+
+.amplify-ctrl-list-item-controls-right {
+  display: flex;
+}
+
+.amplify-ctrl-list-checkbox-all-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-left: 8px;
+}
+
+.amplify-ctrl-edit-button {
+  position: absolute;
+  right: 11px;
+  display: none;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.3);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+}
+
+.amplify-ctrl-button {
+  background: unset;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 4px 16px;
+}
+
+.amplify-ctrl-save-button {
+  background: #ffffff;
+  border-radius: 4px;
+  padding: 4px 16px;
+  font-weight: bold;
+  cursor: pointer;
+  color: black;
+}
+
+.maplibregl-ctrl-full-screen {
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+  pointer-events: none;
+}

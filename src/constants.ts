@@ -3,7 +3,7 @@ export const COLOR_BLACK = "#000";
 export const MARKER_COLOR = "#5d8aff";
 export const ACTIVE_MARKER_COLOR = "#ff9900";
 export const POPUP_BORDER_COLOR = "#0000001f";
-export const COLOR_HOVER = "#D9D9D9";
+export const COLOR_HOVER = "#003560";
 export const GEOFENCE_COLOR = "#2194f3";
 export const GEOFENCE_BORDER_COLOR = "#003560";
 

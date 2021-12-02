@@ -77,7 +77,6 @@ export class AmplifyGeofenceControl {
     this._amplifyDraw = new AmplifyMapboxDraw(map, this._ui);
 
     this._ui.registerControlPosition(map, "full-screen");
-    this._ui.createStyleHeader();
 
     this._ui.createGeofenceListContainer();
 

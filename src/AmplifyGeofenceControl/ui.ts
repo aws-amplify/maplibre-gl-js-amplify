@@ -1,7 +1,10 @@
 import { Geofence } from "../types";
 import { debounce } from "debounce";
-import { COLOR_HOVER } from "../constants";
 import { createElement, removeElement } from "../utils";
+import editIcon from "../public/editIcon.svg";
+import trashIcon from "../public/trashIcon.svg";
+
+import "../public/amplify-ctrl-geofence.css";
 
 export function AmplifyGeofenceControlUI(
   geofenceControl: any,
@@ -25,33 +28,6 @@ export function AmplifyGeofenceControlUI(
     map._controlPositions[positionName] = positionContainer;
   }
 
-  function createStyleHeader(): void {
-    const style = document.createElement("style");
-    style.setAttribute("className", "geofenceControl");
-    document.head.append(style);
-    style.textContent =
-      ".amplify-ctrl-list-container { position: absolute; height: 100vh; left: 0; top: 0; width: 15%; background: white; z-index: 100; font-size: 14px; line-height: 24px; display: flex; flex-direction: column; }" +
-      ".amplify-ctrl-list { height: 100%; overflow: scroll; }" +
-      ".amplify-ctrl-list-noHover { pointer-events: none; }" +
-      ".amplify-ctrl-list-header { display: flex; justify-content: space-between; padding: 12px; height: 32px; align-items: center; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); margin-bottom: 11px; }" +
-      ".amplify-ctrl-list-header-title { font-weight: 600; }" +
-      ".amplify-ctrl-list-header-add-button { border: none; background: none; }" +
-      ".amplify-ctrl-list-item-container { display: flex; flex-direction: column; }" +
-      ".amplify-ctrl-list-item { display: flex; flex-direction: row; }" +
-      ".amplify-ctrl-list-selected-item { display: flex; background: #003560;}" +
-      ".amplify-ctrl-list-selected-item .amplify-ctrl-list-item-checkbox { visibility: hidden; }" +
-      `.amplify-ctrl-list-item:hover { background: ${COLOR_HOVER}; }` +
-      `.amplify-ctrl-list-item:hover .amplify-ctrl-edit-button { display: block; }` +
-      ".amplify-ctrl-list-item-title { padding-left: 8px; margin-left: 8px; border-left: 1px solid #E9E9E9; }" +
-      ".amplify-ctrl-list-selected-item .amplify-ctrl-list-item-title { border: unset; color: white; }" +
-      ".amplify-ctrl-list-item-controls { display: flex; flex-direction: row; background: #003560; pointer-events: auto; }" +
-      ".amplify-ctrl-list-checkbox-all-container { display: flex; flex-direction: row; align-items: center; }" +
-      `.amplify-ctrl-edit-button { position: absolute; right: 0; display: none; }` +
-      ".amplify-ctrl-prompt-container { position: absolute; background: rgba(0,0,0,0.4); height: 100vh; width: 100vw; top: 0; display: flex; justify-content: center; align-items: center; }" +
-      ".amplify-ctrl-prompt { background: white; padding: 20px; }" +
-      ".maplibregl-ctrl-full-screen { position: absolute; height: 100vh; width: 100vw; pointer-events: none; }";
-  }
-
   function createGeofenceCreateContainer(): void {
     _createContainer = createElement(
       "div",
@@ -68,15 +44,6 @@ export function AmplifyGeofenceControlUI(
       "keydown",
       debounce(geofenceControl.updateInputRadius, 200)
     );
-
-    const saveGeofenceButton = createElement(
-      "button",
-      "amplify-ctrl-create-save-button",
-      _createContainer
-    );
-    saveGeofenceButton.addEventListener("click", geofenceControl.saveGeofence);
-    saveGeofenceButton.title = "Save Geofence";
-    saveGeofenceButton.innerHTML = "Save Geofence";
 
     const circleModeButton = createElement(
       "button",
@@ -219,17 +186,19 @@ export function AmplifyGeofenceControlUI(
     geofenceTitle.innerHTML = geofence.id;
 
     const editButton = createElement(
-      "button",
+      "div",
       "amplify-ctrl-edit-button",
       listItem
     );
-    editButton.innerHTML = "Edit";
     editButton.addEventListener("click", function () {
       geofenceControl.editGeofence(geofence.id);
       createEditControls(container, listItem, geofence.id);
       listItem.classList.remove("amplify-ctrl-list-item");
       listItem.classList.add("amplify-ctrl-list-selected-item");
     });
+    const imageIcon = new Image(15, 15);
+    imageIcon.src = editIcon;
+    editButton.appendChild(imageIcon);
   }
 
   function createEditControls(
@@ -245,11 +214,18 @@ export function AmplifyGeofenceControlUI(
 
     renderDeleteButton(editContainer, id);
 
-    const cancelButton = createElement(
-      "button",
-      "amplify-ctrl-add-geofence-cancel-button",
+    const rightContainer = createElement(
+      "div",
+      "amplify-ctrl-list-item-controls-right",
       editContainer
     );
+
+    const cancelButton = createElement(
+      "div",
+      "amplify-ctrl-cancel-button",
+      rightContainer
+    );
+    cancelButton.classList.add("amplify-ctrl-button");
     cancelButton.innerHTML = "Cancel";
     cancelButton.addEventListener("click", () => {
       geofenceControl.disableEditingMode();
@@ -259,9 +235,9 @@ export function AmplifyGeofenceControlUI(
     });
 
     const saveGeofenceButton = createElement(
-      "button",
-      "amplify-ctrl-create-save-button",
-      editContainer
+      "div",
+      "amplify-ctrl-save-button amplify-ctrl-button",
+      rightContainer
     );
     saveGeofenceButton.addEventListener("click", () => {
       geofenceControl.saveGeofence();
@@ -269,8 +245,8 @@ export function AmplifyGeofenceControlUI(
       item.classList.add("amplify-ctrl-list-item");
       removeElement(editContainer);
     });
-    saveGeofenceButton.title = "Save Geofence";
-    saveGeofenceButton.innerHTML = "Save Geofence";
+    saveGeofenceButton.title = "Save";
+    saveGeofenceButton.innerHTML = "Save";
   }
 
   /************************************************************
@@ -300,7 +276,7 @@ export function AmplifyGeofenceControlUI(
       "amplify-ctrl-add-geofence-title",
       addGeofencePrompt
     );
-    title.innerHTML = "Add a new geofence:";
+    title.innerHTML = "Add a new geofence";
 
     const nameInput = createElement(
       "input",
@@ -351,14 +327,17 @@ export function AmplifyGeofenceControlUI(
 
   function renderDeleteButton(container: HTMLElement, id: string): void {
     const deleteButton = createElement(
-      "button",
-      "geofence-delete-button",
+      "div",
+      "amplify-ctrl-delete-button",
       container
     );
-    deleteButton.innerHTML = "Delete";
+    deleteButton.classList.add("amplify-ctrl-button");
     deleteButton.addEventListener("click", function () {
       createConfirmDeleteContainer(id);
     });
+    const imageIcon = new Image(15, 15);
+    imageIcon.src = trashIcon;
+    deleteButton.appendChild(imageIcon);
   }
 
   function createConfirmDeleteContainer(geofenceId: string): void {
@@ -442,7 +421,6 @@ export function AmplifyGeofenceControlUI(
 
   return {
     registerControlPosition,
-    createStyleHeader,
     createElement,
     removeElement,
     createGeofenceCreateContainer,
