@@ -116,7 +116,8 @@ export class AmplifyMapboxDraw {
       }
     >
   ): void {
-    this.enable();
+    const isCircle = data.properties.isCircle;
+    this.enable(isCircle);
     this._mapBoxDraw.add(data);
     this._mapBoxDraw.changeMode("direct_select" as any, {
       featureId: data.id as string,
@@ -134,7 +135,7 @@ export class AmplifyMapboxDraw {
     this._ui.removeGeofenceCreateContainer();
   }
 
-  enable(): void {
+  enable(isCircle?: boolean): void {
     if (this._map.hasControl(this._mapBoxDraw as unknown as IControl)) {
       return;
     }
@@ -142,7 +143,7 @@ export class AmplifyMapboxDraw {
       this._mapBoxDraw as unknown as IControl,
       "bottom-right"
     );
-    this._ui.createGeofenceCreateContainer();
+    this._ui.createGeofenceCreateContainer(isCircle);
   }
 
   /**

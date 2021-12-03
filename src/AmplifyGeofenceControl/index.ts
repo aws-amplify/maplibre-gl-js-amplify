@@ -157,7 +157,7 @@ export class AmplifyGeofenceControl {
     this._editingGeofenceId = geofence.id;
   }
 
-  deleteGeofence(id: string): void {
+  deleteGeofence(id: string): string {
     // FIXME: delete geofence api call here
     this._ui.removeGeofenceListItem(id);
 
@@ -168,6 +168,8 @@ export class AmplifyGeofenceControl {
     );
 
     this._updateDisplayedGeofences();
+
+    return id;
   }
 
   deleteSelectedGeofences(): void {
@@ -342,5 +344,6 @@ export class AmplifyGeofenceControl {
   addEditableGeofence(): void {
     this._editingGeofenceId = "tempGeofence";
     this._amplifyDraw.drawCircularGeofence("tempGeofence");
+    this.enableEditingMode();
   }
 }

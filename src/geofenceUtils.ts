@@ -47,13 +47,15 @@ export const getPolygonFeatureFromBounds = (
   const neCoordinate = bounds.getNorthEast().toArray();
   const center = bounds.getCenter().toArray();
   const line = lineString([swCoordinate, center, neCoordinate]);
-  const distanceInMeters = length(line);
+  const distanceInMiles = length(line, { units: "miles" });
 
   // Gets coordinates 1/4 along the line from each coordinate
-  const southWestCoordinate = along(line, distanceInMeters / 4).geometry
-    .coordinates;
-  const northeastCoordinate = along(line, distanceInMeters * (3 / 4)).geometry
-    .coordinates;
+  const southWestCoordinate = along(line, distanceInMiles / 4, {
+    units: "miles",
+  }).geometry.coordinates;
+  const northeastCoordinate = along(line, distanceInMiles * (3 / 4), {
+    units: "miles",
+  }).geometry.coordinates;
 
   // Creates a polygon from the coordinates found along the line between the bounding coordinates
   const polygon = [
@@ -89,7 +91,7 @@ export const getCircleFeatureFromCoords = (
   validateCoordinates(center);
 
   const circleRadius = radius ?? getDistanceFromBounds(bounds) / 8;
-  const circleFeature = circle(center, circleRadius);
+  const circleFeature = circle(center, circleRadius, { units: "miles" });
 
   return {
     id,
@@ -110,7 +112,7 @@ const getDistanceFromBounds = (bounds: LngLatBounds): number => {
   const neCoordinate = bounds.getNorthEast().toArray();
   const center = bounds.getCenter().toArray();
   const line = lineString([swCoordinate, center, neCoordinate]);
-  return length(line);
+  return length(line, { units: "miles" });
 };
 
 export const doesGeofenceExist = (
