@@ -3,6 +3,10 @@ import { debounce } from "debounce";
 import { createElement, removeElement } from "../utils";
 import editIcon from "../public/editIcon.svg";
 import trashIcon from "../public/trashIcon.svg";
+import popupStep1 from "../public/popupStep1.svg";
+import popupStep2 from "../public/popupStep2.svg";
+import popupStep3 from "../public/popupStep3.svg";
+import popupStep4 from "../public/popupStep4.svg";
 
 import "../public/amplify-ctrl-geofence.css";
 
@@ -17,6 +21,10 @@ export function AmplifyGeofenceControlUI(
   let _geofenceList: HTMLElement;
   let _createContainer: HTMLElement;
   let _geofenceTitle: HTMLElement;
+  let _checkBoxAllAndCreateContainer: HTMLElement;
+  let _checkBoxAllContainer: HTMLElement;
+  let _circleModeContainer: HTMLElement;
+  let _polygonModeContainer: HTMLElement;
 
   function registerControlPosition(map, positionName): void {
     if (map._controlPositions[positionName]) {
@@ -28,48 +36,176 @@ export function AmplifyGeofenceControlUI(
     map._controlPositions[positionName] = positionContainer;
   }
 
+  /************************************************************
+   * Create Geofence Controls
+   *************************************************************/
+
   function createGeofenceCreateContainer(): void {
-    _createContainer = createElement(
+    const container = createElement(
       "div",
-      "amplify-ctrl-create-prompt",
+      "amplify-ctrl-create-prompt-container",
       geofenceControlContainer
     );
 
+    _createContainer = createElement(
+      "div",
+      "amplify-ctrl-create-prompt",
+      container
+    );
+
+    const buttonContainer = createElement(
+      "div",
+      "amplify-ctrl-create-prompt-buttons",
+      _createContainer
+    );
+
+    const circleModeButton = createElement(
+      "div",
+      "amplify-ctrl-create-prompt-button-circle amplify-ctrl-create-prompt-button",
+      buttonContainer
+    );
+    circleModeButton.addEventListener("click", () => {
+      geofenceControl.changeMode("draw_circle");
+      circleModeButton.classList.add("amplify-ctrl-create-prompt-selected");
+      polygonModeButton.classList.remove("amplify-ctrl-create-prompt-selected");
+      removeElement(_polygonModeContainer);
+      createCircleModeCreateContainer(_createContainer);
+    });
+    circleModeButton.innerHTML = "Circle";
+
+    const polygonModeButton = createElement(
+      "div",
+      "amplify-ctrl-create-prompt-button-polygon amplify-ctrl-create-prompt-button",
+      buttonContainer
+    );
+    polygonModeButton.addEventListener("click", () => {
+      geofenceControl.changeMode("draw_polygon");
+      polygonModeButton.classList.add("amplify-ctrl-create-prompt-selected");
+      circleModeButton.classList.remove("amplify-ctrl-create-prompt-selected");
+      removeElement(_circleModeContainer);
+      createPolygonModeCreateContainer(_createContainer);
+    });
+    polygonModeButton.innerHTML = "Custom";
+
+    // Default to circle mode
+    circleModeButton.classList.add("amplify-ctrl-create-prompt-selected");
+    createCircleModeCreateContainer(_createContainer);
+  }
+
+  function createCircleModeCreateContainer(container: HTMLElement): void {
+    _circleModeContainer = createElement(
+      "div",
+      "amplify-ctrl-create-circle-mode-container",
+      container
+    );
+
+    const radiusTitle = createElement(
+      "div",
+      "amplify-ctrl-create-circle-mode-title",
+      _circleModeContainer
+    );
+    radiusTitle.innerHTML = "Radius";
+
     const geofenceCreateInput = createElement(
       "input",
-      "amplify-ctrl-create-input",
-      _createContainer
+      "amplify-ctrl-create-circle-mode-input",
+      _circleModeContainer
     );
     geofenceCreateInput.addEventListener(
       "keydown",
       debounce(geofenceControl.updateInputRadius, 200)
     );
-
-    const circleModeButton = createElement(
-      "button",
-      "amplify-ctrl-create-circle-button",
-      _createContainer
-    );
-    circleModeButton.addEventListener("click", () =>
-      geofenceControl.changeMode("draw_circle")
-    );
-    circleModeButton.title = "Circle Mode";
-    circleModeButton.innerHTML = "Circle Mode";
-
-    const polygonModeButton = createElement(
-      "button",
-      "amplify-ctrl-create-polygon-button",
-      _createContainer
-    );
-    polygonModeButton.addEventListener("click", () =>
-      geofenceControl.changeMode("draw_polygon")
-    );
-    polygonModeButton.title = "Polygon Mode";
-    polygonModeButton.innerHTML = "Polygon Mode";
   }
 
-  function removeAddGeofenceContainer(): void {
-    removeElement(_addGeofenceContainer);
+  function createPolygonModeCreateContainer(container: HTMLElement): void {
+    _polygonModeContainer = createElement(
+      "div",
+      "amplify-ctrl-create-polygon-mode-container",
+      container
+    );
+
+    const moreInfoIcon = createElement(
+      "div",
+      "amplify-ctrl-create-polygon-mode-icon",
+      _polygonModeContainer
+    );
+
+    const letterI = createElement(
+      "div",
+      "amplify-ctrl-create-polygon-mode-icon-i",
+      moreInfoIcon
+    );
+    letterI.innerHTML = "i";
+
+    const moreInfo = createElement(
+      "div",
+      "amplify-ctrl-create-polygon-mode-title",
+      _polygonModeContainer
+    );
+    moreInfo.innerHTML = "How it works?";
+
+    // Add popup onClick
+    const popup = createPolygonModeInfoPopup(moreInfoIcon);
+    _polygonModeContainer.addEventListener("click", () => {
+      popup.classList.toggle("show");
+    });
+  }
+
+  function createPolygonModeInfoPopup(container: HTMLElement): HTMLElement {
+    const popupContainer = createElement(
+      "div",
+      "amplify-ctrl-create-polygon-mode-popup-container",
+      container
+    );
+
+    const popup = createElement(
+      "div",
+      "amplify-ctrl-create-polygon-mode-popup",
+      popupContainer
+    );
+
+    const imageIcon1 = new Image(32, 32);
+    imageIcon1.src = popupStep1;
+    createPopupStep(popup, "Move dots to desired position", imageIcon1);
+
+    const imageIcon2 = new Image(32, 32);
+    imageIcon2.src = popupStep2;
+    createPopupStep(popup, "Click on a border to create a dot", imageIcon2);
+
+    const imageIcon3 = new Image(32, 32);
+    imageIcon3.src = popupStep3;
+    createPopupStep(popup, "Click into shape to move", imageIcon3);
+
+    const imageIcon4 = new Image(64, 32);
+    imageIcon4.src = popupStep4;
+    createPopupStep(popup, "Press delete to remove a dot", imageIcon4);
+
+    return popup;
+  }
+
+  function createPopupStep(
+    container: HTMLElement,
+    text: string,
+    image: HTMLImageElement
+  ): void {
+    const popupStep = createElement(
+      "div",
+      "amplify-ctrl-create-polygon-mode-popup-step",
+      container
+    );
+    const popupStepImage = createElement(
+      "div",
+      "amplify-ctrl-create-polygon-mode-popup-step-image",
+      popupStep
+    );
+    popupStepImage.appendChild(image);
+
+    const popupStepText = createElement(
+      "div",
+      "amplify-ctrl-create-polygon-mode-popup-step-text",
+      popupStep
+    );
+    popupStepText.innerHTML = text;
   }
 
   /************************************************************
@@ -83,44 +219,12 @@ export function AmplifyGeofenceControlUI(
     );
 
     createGeofenceListHeader(geofenceListContainer);
-    createCheckboxAllContainer(geofenceListContainer);
 
     _geofenceList = createElement(
       "div",
       "amplify-ctrl-list",
       geofenceListContainer
     );
-  }
-
-  function createCheckboxAllContainer(geofenceListContainer: HTMLElement) {
-    const container = createElement(
-      "div",
-      "amplify-ctrl-list-checkbox-all-container",
-      geofenceListContainer
-    );
-
-    _checkboxAll = createElement(
-      "input",
-      "amplify-ctrl-list-checkbox-all",
-      container
-    ) as HTMLInputElement;
-    _checkboxAll.type = "checkbox";
-    _checkboxAll.addEventListener("click", function () {
-      if (_checkboxAll.checked) {
-        geofenceControl.displayAllGeofences();
-        checkboxAllText.innerHTML = "Deselect All";
-      } else {
-        geofenceControl.hideAllGeofences();
-        checkboxAllText.innerHTML = "Select All";
-      }
-    });
-
-    const checkboxAllText = createElement(
-      "div",
-      "amplify-ctrl-list-item-title",
-      container
-    );
-    checkboxAllText.innerHTML = "Select all";
   }
 
   function createGeofenceListHeader(geofenceListContainer: HTMLElement) {
@@ -137,12 +241,50 @@ export function AmplifyGeofenceControlUI(
     );
     _geofenceTitle.innerHTML = "Geofences (0)";
 
-    _addGeofencebutton = createElement(
-      "button",
-      "amplify-ctrl-list-header-add-button",
+    _checkBoxAllAndCreateContainer = createElement(
+      "div",
+      "amplify-ctrl-list-header-checkbox-create-container",
       header
+    );
+    createCheckboxAllContainer(_checkBoxAllAndCreateContainer);
+  }
+
+  function createCheckboxAllContainer(geofenceListContainer: HTMLElement) {
+    _checkBoxAllContainer = createElement(
+      "div",
+      "amplify-ctrl-list-checkbox-all-container",
+      geofenceListContainer
+    );
+
+    _checkboxAll = createElement(
+      "input",
+      "amplify-ctrl-list-checkbox-all",
+      _checkBoxAllContainer
+    ) as HTMLInputElement;
+    _checkboxAll.type = "checkbox";
+    _checkboxAll.addEventListener("click", function () {
+      if (_checkboxAll.checked) {
+        geofenceControl.displayAllGeofences();
+        checkboxAllText.innerHTML = "Deselect All";
+      } else {
+        geofenceControl.hideAllGeofences();
+        checkboxAllText.innerHTML = "Select All";
+      }
+    });
+
+    const checkboxAllText = createElement(
+      "div",
+      "amplify-ctrl-list-checkbox-all-title",
+      _checkBoxAllContainer
+    );
+    checkboxAllText.innerHTML = "Select all";
+
+    _addGeofencebutton = createElement(
+      "div",
+      "amplify-ctrl-list-header-add-button",
+      _checkBoxAllContainer
     ) as HTMLButtonElement;
-    _addGeofencebutton.innerHTML = "+";
+    _addGeofencebutton.innerHTML = "+ Add";
     _addGeofencebutton.addEventListener("click", () => {
       createAddGeofenceContainer();
     });
@@ -220,6 +362,12 @@ export function AmplifyGeofenceControlUI(
       editContainer
     );
 
+    const removeEditContainer = () => {
+      item.classList.remove("amplify-ctrl-list-selected-item");
+      item.classList.add("amplify-ctrl-list-item");
+      removeElement(editContainer);
+    };
+
     const cancelButton = createElement(
       "div",
       "amplify-ctrl-cancel-button",
@@ -229,9 +377,7 @@ export function AmplifyGeofenceControlUI(
     cancelButton.innerHTML = "Cancel";
     cancelButton.addEventListener("click", () => {
       geofenceControl.disableEditingMode();
-      item.classList.remove("amplify-ctrl-list-selected-item");
-      item.classList.add("amplify-ctrl-list-item");
-      removeElement(editContainer);
+      removeEditContainer();
     });
 
     const saveGeofenceButton = createElement(
@@ -241,9 +387,7 @@ export function AmplifyGeofenceControlUI(
     );
     saveGeofenceButton.addEventListener("click", () => {
       geofenceControl.saveGeofence();
-      item.classList.remove("amplify-ctrl-list-selected-item");
-      item.classList.add("amplify-ctrl-list-item");
-      removeElement(editContainer);
+      removeEditContainer();
     });
     saveGeofenceButton.title = "Save";
     saveGeofenceButton.innerHTML = "Save";
@@ -257,66 +401,71 @@ export function AmplifyGeofenceControlUI(
     removeElement(_createContainer);
   }
 
+  function removeAddGeofenceContainer(): void {
+    removeElement(_addGeofenceContainer);
+    showCheckboxAllContainer();
+  }
+
   function createAddGeofenceContainer(): void {
     geofenceControl.enableEditingMode();
+    hideCheckboxAllContainer();
     _addGeofenceContainer = createElement(
       "div",
-      "amplify-ctrl-prompt-container ",
-      geofenceControlContainer
+      "amplify-ctrl-add-geofence-container",
+      _checkBoxAllAndCreateContainer
     );
 
     const addGeofencePrompt = createElement(
       "div",
-      "amplify-ctrl-prompt",
+      "amplify-ctrl-add-geofence",
       _addGeofenceContainer
     );
-
-    const title = createElement(
-      "div",
-      "amplify-ctrl-add-geofence-title",
-      addGeofencePrompt
-    );
-    title.innerHTML = "Add a new geofence";
 
     const nameInput = createElement(
       "input",
       "amplify-ctrl-add-geofence-input",
       addGeofencePrompt
     );
+    (nameInput as HTMLInputElement).placeholder = "Name";
 
-    const confirmAddButton = createElement(
-      "button",
-      "amplify-ctrl-add-geofence-add-button",
+    const buttonContainer = createElement(
+      "div",
+      "amplify-ctrl-add-geofence-buttons",
       addGeofencePrompt
     );
-    confirmAddButton.innerHTML = "Next";
-    confirmAddButton.addEventListener("click", function () {
-      geofenceControl.addEditableGeofence(
-        (nameInput as HTMLButtonElement).value,
-        addGeofencePrompt
-      );
-    });
 
     const cancelButton = createElement(
-      "button",
-      "amplify-ctrl-add-geofence-cancel-button",
-      addGeofencePrompt
+      "div",
+      "amplify-ctrl-add-geofence-cancel-button amplify-ctrl-button ",
+      buttonContainer
     );
     cancelButton.innerHTML = "Cancel";
     cancelButton.addEventListener("click", () => {
       removeAddGeofenceContainer();
       geofenceControl.disableEditingMode();
     });
+
+    const saveButton = createElement(
+      "div",
+      "amplify-ctrl-add-geofence-add-button amplify-ctrl-button ",
+      buttonContainer
+    );
+    saveButton.innerHTML = "Save";
+    saveButton.addEventListener("click", function () {
+      const output = geofenceControl.saveGeofence(
+        (nameInput as HTMLInputElement).value
+      );
+      if (output) removeAddGeofenceContainer();
+    });
+
+    geofenceControl.addEditableGeofence();
   }
 
-  function createAddGeofencePromptError(
-    error: string,
-    container: HTMLElement
-  ): void {
+  function createAddGeofencePromptError(error: string): void {
     const errorDiv = createElement(
       "div",
       "amplify-ctrl-add-geofence-error",
-      container
+      _addGeofenceContainer
     );
     errorDiv.innerHTML = error;
   }
@@ -343,13 +492,13 @@ export function AmplifyGeofenceControlUI(
   function createConfirmDeleteContainer(geofenceId: string): void {
     _deleteGeofenceContainer = createElement(
       "div",
-      "amplify-ctrl-prompt-container ",
+      "amplify-ctrl-delete-prompt-container",
       geofenceControlContainer
     );
 
     const deleteGeofencePrompt = createElement(
       "div",
-      "amplify-ctrl-prompt",
+      "amplify-ctrl-delete-prompt",
       _deleteGeofenceContainer
     );
 
@@ -417,6 +566,13 @@ export function AmplifyGeofenceControlUI(
 
   function updateGeofenceCount(count: number): void {
     _geofenceTitle.innerHTML = `Geofences (${count})`;
+  }
+
+  function hideCheckboxAllContainer(): void {
+    _checkBoxAllContainer.style.display = "none";
+  }
+  function showCheckboxAllContainer(): void {
+    _checkBoxAllContainer.style.display = "flex";
   }
 
   return {

@@ -71,7 +71,7 @@ export class AmplifyGeofenceControl {
 
   onAdd(map: Map): HTMLElement {
     this._map = map;
-    this._container = createElement("div", "maplibregl-ctrl");
+    this._container = createElement("div", "amplify-ctrl maplibregl-ctrl");
 
     this._ui = AmplifyGeofenceControlUI(this, this._container);
     this._amplifyDraw = new AmplifyMapboxDraw(map, this._ui);
@@ -113,12 +113,19 @@ export class AmplifyGeofenceControl {
     return this._container;
   }
 
-  saveGeofence(): void {
+  saveGeofence(id?: string): string | null {
+    if (id) {
+      if (!isValidGeofenceId(id, this._loadedGeofences)) {
+        console.error("Geofence ID invalid");
+        this._ui.createAddGeofencePromptError("Invalid Geofence ID");
+        return;
+      }
+    }
     const feature = this._amplifyDraw.get(this._editingGeofenceId);
 
     // FIXME: Save geofence api call here
     const savedGeofence: Geofence = {
-      id: this._editingGeofenceId,
+      id: id || this._editingGeofenceId,
       geometry: { polygon: feature.geometry["coordinates"] },
     };
 
@@ -127,6 +134,8 @@ export class AmplifyGeofenceControl {
     this.displayGeofence(savedGeofence.id);
 
     this.disableEditingMode();
+
+    return savedGeofence.id;
   }
 
   editGeofence(id: string): void {
@@ -322,22 +331,16 @@ export class AmplifyGeofenceControl {
   }
 
   updateInputRadius(event: Event): void {
-    const radius = (event.target as HTMLInputElement).value;
-    this._amplifyDraw.drawCircularGeofence(
-      this._editingGeofenceId,
-      parseInt(radius)
-    );
-  }
-
-  addEditableGeofence(id: string, container: HTMLElement): void {
-    if (!isValidGeofenceId(id, this._loadedGeofences)) {
-      console.error("Geofence ID invalid");
-      this._ui.createAddGeofencePromptError("Invalid Geofence ID", container);
+    const radiusString = (event.target as HTMLInputElement).value;
+    const radius = parseInt(radiusString);
+    if (isNaN(radius)) {
       return;
     }
-    this._editingGeofenceId = id;
+    this._amplifyDraw.drawCircularGeofence(this._editingGeofenceId, radius);
+  }
 
-    this._amplifyDraw.drawCircularGeofence(id);
-    this._ui.removeAddGeofenceContainer();
+  addEditableGeofence(): void {
+    this._editingGeofenceId = "tempGeofence";
+    this._amplifyDraw.drawCircularGeofence("tempGeofence");
   }
 }

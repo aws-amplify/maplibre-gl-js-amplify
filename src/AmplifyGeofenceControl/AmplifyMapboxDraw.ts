@@ -11,6 +11,11 @@ import {
   getPolygonFeatureFromBounds,
   getCircleFeatureFromCoords,
 } from "../geofenceUtils";
+import {
+  GEOFENCE_BORDER_COLOR,
+  GEOFENCE_COLOR,
+  GEOFENCE_VERTEX_COLOR,
+} from "../constants";
 
 export class AmplifyMapboxDraw {
   _map: Map;
@@ -28,6 +33,61 @@ export class AmplifyMapboxDraw {
       direct_select: DirectMode,
       simple_select: SimpleSelectMode,
     },
+    styles: [
+      // ACTIVE (being drawn)
+      // polygon fill
+      {
+        id: "gl-draw-polygon-fill",
+        type: "fill",
+        filter: ["all", ["==", "$type", "Polygon"], ["!=", "mode", "static"]],
+        paint: {
+          "fill-color": GEOFENCE_COLOR,
+          "fill-outline-color": GEOFENCE_COLOR,
+          "fill-opacity": 0.3,
+        },
+      },
+      // polygon mid points
+      {
+        id: "gl-draw-polygon-midpoint",
+        type: "circle",
+        filter: ["all", ["==", "$type", "Point"], ["==", "meta", "midpoint"]],
+        paint: {
+          "circle-radius": 5,
+          "circle-color": GEOFENCE_VERTEX_COLOR,
+        },
+      },
+      // polygon border
+      {
+        id: "gl-draw-polygon-stroke-active",
+        type: "line",
+        filter: ["all", ["==", "$type", "Polygon"], ["!=", "mode", "static"]],
+        layout: {
+          "line-cap": "round",
+          "line-join": "round",
+        },
+        paint: {
+          "line-color": GEOFENCE_BORDER_COLOR,
+          "line-width": 4,
+        },
+      },
+      // vertex circle
+      {
+        id: "gl-draw-polygon-and-line-vertex-active",
+        type: "circle",
+        filter: [
+          "all",
+          ["==", "meta", "vertex"],
+          ["==", "$type", "Point"],
+          ["!=", "mode", "static"],
+        ],
+        paint: {
+          "circle-radius": 8,
+          "circle-color": GEOFENCE_VERTEX_COLOR,
+          "circle-stroke-color": GEOFENCE_BORDER_COLOR,
+          "circle-stroke-width": 1,
+        },
+      },
+    ],
   });
 
   constructor(map: Map, ui) {

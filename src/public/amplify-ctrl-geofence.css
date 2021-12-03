@@ -1,3 +1,16 @@
+.amplify-ctrl {
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.amplify-ctrl-button {
+  background: unset;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 4px 16px;
+}
+
 /* List Styles */
 .amplify-ctrl-list-container {
   position: absolute;
@@ -5,9 +18,9 @@
   left: 0;
   top: 0;
   width: 15%;
+  max-width: 240px;
   background: white;
   z-index: 100;
-  font-size: 14px;
   line-height: 24px;
   display: flex;
   flex-direction: column;
@@ -24,18 +37,35 @@
 
 .amplify-ctrl-list-header {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
-  padding: 12px;
-  height: 32px;
-  align-items: center;
+  text-align: initial;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 11px;
   font-weight: 600;
+}
+
+.amplify-ctrl-list-header-title {
+  border-bottom: 1px solid #e2e2e2;
+  padding: 4px 12px;
+}
+
+.amplify-ctrl-list-checkbox-all-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 4px 12px 4px 8px;
+}
+
+.amplify-ctrl-list-checkbox-all-title {
+  padding-left: 8px;
 }
 
 .amplify-ctrl-list-header-add-button {
   border: none;
   background: none;
+  position: absolute;
+  right: 8px;
+  cursor: pointer;
 }
 
 .amplify-ctrl-list-item-container {
@@ -84,7 +114,7 @@
 
 /* Add Geofence Prompt Styles */
 
-.amplify-ctrl-prompt-container {
+.amplify-ctrl-delete-prompt-container {
   position: absolute;
   background: rgba(0, 0, 0, 0.4);
   height: 100vh;
@@ -95,7 +125,156 @@
   align-items: center;
 }
 
-.amplify-ctrl-prompt {
+.amplify-ctrl-delete-prompt {
+  background: white;
+  padding: 15px;
+  border-radius: 4px;
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.12);
+}
+
+.amplify-ctrl-create-prompt-container {
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  pointer-events: none;
+}
+
+.amplify-ctrl-create-prompt {
+  box-shadow: 0px -2px 4px rgb(0 0 0 / 12%);
+  border-radius: 4px;
+  background: white;
+  padding: 12px;
+  pointer-events: auto;
+  height: 88px;
+}
+
+.amplify-ctrl-create-prompt-buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.amplify-ctrl-create-prompt-button {
+  color: black;
+  background: white;
+  border: 1px solid #d8d8d8;
+  font-weight: 600;
+  padding: 8px 24px;
+  cursor: pointer;
+}
+
+.amplify-ctrl-create-prompt-selected {
+  color: white;
+  background: black;
+  border-color: black;
+}
+
+.amplify-ctrl-create-prompt-button-circle {
+  border-radius: 4px 0 0 4px;
+  border-right: unset;
+}
+
+.amplify-ctrl-create-prompt-button-polygon {
+  border-radius: 0 4px 4px 0;
+  border-left: unset;
+}
+
+.amplify-ctrl-create-circle-mode-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.amplify-ctrl-create-circle-mode-title {
+  padding: 4px 0;
+  width: 124px;
+  text-align: initial;
+}
+
+.amplify-ctrl-create-circle-mode-input {
+  width: 124px;
+}
+
+.amplify-ctrl-create-polygon-mode-container {
+  font-weight: 600;
+  display: flex;
+  padding-top: 8px;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.amplify-ctrl-create-polygon-mode-icon {
+  background: black;
+  color: white;
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+}
+
+.amplify-ctrl-create-polygon-mode-title {
+  padding-left: 8px;
+}
+
+/* Popup container */
+.amplify-ctrl-create-polygon-mode-popup-container {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* The actual popup (appears on top) */
+.amplify-ctrl-create-polygon-mode-popup-container
+  .amplify-ctrl-create-polygon-mode-popup {
+  visibility: hidden;
+  width: 560px;
+  height: 100px;
+  background-color: white;
+  box-sizing: border-box;
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  text-align: center;
+  padding: 8px 24px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -280px;
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Popup arrow */
+.amplify-ctrl-create-polygon-mode-popup-container
+  .amplify-ctrl-create-polygon-mode-popup::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: white transparent transparent transparent;
+}
+
+/* Toggle this class when clicking on the popup container (hide and show the popup) */
+.amplify-ctrl-create-polygon-mode-popup-container .show {
+  visibility: visible;
+}
+
+.amplify-ctrl-create-polygon-mode-popup-step {
+  color: black;
+  display: flex;
+  flex-direction: column;
+  font-weight: 500;
+  text-align: initial;
+  width: 116px;
+}
+
+.amplify-ctrl-add-geofence {
   background: white;
   padding: 15px;
   border-radius: 4px;
@@ -105,9 +284,31 @@
 .amplify-ctrl-add-geofence-title {
   text-align: left;
   font-weight: 600;
-  font-size: 14px;
-  line-height: 18px;
   padding-bottom: 5px;
+}
+
+.amplify-ctrl-add-geofence-input {
+  padding: 5px 8px;
+  width: 100%;
+  border: 1px solid #b0b8bf;
+  border-radius: 4px;
+  margin-bottom: 5px;
+}
+
+.amplify-ctrl-add-geofence-buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.amplify-ctrl-add-geofence-cancel-button {
+  color: black;
+}
+
+.amplify-ctrl-add-geofence-add-button {
+  background-color: black;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 /* Other Styles */
@@ -125,13 +326,6 @@
   display: flex;
 }
 
-.amplify-ctrl-list-checkbox-all-container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding-left: 8px;
-}
-
 .amplify-ctrl-edit-button {
   position: absolute;
   right: 11px;
@@ -141,14 +335,6 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-}
-
-.amplify-ctrl-button {
-  background: unset;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  padding: 4px 16px;
 }
 
 .amplify-ctrl-save-button {
