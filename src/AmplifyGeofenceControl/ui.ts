@@ -396,7 +396,7 @@ export function AmplifyGeofenceControlUI(
     cancelButton.classList.add("amplify-ctrl-button");
     cancelButton.innerHTML = "Cancel";
     cancelButton.addEventListener("click", () => {
-      geofenceControl.disableEditingMode();
+      geofenceControl.setEditingModeEnabled(false);
       removeEditContainer();
     });
 
@@ -461,7 +461,7 @@ export function AmplifyGeofenceControlUI(
     cancelButton.innerHTML = "Cancel";
     cancelButton.addEventListener("click", () => {
       removeAddGeofenceContainer();
-      geofenceControl.disableEditingMode();
+      geofenceControl.setEditingModeEnabled(false);
     });
 
     const saveButton = createElement(
@@ -563,7 +563,7 @@ export function AmplifyGeofenceControlUI(
         console.log(id);
         createDeleteResultContainer(true);
         removeElement(_deleteGeofenceContainer);
-        geofenceControl.disableEditingMode();
+        geofenceControl.setEditingModeEnabled(false);
       }
     });
   }
@@ -617,16 +617,20 @@ export function AmplifyGeofenceControlUI(
     removeElement(listItem);
   }
 
-  function disableAddGeofenceButton(disabled: boolean): void {
-    _addGeofencebutton.disabled = disabled;
-  }
+  function setGeofenceListEnabled(enabled): void {
+    _addGeofencebutton.disabled = !enabled;
+    _checkboxAll.disabled = !enabled;
 
-  function enableGeofenceList(): void {
-    _geofenceList.classList.remove("amplify-ctrl-list-noHover");
-  }
+    enabled
+      ? _geofenceList.classList.remove("amplify-ctrl-list-noHover")
+      : _geofenceList.classList.add("amplify-ctrl-list-noHover");
 
-  function disableGeofenceList(): void {
-    _geofenceList.classList.add("amplify-ctrl-list-noHover");
+    const inputs = document.getElementsByClassName(
+      "amplify-ctrl-list-item-checkbox"
+    );
+    for (let i = 0; i < inputs.length; i++) {
+      (inputs.item(i) as HTMLInputElement).disabled = !enabled;
+    }
   }
 
   function getCheckboxAllValue(): boolean {
@@ -655,9 +659,7 @@ export function AmplifyGeofenceControlUI(
     renderListItem,
     updateCheckbox,
     removeGeofenceListItem,
-    disableAddGeofenceButton,
-    enableGeofenceList,
-    disableGeofenceList,
+    setGeofenceListEnabled,
     getCheckboxAllValue,
     removeGeofenceCreateContainer,
     updateGeofenceCount,

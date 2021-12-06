@@ -47,9 +47,8 @@ export class AmplifyGeofenceControl {
     this.deleteGeofence = this.deleteGeofence.bind(this);
     this.displayAllGeofences = this.displayAllGeofences.bind(this);
     this.hideAllGeofences = this.hideAllGeofences.bind(this);
-    this.enableEditingMode = this.enableEditingMode.bind(this);
     this.addEditableGeofence = this.addEditableGeofence.bind(this);
-    this.disableEditingMode = this.disableEditingMode.bind(this);
+    this.setEditingModeEnabled = this.setEditingModeEnabled.bind(this);
     this.displayHighlightedGeofence =
       this.displayHighlightedGeofence.bind(this);
     this.hideHighlightedGeofence = this.hideHighlightedGeofence.bind(this);
@@ -133,13 +132,13 @@ export class AmplifyGeofenceControl {
     this._loadGeofence(savedGeofence);
     this.displayGeofence(savedGeofence.id);
 
-    this.disableEditingMode();
+    this.setEditingModeEnabled(false);
 
     return savedGeofence.id;
   }
 
   editGeofence(id: string): void {
-    this.enableEditingMode();
+    this.setEditingModeEnabled(true);
 
     const geofence = this._loadedGeofences[id];
     if (!geofence) {
@@ -317,19 +316,12 @@ export class AmplifyGeofenceControl {
   }
 
   // Disables add button and selecting items from geofence list
-  enableEditingMode(): void {
-    this._amplifyDraw.enable();
-    this._drawGeofencesOutput.hide();
-    this._ui.disableAddGeofenceButton(true);
-    this._ui.disableGeofenceList();
-  }
-
-  // Disables add button and selecting items from geofence list
-  disableEditingMode(): void {
-    this._amplifyDraw.disable();
-    this._drawGeofencesOutput.show();
-    this._ui.disableAddGeofenceButton(false);
-    this._ui.enableGeofenceList();
+  setEditingModeEnabled(enabled: boolean): void {
+    enabled ? this._amplifyDraw.enable() : this._amplifyDraw.disable();
+    enabled
+      ? this._drawGeofencesOutput.hide()
+      : this._drawGeofencesOutput.show();
+    this._ui.setGeofenceListEnabled(!enabled);
   }
 
   updateInputRadius(event: Event): void {
@@ -344,6 +336,6 @@ export class AmplifyGeofenceControl {
   addEditableGeofence(): void {
     this._editingGeofenceId = "tempGeofence";
     this._amplifyDraw.drawCircularGeofence("tempGeofence");
-    this.enableEditingMode();
+    this.setEditingModeEnabled(true);
   }
 }
