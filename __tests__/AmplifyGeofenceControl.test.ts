@@ -26,7 +26,7 @@ describe("AmplifyGeofenceControl", () => {
       return {
         renderListItem: jest.fn(),
         updateCheckbox: jest.fn(),
-        disableAddGeofenceButton: jest.fn(),
+        setGeofenceListEnabled: jest.fn(),
         enableGeofenceList: jest.fn(),
         removeGeofenceListItem: jest.fn(),
       };
