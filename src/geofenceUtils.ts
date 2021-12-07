@@ -133,5 +133,5 @@ export const isGeofenceDisplayed = (
   id: string,
   displayedGeofences: Geofence[]
 ): boolean => {
-  return !!displayedGeofences.find((geofence) => geofence.id === id);
+  return !!displayedGeofences.find((geofence) => geofence.geofenceId === id);
 };

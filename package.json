@@ -36,7 +36,7 @@
   "homepage": "https://github.com/aws-amplify/maplibre-gl-js-amplify#readme",
   "devDependencies": {
     "@aws-amplify/core": "^4.3.1",
-    "@aws-amplify/geo": "^1.1.1",
+    "@aws-amplify/geo": "1.1.11-geo.6",
     "@babel/preset-env": "^7.16.4",
     "@maplibre/maplibre-gl-geocoder": "^1.1.0",
     "@types/debounce": "^1.2.1",
@@ -68,7 +68,7 @@
   },
   "peerDependencies": {
     "@aws-amplify/core": "^4.3.1",
-    "@aws-amplify/geo": "^1.1.1",
+    "@aws-amplify/geo": "1.1.11-geo.6",
     "maplibre-gl": "^1.14.0"
   },
   "dependencies": {

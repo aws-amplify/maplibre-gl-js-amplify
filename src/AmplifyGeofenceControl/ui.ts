@@ -342,10 +342,10 @@ export function AmplifyGeofenceControlUI(
       "amplify-ctrl-list-item-container",
       _geofenceList
     );
-    container.id = `list-item-${geofence.id}`;
+    container.id = `list-item-${geofence.geofenceId}`;
     const listItem = createElement("li", "amplify-ctrl-list-item", container);
     listItem.addEventListener("mouseover", function () {
-      geofenceControl.displayHighlightedGeofence(geofence.id);
+      geofenceControl.displayHighlightedGeofence(geofence.geofenceId);
     });
     listItem.addEventListener("mouseout", function () {
       geofenceControl.hideHighlightedGeofence();
@@ -356,13 +356,13 @@ export function AmplifyGeofenceControlUI(
       "amplify-ctrl-list-item-checkbox",
       listItem
     );
-    checkbox.id = `list-item-checkbox-${geofence.id}`;
+    checkbox.id = `list-item-checkbox-${geofence.geofenceId}`;
     (checkbox as HTMLInputElement).type = "checkbox";
     checkbox.addEventListener("click", function () {
       if ((checkbox as HTMLInputElement).checked) {
-        geofenceControl.displayGeofence(geofence.id);
+        geofenceControl.displayGeofence(geofence.geofenceId);
       } else {
-        geofenceControl.hideGeofence(geofence.id);
+        geofenceControl.hideGeofence(geofence.geofenceId);
       }
     });
 
@@ -371,7 +371,7 @@ export function AmplifyGeofenceControlUI(
       "amplify-ctrl-list-item-title",
       listItem
     );
-    geofenceTitle.innerHTML = geofence.id;
+    geofenceTitle.innerHTML = geofence.geofenceId;
 
     const editButton = createElement(
       "div",
@@ -379,8 +379,8 @@ export function AmplifyGeofenceControlUI(
       listItem
     );
     editButton.addEventListener("click", function () {
-      geofenceControl.editGeofence(geofence.id);
-      createEditControls(container, listItem, geofence.id);
+      geofenceControl.editGeofence(geofence.geofenceId);
+      createEditControls(container, listItem, geofence.geofenceId);
       listItem.classList.remove("amplify-ctrl-list-item");
       listItem.classList.add("amplify-ctrl-list-selected-item");
     });
@@ -431,8 +431,8 @@ export function AmplifyGeofenceControlUI(
       "amplify-ctrl-save-button amplify-ctrl-button",
       rightContainer
     );
-    saveGeofenceButton.addEventListener("click", () => {
-      geofenceControl.saveGeofence();
+    saveGeofenceButton.addEventListener("click", async () => {
+      await geofenceControl.updateGeofence();
       removeEditContainer();
     });
     saveGeofenceButton.title = "Save";
@@ -492,8 +492,8 @@ export function AmplifyGeofenceControlUI(
       buttonContainer
     );
     saveButton.innerHTML = "Save";
-    saveButton.addEventListener("click", function () {
-      const output = geofenceControl.saveGeofence(
+    saveButton.addEventListener("click", async function () {
+      const output = await geofenceControl.createGeofence(
         escape((nameInput as HTMLInputElement).value)
       );
       if (output) removeAddGeofenceContainer();
@@ -578,8 +578,8 @@ export function AmplifyGeofenceControlUI(
       deleteButtonsContainer
     );
     confirmDeleteButton.innerHTML = "Delete";
-    confirmDeleteButton.addEventListener("click", function () {
-      const id = geofenceControl.deleteGeofence(geofenceId);
+    confirmDeleteButton.addEventListener("click", async function () {
+      const id = await geofenceControl.deleteGeofence(geofenceId);
 
       if (id) {
         console.log(id);
@@ -640,12 +640,15 @@ export function AmplifyGeofenceControlUI(
   }
 
   function setGeofenceListEnabled(enabled): void {
-    _addGeofencebutton.disabled = !enabled;
     _checkboxAll.disabled = !enabled;
 
-    enabled
-      ? _geofenceList.classList.remove("amplify-ctrl-list-noHover")
-      : _geofenceList.classList.add("amplify-ctrl-list-noHover");
+    if (enabled) {
+      _addGeofencebutton.classList.remove("amplify-ctrl-noHover");
+      _geofenceList.classList.remove("amplify-ctrl-noHover");
+    } else {
+      _addGeofencebutton.classList.add("amplify-ctrl-noHover");
+      _geofenceList.classList.add("amplify-ctrl-noHover");
+    }
 
     const inputs = document.getElementsByClassName(
       "amplify-ctrl-list-item-checkbox"

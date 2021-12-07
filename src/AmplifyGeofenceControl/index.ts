@@ -1,4 +1,5 @@
 import { Map } from "maplibre-gl";
+import { Geo } from "@aws-amplify/geo";
 import { drawGeofences, DrawGeofencesOutput } from "../drawGeofences";
 import { Geofence } from "../types";
 import { Feature } from "geojson";
@@ -39,10 +40,11 @@ export class AmplifyGeofenceControl {
     this._loadedGeofences = {};
     this._displayedGeofences = [];
     this.changeMode = this.changeMode.bind(this);
-    this._loadAllGeofences = this._loadAllGeofences.bind(this);
+    this.listGeofences = this.listGeofences.bind(this);
     this._loadGeofence = this._loadGeofence.bind(this);
     this.updateInputRadius = this.updateInputRadius.bind(this);
-    this.saveGeofence = this.saveGeofence.bind(this);
+    this.createGeofence = this.createGeofence.bind(this);
+    this.updateGeofence = this.updateGeofence.bind(this);
     this.editGeofence = this.editGeofence.bind(this);
     this.deleteGeofence = this.deleteGeofence.bind(this);
     this.displayAllGeofences = this.displayAllGeofences.bind(this);
@@ -105,16 +107,16 @@ export class AmplifyGeofenceControl {
           }
         );
 
-        this._loadAllGeofences();
+        this.listGeofences();
       }.bind(this)
     );
 
     return this._container;
   }
 
-  saveGeofence(id?: string): string | null {
-    if (id) {
-      if (!isValidGeofenceId(id, this._loadedGeofences)) {
+  async createGeofence(geofenceId?: string): Promise<string | null> {
+    if (geofenceId) {
+      if (!isValidGeofenceId(geofenceId, this._loadedGeofences)) {
         console.error("Geofence ID invalid");
         this._ui.createAddGeofencePromptError("Invalid Geofence ID");
         return;
@@ -122,57 +124,132 @@ export class AmplifyGeofenceControl {
     }
     const feature = this._amplifyDraw.get(this._editingGeofenceId);
 
-    // FIXME: Save geofence api call here
+    const response = await Geo.createGeofences({
+      geofenceId: geofenceId || this._editingGeofenceId,
+      geometry: { polygon: feature.geometry["coordinates"] },
+    });
+
+    if (response.errors[0]) {
+      const err = response.errors[0];
+      throw new Error(
+        `There was an error creating geofence with id ${geofenceId}: ${err.error.code} - ${err.error.message}`
+      );
+    }
+
+    const success = response.successes[0];
+
     const savedGeofence: Geofence = {
-      id: id || this._editingGeofenceId,
+      geofenceId: success.geofenceId,
       geometry: { polygon: feature.geometry["coordinates"] },
     };
 
     // render geofence to the map and add it to the list
     this._loadGeofence(savedGeofence);
-    this.displayGeofence(savedGeofence.id);
+    this.displayGeofence(savedGeofence.geofenceId);
 
     this.setEditingModeEnabled(false);
 
-    return savedGeofence.id;
+    return savedGeofence.geofenceId;
   }
 
-  editGeofence(id: string): void {
+  async updateGeofence(geofenceId?: string): Promise<string | null> {
+    if (geofenceId) {
+      if (!isValidGeofenceId(geofenceId, this._loadedGeofences)) {
+        console.error("Geofence ID invalid");
+        this._ui.createAddGeofencePromptError("Invalid Geofence ID");
+        return;
+      }
+    }
+    const feature = this._amplifyDraw.get(this._editingGeofenceId);
+
+    const id = geofenceId || this._editingGeofenceId;
+    const response = await Geo.updateGeofences({
+      geofenceId: id,
+      geometry: { polygon: feature.geometry["coordinates"] },
+    });
+
+    if (response.errors[0]) {
+      throw new Error(
+        `There was an error updating geofence with id ${id}: ${response.errors[0]}`
+      );
+    }
+
+    const success = response.successes[0];
+
+    const savedGeofence: Geofence = {
+      geofenceId: success.geofenceId,
+      geometry: { polygon: feature.geometry["coordinates"] },
+    };
+
+    // render geofence to the map and add it to the list
+    this._loadGeofence(savedGeofence);
+    this.displayGeofence(savedGeofence.geofenceId);
+
+    this.setEditingModeEnabled(false);
+
+    return savedGeofence.geofenceId;
+  }
+
+  // FIXME: Add infinite scroll plus next tokens here
+  // Each page loads 100 geofences
+  async listGeofences(): Promise<void> {
+    try {
+      const { entries } = await Geo.listGeofences();
+
+      const loadGeofence = this._loadGeofence;
+      entries.forEach((geofence) => loadGeofence(geofence));
+      this._ui.updateGeofenceCount(entries.length);
+    } catch (e) {
+      throw new Error(`Error calling listGeofences: ${e}`);
+    }
+  }
+
+  editGeofence(geofenceId: string): void {
     this.setEditingModeEnabled(true);
 
-    const geofence = this._loadedGeofences[id];
+    const geofence = this._loadedGeofences[geofenceId];
     if (!geofence) {
-      throw new Error(`Geofence with id ${id} does not exist`);
+      throw new Error(`Geofence with id ${geofenceId} does not exist`);
     }
 
     // render in mapboxdraw
     const feature = getGeofenceFeatureFromPolygon(geofence.geometry.polygon);
     const data: Feature = {
-      id: geofence.id,
+      id: geofence.geofenceId,
       ...feature,
     };
     this._amplifyDraw.add(data);
 
-    this._editingGeofenceId = geofence.id;
+    this._editingGeofenceId = geofence.geofenceId;
   }
 
-  deleteGeofence(id: string): string {
-    // FIXME: delete geofence api call here
-    this._ui.removeGeofenceListItem(id);
+  async deleteGeofence(geofenceId: string): Promise<string> {
+    const response = await Geo.deleteGeofences(geofenceId);
 
-    delete this._loadedGeofences[id];
+    if (response.errors[0]) {
+      const err = response.errors[0].error;
+      throw new Error(
+        `There was an error deleting geofence with id ${geofenceId}: ${err.code} - ${err.message}`
+      );
+    }
+
+    this._ui.removeGeofenceListItem(geofenceId);
+
+    delete this._loadedGeofences[geofenceId];
 
     this._displayedGeofences = this._displayedGeofences.filter(
-      (geofence) => geofence.id !== id
+      (geofence) => geofence.geofenceId !== geofenceId
     );
 
     this._updateDisplayedGeofences();
 
-    return id;
+    return geofenceId;
   }
 
   deleteSelectedGeofences(): void {
-    const idsToDelete = this._displayedGeofences.map((fence) => fence.id);
+    const idsToDelete = this._displayedGeofences.map(
+      (fence) => fence.geofenceId
+    );
     // FIXME: delete geofence api call here
     idsToDelete.forEach((id) => {
       this._ui.removeGeofenceListItem(id);
@@ -188,66 +265,23 @@ export class AmplifyGeofenceControl {
    Private methods for CRUD Geofences
    **********************************************************************/
 
-  async _loadAllGeofences(): Promise<void> {
-    // FIXME: Harded coded response from geofence API, call getGeofences here
-    const hardcodeGeofence: Geofence = {
-      id: "myHardcodedGeofence",
-      geometry: {
-        polygon: [
-          [
-            [-124.0488709112, 35.9978649131],
-            [-119.5127318998, 35.9978649131],
-            [-119.5127318998, 38.315786399],
-            [-124.0488709112, 38.315786399],
-            [-124.0488709112, 35.9978649131],
-          ],
-        ],
-      },
-    };
-
-    const anotherOne: Geofence = {
-      id: "myHardcodedGeofence2",
-      geometry: {
-        polygon: [
-          [
-            [-119.19118301902287, 35.98013497132733],
-            [-114.65504400762288, 35.98013497132733],
-            [-114.65504400762288, 38.298056457227325],
-            [-119.19118301902287, 38.298056457227325],
-            [-119.19118301902287, 35.98013497132733],
-          ],
-        ],
-      },
-    };
-    const asdf = [];
-    for (let i = 0; i < 10; i++) {
-      asdf.push({ ...hardcodeGeofence, id: `asdf${i}` });
-      asdf.push({ ...anotherOne, id: `zxcv${i}` });
-    }
-
-    const loadGeofence = this._loadGeofence;
-    asdf.forEach((geofence) => loadGeofence(geofence));
-    this._ui.updateGeofenceCount(asdf.length);
-  }
-
   _loadGeofence(geofence: Geofence): void {
-    // FIXME: Add pagination/infinite scroll here
     // If geofence exists remove it from displayed geofences
-    if (this._loadedGeofences[geofence.id]) {
+    if (this._loadedGeofences[geofence.geofenceId]) {
       this._displayedGeofences = this._displayedGeofences.filter(
-        (fence) => fence.id !== geofence.id
+        (fence) => fence.geofenceId !== geofence.geofenceId
       );
     } else {
       // If geofence doesn't exist render a new list item for it
       this._ui.renderListItem(geofence);
     }
-    this._loadedGeofences[geofence.id] = geofence;
+    this._loadedGeofences[geofence.geofenceId] = geofence;
   }
 
-  displayGeofence(id: string): void {
-    this._displayedGeofences.push(this._loadedGeofences[id]);
+  displayGeofence(geofenceId: string): void {
+    this._displayedGeofences.push(this._loadedGeofences[geofenceId]);
     this._updateDisplayedGeofences();
-    this._ui.updateCheckbox(id, true);
+    this._ui.updateCheckbox(geofenceId, true);
   }
 
   displayAllGeofences(): void {
@@ -261,12 +295,12 @@ export class AmplifyGeofenceControl {
     );
   }
 
-  hideGeofence(id: string): void {
+  hideGeofence(geofenceId: string): void {
     this._displayedGeofences = this._displayedGeofences.filter(
-      (geofence) => geofence.id !== id
+      (geofence) => geofence.geofenceId !== geofenceId
     );
     this._updateDisplayedGeofences();
-    this._ui.updateCheckbox(id, false);
+    this._ui.updateCheckbox(geofenceId, false);
   }
 
   hideAllGeofences(): void {
@@ -285,10 +319,10 @@ export class AmplifyGeofenceControl {
     this._drawGeofencesOutput.setData(feature);
   }
 
-  displayHighlightedGeofence(id: string): void {
-    const geofence = this._loadedGeofences[id];
+  displayHighlightedGeofence(geofenceId: string): void {
+    const geofence = this._loadedGeofences[geofenceId];
     if (!geofence) {
-      console.warn(`Geofence with id ${id} does not exist`);
+      console.warn(`Geofence with id ${geofenceId} does not exist`);
       return;
     }
     const feature = getGeofenceFeatureFromPolygon(geofence.geometry.polygon);

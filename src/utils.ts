@@ -30,7 +30,7 @@ export function isNamedLocationArray(array: unknown): array is NamedLocation[] {
 export function isGeofence(object: unknown): object is Geofence {
   return (
     object &&
-    typeof (object as Geofence).id === "string" &&
+    typeof (object as Geofence).geofenceId === "string" &&
     typeof (object as Geofence).geometry === "object"
   );
 }

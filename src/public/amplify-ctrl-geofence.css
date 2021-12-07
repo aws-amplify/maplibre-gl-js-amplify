@@ -31,7 +31,7 @@
   overflow: scroll;
 }
 
-.amplify-ctrl-list-noHover {
+.amplify-ctrl-noHover {
   pointer-events: none;
 }
 
