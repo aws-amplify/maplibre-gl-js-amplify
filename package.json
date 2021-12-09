@@ -16,7 +16,7 @@
     "bundle:umd:min": "terser --ecma 6 --compress --mangle --source-map \"content='dist/maplibre-gl-js-amplify.umd.js.map'\" -o dist/maplibre-gl-js-amplify.umd.min.js -- dist/maplibre-gl-js-amplify.umd.js && gzip -9 -c dist/maplibre-gl-js-amplify.umd.min.js > dist/maplibre-gl-js-amplify.umd.min.js.gz",
     "clean": "rimraf dist && rimraf lib",
     "compile": "npm run tsc",
-    "copy:files": "mkdir -p dist/public/ && cp src/public/* dist/public/",
+    "copy:files": "mkdir -p dist/public/ lib/cjs/public lib/esm/public && cp src/public/* dist/public/ && cp src/public/* lib/cjs/public/ && cp src/public/* lib/esm/public/",
     "prepublish": "npm run build",
     "test": "jest",
     "tsc": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json"
@@ -60,6 +60,7 @@
     "maplibre-gl": "^1.14.0",
     "prettier": "^2.3.0",
     "rollup": "^2.55.1",
+    "rollup-plugin-import-css": "^3.0.2",
     "rollup-plugin-svg": "^2.0.0",
     "terser": "^5.7.1",
     "ts-jest": "^27.0.2",

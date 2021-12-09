@@ -8,8 +8,9 @@ import {
   getGeofenceFeatureArray,
 } from "../geofenceUtils";
 import { GEOFENCE_COLOR, GEOFENCE_BORDER_COLOR } from "../constants";
-import { AmplifyGeofenceControlUI, createElement } from "./ui";
+import { AmplifyGeofenceControlUI } from "./ui";
 import { AmplifyMapboxDraw } from "./AmplifyMapboxDraw";
+import { createElement } from "../utils";
 
 export interface AmplifyGeofenceControlOptions {
   geofenceCollectionId?: string;
@@ -46,9 +47,8 @@ export class AmplifyGeofenceControl {
     this.deleteGeofence = this.deleteGeofence.bind(this);
     this.displayAllGeofences = this.displayAllGeofences.bind(this);
     this.hideAllGeofences = this.hideAllGeofences.bind(this);
-    this.enableEditingMode = this.enableEditingMode.bind(this);
     this.addEditableGeofence = this.addEditableGeofence.bind(this);
-    this.disableEditingMode = this.disableEditingMode.bind(this);
+    this.setEditingModeEnabled = this.setEditingModeEnabled.bind(this);
     this.displayHighlightedGeofence =
       this.displayHighlightedGeofence.bind(this);
     this.hideHighlightedGeofence = this.hideHighlightedGeofence.bind(this);
@@ -70,13 +70,12 @@ export class AmplifyGeofenceControl {
 
   onAdd(map: Map): HTMLElement {
     this._map = map;
-    this._container = createElement("div", "maplibregl-ctrl");
+    this._container = createElement("div", "amplify-ctrl maplibregl-ctrl");
 
     this._ui = AmplifyGeofenceControlUI(this, this._container);
     this._amplifyDraw = new AmplifyMapboxDraw(map, this._ui);
 
     this._ui.registerControlPosition(map, "full-screen");
-    this._ui.createStyleHeader();
 
     this._ui.createGeofenceListContainer();
 
@@ -113,12 +112,19 @@ export class AmplifyGeofenceControl {
     return this._container;
   }
 
-  saveGeofence(): void {
+  saveGeofence(id?: string): string | null {
+    if (id) {
+      if (!isValidGeofenceId(id, this._loadedGeofences)) {
+        console.error("Geofence ID invalid");
+        this._ui.createAddGeofencePromptError("Invalid Geofence ID");
+        return;
+      }
+    }
     const feature = this._amplifyDraw.get(this._editingGeofenceId);
 
     // FIXME: Save geofence api call here
     const savedGeofence: Geofence = {
-      id: this._editingGeofenceId,
+      id: id || this._editingGeofenceId,
       geometry: { polygon: feature.geometry["coordinates"] },
     };
 
@@ -126,11 +132,13 @@ export class AmplifyGeofenceControl {
     this._loadGeofence(savedGeofence);
     this.displayGeofence(savedGeofence.id);
 
-    this.disableEditingMode();
+    this.setEditingModeEnabled(false);
+
+    return savedGeofence.id;
   }
 
   editGeofence(id: string): void {
-    this.enableEditingMode();
+    this.setEditingModeEnabled(true);
 
     const geofence = this._loadedGeofences[id];
     if (!geofence) {
@@ -148,7 +156,7 @@ export class AmplifyGeofenceControl {
     this._editingGeofenceId = geofence.id;
   }
 
-  deleteGeofence(id: string): void {
+  deleteGeofence(id: string): string {
     // FIXME: delete geofence api call here
     this._ui.removeGeofenceListItem(id);
 
@@ -159,6 +167,8 @@ export class AmplifyGeofenceControl {
     );
 
     this._updateDisplayedGeofences();
+
+    return id;
   }
 
   deleteSelectedGeofences(): void {
@@ -217,6 +227,7 @@ export class AmplifyGeofenceControl {
 
     const loadGeofence = this._loadGeofence;
     asdf.forEach((geofence) => loadGeofence(geofence));
+    this._ui.updateGeofenceCount(asdf.length);
   }
 
   _loadGeofence(geofence: Geofence): void {
@@ -305,38 +316,26 @@ export class AmplifyGeofenceControl {
   }
 
   // Disables add button and selecting items from geofence list
-  enableEditingMode(): void {
-    this._amplifyDraw.enable();
-    this._drawGeofencesOutput.hide();
-    this._ui.disableAddGeofenceButton(true);
-    this._ui.disableGeofenceList();
-  }
-
-  // Disables add button and selecting items from geofence list
-  disableEditingMode(): void {
-    this._amplifyDraw.disable();
-    this._drawGeofencesOutput.show();
-    this._ui.disableAddGeofenceButton(false);
-    this._ui.enableGeofenceList();
+  setEditingModeEnabled(enabled: boolean): void {
+    enabled ? this._amplifyDraw.enable() : this._amplifyDraw.disable();
+    enabled
+      ? this._drawGeofencesOutput.hide()
+      : this._drawGeofencesOutput.show();
+    this._ui.setGeofenceListEnabled(!enabled);
   }
 
   updateInputRadius(event: Event): void {
-    const radius = (event.target as HTMLInputElement).value;
-    this._amplifyDraw.drawCircularGeofence(
-      this._editingGeofenceId,
-      parseInt(radius)
-    );
-  }
-
-  addEditableGeofence(id: string, container: HTMLElement): void {
-    if (!isValidGeofenceId(id, this._loadedGeofences)) {
-      console.error("Geofence ID invalid");
-      this._ui.createAddGeofencePromptError("Invalid Geofence ID", container);
+    const radiusString = (event.target as HTMLInputElement).value;
+    const radius = parseInt(radiusString);
+    if (isNaN(radius)) {
       return;
     }
-    this._editingGeofenceId = id;
+    this._amplifyDraw.drawCircularGeofence(this._editingGeofenceId, radius);
+  }
 
-    this._amplifyDraw.drawCircularGeofence(id);
-    this._ui.removeAddGeofenceContainer();
+  addEditableGeofence(): void {
+    this._editingGeofenceId = "tempGeofence";
+    this._amplifyDraw.drawCircularGeofence("tempGeofence");
+    this.setEditingModeEnabled(true);
   }
 }
