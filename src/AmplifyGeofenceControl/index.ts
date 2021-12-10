@@ -69,8 +69,21 @@ export class AmplifyGeofenceControl {
     this._ui.removeElement(this._container);
   }
 
+  // Reorders MapLibre canvas class names to fix a mapbox draw bug - https://github.com/mapbox/mapbox-gl-draw/pull/1079
+  reorderMapLibreClassNames(): void {
+    const mapCanvas = document
+      .getElementsByClassName("maplibregl-canvas")
+      .item(0);
+    if (mapCanvas) {
+      mapCanvas.className = "mapboxgl-canvas maplibregl-canvas";
+    }
+  }
+
   onAdd(map: Map): HTMLElement {
     this._map = map;
+
+    this.reorderMapLibreClassNames();
+
     this._container = createElement("div", "amplify-ctrl maplibregl-ctrl");
 
     this._ui = AmplifyGeofenceControlUI(this, this._container);
