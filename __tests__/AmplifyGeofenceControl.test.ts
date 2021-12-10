@@ -76,7 +76,7 @@ describe("AmplifyGeofenceControl", () => {
   test("Create Geofence", async () => {
     const control = createMockControl();
 
-    (Geo.createGeofences as jest.Mock).mockReturnValueOnce({
+    (Geo.saveGeofences as jest.Mock).mockReturnValueOnce({
       successes: [
         {
           geofenceId: "foobar",
@@ -88,7 +88,7 @@ describe("AmplifyGeofenceControl", () => {
     });
 
     control._editingGeofenceId = "foobar";
-    await control.createGeofence();
+    await control.saveGeofence();
     expect(control._loadedGeofences["foobar"]).toBeDefined();
     expect(control._loadedGeofences["foobar"].geofenceId).toBe("foobar");
   });
@@ -96,7 +96,7 @@ describe("AmplifyGeofenceControl", () => {
   test("Create Geofence API error", async () => {
     const control = createMockControl();
 
-    (Geo.createGeofences as jest.Mock).mockReturnValueOnce({
+    (Geo.saveGeofences as jest.Mock).mockReturnValueOnce({
       successes: [],
       errors: [
         {
@@ -110,13 +110,13 @@ describe("AmplifyGeofenceControl", () => {
     });
 
     control._editingGeofenceId = "foobar";
-    await expect(control.createGeofence()).rejects.toThrow();
+    await expect(control.saveGeofence()).rejects.toThrow();
   });
 
   test("Update Geofence", async () => {
     const control = createMockControl();
 
-    (Geo.updateGeofences as jest.Mock).mockReturnValueOnce({
+    (Geo.saveGeofences as jest.Mock).mockReturnValueOnce({
       successes: [
         {
           geofenceId: "foobar",
@@ -128,7 +128,7 @@ describe("AmplifyGeofenceControl", () => {
     });
 
     control._editingGeofenceId = "foobar";
-    await control.updateGeofence();
+    await control.saveGeofence();
     expect(control._loadedGeofences["foobar"]).toBeDefined();
     expect(control._loadedGeofences["foobar"].geofenceId).toBe("foobar");
   });
@@ -136,7 +136,7 @@ describe("AmplifyGeofenceControl", () => {
   test("Update Geofence API error", async () => {
     const control = createMockControl();
 
-    (Geo.updateGeofences as jest.Mock).mockReturnValueOnce({
+    (Geo.saveGeofences as jest.Mock).mockReturnValueOnce({
       successes: [],
       errors: [
         {
@@ -150,7 +150,7 @@ describe("AmplifyGeofenceControl", () => {
     });
 
     control._editingGeofenceId = "foobar";
-    await expect(control.updateGeofence()).rejects.toThrow();
+    await expect(control.saveGeofence()).rejects.toThrow();
   });
 
   test("Delete Geofence", async () => {

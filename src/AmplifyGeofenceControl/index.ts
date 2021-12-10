@@ -43,8 +43,7 @@ export class AmplifyGeofenceControl {
     this.listGeofences = this.listGeofences.bind(this);
     this._loadGeofence = this._loadGeofence.bind(this);
     this.updateInputRadius = this.updateInputRadius.bind(this);
-    this.createGeofence = this.createGeofence.bind(this);
-    this.updateGeofence = this.updateGeofence.bind(this);
+    this.saveGeofence = this.saveGeofence.bind(this);
     this.editGeofence = this.editGeofence.bind(this);
     this.deleteGeofence = this.deleteGeofence.bind(this);
     this.displayAllGeofences = this.displayAllGeofences.bind(this);
@@ -114,7 +113,7 @@ export class AmplifyGeofenceControl {
     return this._container;
   }
 
-  async createGeofence(geofenceId?: string): Promise<string | null> {
+  async saveGeofence(geofenceId?: string): Promise<string | null> {
     if (geofenceId) {
       if (!isValidGeofenceId(geofenceId, this._loadedGeofences)) {
         console.error("Geofence ID invalid");
@@ -124,7 +123,7 @@ export class AmplifyGeofenceControl {
     }
     const feature = this._amplifyDraw.get(this._editingGeofenceId);
 
-    const response = await Geo.createGeofences({
+    const response = await Geo.saveGeofences({
       geofenceId: geofenceId || this._editingGeofenceId,
       geometry: { polygon: feature.geometry["coordinates"] },
     });
@@ -132,45 +131,7 @@ export class AmplifyGeofenceControl {
     if (response.errors[0]) {
       const err = response.errors[0];
       throw new Error(
-        `There was an error creating geofence with id ${geofenceId}: ${err.error.code} - ${err.error.message}`
-      );
-    }
-
-    const success = response.successes[0];
-
-    const savedGeofence: Geofence = {
-      geofenceId: success.geofenceId,
-      geometry: { polygon: feature.geometry["coordinates"] },
-    };
-
-    // render geofence to the map and add it to the list
-    this._loadGeofence(savedGeofence);
-    this.displayGeofence(savedGeofence.geofenceId);
-
-    this.setEditingModeEnabled(false);
-
-    return savedGeofence.geofenceId;
-  }
-
-  async updateGeofence(geofenceId?: string): Promise<string | null> {
-    if (geofenceId) {
-      if (!isValidGeofenceId(geofenceId, this._loadedGeofences)) {
-        console.error("Geofence ID invalid");
-        this._ui.createAddGeofencePromptError("Invalid Geofence ID");
-        return;
-      }
-    }
-    const feature = this._amplifyDraw.get(this._editingGeofenceId);
-
-    const id = geofenceId || this._editingGeofenceId;
-    const response = await Geo.updateGeofences({
-      geofenceId: id,
-      geometry: { polygon: feature.geometry["coordinates"] },
-    });
-
-    if (response.errors[0]) {
-      throw new Error(
-        `There was an error updating geofence with id ${id}: ${response.errors[0]}`
+        `There was an error saving geofence with id ${geofenceId}: ${err.error.code} - ${err.error.message}`
       );
     }
 

@@ -432,7 +432,7 @@ export function AmplifyGeofenceControlUI(
       rightContainer
     );
     saveGeofenceButton.addEventListener("click", async () => {
-      await geofenceControl.updateGeofence();
+      await geofenceControl.saveGeofence();
       removeEditContainer();
     });
     saveGeofenceButton.title = "Save";
@@ -493,7 +493,7 @@ export function AmplifyGeofenceControlUI(
     );
     saveButton.innerHTML = "Save";
     saveButton.addEventListener("click", async function () {
-      const output = await geofenceControl.createGeofence(
+      const output = await geofenceControl.saveGeofence(
         escape((nameInput as HTMLInputElement).value)
       );
       if (output) removeAddGeofenceContainer();
