@@ -8,7 +8,7 @@ export type Coordinates = [Longitude, Latitude];
 export type LinearRing = Coordinates[]; // Array of 4 or more coordinates, where the first and last coordinate are the same to form a closed boundary
 export type Polygon = LinearRing[]; // An array of one or more linear rings, this allows shapes where there are holes in the middle
 export type PolygonGeometry = { polygon: Polygon };
-export type Geofence = { id: string; geometry: PolygonGeometry };
+export type Geofence = { geofenceId: string; geometry: PolygonGeometry };
 
 export type NamedLocation = {
   coordinates: Coordinates;
