@@ -25,7 +25,7 @@ export class AmplifyMapboxDraw {
     defaultMode: "simple_select",
     userProperties: true,
     controls: {
-      trash: false,
+      trash: true,
     },
     modes: {
       ...MapboxDraw.modes,
