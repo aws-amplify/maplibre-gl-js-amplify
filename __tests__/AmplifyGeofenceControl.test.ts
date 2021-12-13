@@ -2,10 +2,10 @@ import { Map as maplibreMap } from "maplibre-gl";
 import { AmplifyGeofenceControl } from "../src/AmplifyGeofenceControl";
 import { getGeofenceFeatureFromPolygon } from "../src/geofenceUtils";
 import { AmplifyGeofenceControlUI } from "../src/AmplifyGeofenceControl/ui";
-import { AmplifyMapboxDraw } from "../src/AmplifyGeofenceControl/AmplifyMapboxDraw";
+import { AmplifyMapDraw } from "../src/AmplifyGeofenceControl/AmplifyMapDraw";
 import { Geo } from "@aws-amplify/geo";
 
-jest.mock("../src/AmplifyGeofenceControl/AmplifyMapboxDraw");
+jest.mock("../src/AmplifyGeofenceControl/AmplifyMapDraw");
 
 jest.mock("../src/AmplifyGeofenceControl/ui");
 jest.mock("maplibre-gl");
@@ -34,7 +34,7 @@ describe("AmplifyGeofenceControl", () => {
       };
     });
 
-    (AmplifyMapboxDraw as jest.Mock).mockImplementation(() => {
+    (AmplifyMapDraw as jest.Mock).mockImplementation(() => {
       return {
         get: () =>
           getGeofenceFeatureFromPolygon([
@@ -61,7 +61,7 @@ describe("AmplifyGeofenceControl", () => {
       control,
       {} as unknown as HTMLElement
     );
-    control._amplifyDraw = new AmplifyMapboxDraw(control._map, control._ui);
+    control._amplifyDraw = new AmplifyMapDraw(control._map, control._ui);
     control._drawGeofencesOutput = mockDrawGeofencesOutput;
     return control;
   };
