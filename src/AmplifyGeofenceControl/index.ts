@@ -10,7 +10,7 @@ import {
 } from "../geofenceUtils";
 import { GEOFENCE_COLOR, GEOFENCE_BORDER_COLOR } from "../constants";
 import { AmplifyGeofenceControlUI } from "./ui";
-import { AmplifyMapboxDraw } from "./AmplifyMapboxDraw";
+import { AmplifyMapDraw } from "./AmplifyMapDraw";
 import { createElement } from "../utils";
 
 export interface AmplifyGeofenceControlOptions {
@@ -21,7 +21,7 @@ export class AmplifyGeofenceControl {
   options: AmplifyGeofenceControlOptions;
   _geofenceCollectionId: string;
   _map: Map;
-  _amplifyDraw: AmplifyMapboxDraw;
+  _amplifyDraw: AmplifyMapDraw;
   _loadedGeofences?: Record<string, Geofence>;
   _displayedGeofences?: Geofence[];
   _drawGeofencesOutput?: DrawGeofencesOutput;
@@ -87,7 +87,7 @@ export class AmplifyGeofenceControl {
     this._container = createElement("div", "amplify-ctrl maplibregl-ctrl");
 
     this._ui = AmplifyGeofenceControlUI(this, this._container);
-    this._amplifyDraw = new AmplifyMapboxDraw(map, this._ui);
+    this._amplifyDraw = new AmplifyMapDraw(map, this._ui);
 
     this._ui.registerControlPosition(map, "full-screen");
 

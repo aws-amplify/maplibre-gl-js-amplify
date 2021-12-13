@@ -17,7 +17,7 @@ import {
   GEOFENCE_VERTEX_COLOR,
 } from "../constants";
 
-export class AmplifyMapboxDraw {
+export class AmplifyMapDraw {
   _map: Map;
   _ui;
   _mapBoxDraw: MapboxDraw = new MapboxDraw({
