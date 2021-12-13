@@ -271,6 +271,12 @@ export function AmplifyGeofenceControlUI(
       "amplify-ctrl-list",
       geofenceListContainer
     );
+    _geofenceList.addEventListener("scroll", () => {
+      const { scrollHeight, scrollTop, clientHeight } = _geofenceList;
+      if (scrollTop + clientHeight >= scrollHeight - 20) {
+        geofenceControl.loadMoreGeofences();
+      }
+    });
   }
 
   function createGeofenceListHeader(geofenceListContainer: HTMLElement) {
@@ -582,7 +588,6 @@ export function AmplifyGeofenceControlUI(
       const id = await geofenceControl.deleteGeofence(geofenceId);
 
       if (id) {
-        console.log(id);
         createDeleteResultContainer(true);
         removeElement(_deleteGeofenceContainer);
         geofenceControl.setEditingModeEnabled(false);
