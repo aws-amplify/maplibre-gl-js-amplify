@@ -57,14 +57,14 @@ export const getPolygonFeatureFromBounds = (
     units: "miles",
   }).geometry.coordinates;
 
-  // Creates a polygon from the coordinates found along the line between the bounding coordinates
+  // Creates a polygon from the coordinates found along the line between the bounding coordinates in counter clockwise order starting from northeast most coordinate
   const polygon = [
     [
-      [southWestCoordinate[0], northeastCoordinate[1]] as Coordinates,
       northeastCoordinate as Coordinates,
-      [northeastCoordinate[0], southWestCoordinate[1]] as Coordinates,
-      southWestCoordinate as Coordinates,
       [southWestCoordinate[0], northeastCoordinate[1]] as Coordinates,
+      southWestCoordinate as Coordinates,
+      [northeastCoordinate[0], southWestCoordinate[1]] as Coordinates,
+      northeastCoordinate as Coordinates,
     ],
   ];
 

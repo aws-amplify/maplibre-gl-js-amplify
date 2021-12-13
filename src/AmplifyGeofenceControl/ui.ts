@@ -366,17 +366,22 @@ export function AmplifyGeofenceControlUI(
       }
     });
 
+    const geofenceTitleContainer = createElement(
+      "div",
+      "amplify-ctrl-list-item-title-container",
+      listItem
+    );
     const geofenceTitle = createElement(
       "div",
       "amplify-ctrl-list-item-title",
-      listItem
+      geofenceTitleContainer
     );
     geofenceTitle.innerHTML = geofence.geofenceId;
 
     const editButton = createElement(
       "div",
       "amplify-ctrl-edit-button",
-      listItem
+      geofenceTitleContainer
     );
     editButton.addEventListener("click", function () {
       geofenceControl.editGeofence(geofence.geofenceId);
@@ -642,19 +647,24 @@ export function AmplifyGeofenceControlUI(
   function setGeofenceListEnabled(enabled): void {
     _checkboxAll.disabled = !enabled;
 
-    if (enabled) {
-      _addGeofencebutton.classList.remove("amplify-ctrl-noHover");
-      _geofenceList.classList.remove("amplify-ctrl-noHover");
-    } else {
-      _addGeofencebutton.classList.add("amplify-ctrl-noHover");
-      _geofenceList.classList.add("amplify-ctrl-noHover");
-    }
+    enabled
+      ? _addGeofencebutton.classList.remove("amplify-ctrl-noHover")
+      : _addGeofencebutton.classList.add("amplify-ctrl-noHover");
 
     const inputs = document.getElementsByClassName(
       "amplify-ctrl-list-item-checkbox"
     );
     for (let i = 0; i < inputs.length; i++) {
       (inputs.item(i) as HTMLInputElement).disabled = !enabled;
+    }
+
+    const items = document.getElementsByClassName(
+      "amplify-ctrl-list-item-container"
+    );
+    for (let i = 0; i < items.length; i++) {
+      enabled
+        ? items.item(i).classList.remove("amplify-ctrl-noHover")
+        : items.item(i).classList.add("amplify-ctrl-noHover");
     }
   }
 

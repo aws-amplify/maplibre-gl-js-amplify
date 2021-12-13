@@ -35,8 +35,8 @@ export class AmplifyGeofenceControl {
   _geofenceCreateInput?: HTMLElement;
   _addGeofenceContainer?: HTMLElement;
 
-  constructor(options: AmplifyGeofenceControlOptions) {
-    this._geofenceCollectionId = options.geofenceCollectionId ?? "fixme"; // this should be retrieved from Geofence API
+  constructor(options?: AmplifyGeofenceControlOptions) {
+    this._geofenceCollectionId = options?.geofenceCollectionId ?? "fixme"; // this should be retrieved from Geofence API
     this._loadedGeofences = {};
     this._displayedGeofences = [];
     this.changeMode = this.changeMode.bind(this);
@@ -136,15 +136,16 @@ export class AmplifyGeofenceControl {
     }
     const feature = this._amplifyDraw.get(this._editingGeofenceId);
 
+    const idToSave = geofenceId || this._editingGeofenceId;
     const response = await Geo.saveGeofences({
-      geofenceId: geofenceId || this._editingGeofenceId,
+      geofenceId: idToSave,
       geometry: { polygon: feature.geometry["coordinates"] },
     });
 
     if (response.errors[0]) {
       const err = response.errors[0];
       throw new Error(
-        `There was an error saving geofence with id ${geofenceId}: ${err.error.code} - ${err.error.message}`
+        `There was an error saving geofence with id ${idToSave}: ${err.error.code} - ${err.error.message}`
       );
     }
 
