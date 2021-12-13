@@ -30,7 +30,7 @@
     universal-cookie "^4.0.4"
     zen-observable-ts "0.8.19"
 
-"@aws-amplify/geo@geo":
+"@aws-amplify/geo@1.1.11-geo.8":
   version "1.1.11-geo.8"
   resolved "https://registry.yarnpkg.com/@aws-amplify/geo/-/geo-1.1.11-geo.8.tgz#baa9f7230ba3b6f4669f4a6370211663dd391697"
   integrity sha512-G64w2DARN9m6e/sDJVJ2rpNa0ZX97LtlzMK+R9ooQi+y6a8jXx2RjJTba1a9LvadwZ4v1szIbLI7oqasf9AKTQ==
