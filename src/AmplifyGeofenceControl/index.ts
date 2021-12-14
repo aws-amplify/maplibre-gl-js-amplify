@@ -174,7 +174,7 @@ export class AmplifyGeofenceControl {
 
       const loadGeofence = this._loadGeofence;
       entries.forEach((geofence) => loadGeofence(geofence));
-      this._ui.updateGeofenceCount(entries.length);
+      this._ui.updateGeofenceCount(Object.keys(this._loadedGeofences).length);
     } catch (e) {
       throw new Error(`Error calling listGeofences: ${e}`);
     }
@@ -190,7 +190,7 @@ export class AmplifyGeofenceControl {
 
         const loadGeofence = this._loadGeofence;
         entries.forEach((geofence) => loadGeofence(geofence));
-        this._ui.updateGeofenceCount(entries.length);
+        this._ui.updateGeofenceCount(Object.keys(this._loadedGeofences).length);
       } catch (e) {
         throw new Error(`Error calling listGeofences: ${e}`);
       }
