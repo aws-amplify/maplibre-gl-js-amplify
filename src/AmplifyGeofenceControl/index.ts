@@ -36,7 +36,7 @@ export class AmplifyGeofenceControl {
   _addGeofenceContainer?: HTMLElement;
 
   constructor(options?: AmplifyGeofenceControlOptions) {
-    this._geofenceCollectionId = options?.geofenceCollectionId ?? "fixme"; // this should be retrieved from Geofence API
+    this._geofenceCollectionId = options?.geofenceCollectionId;
     this._loadedGeofences = {};
     this._displayedGeofences = [];
     this.changeMode = this.changeMode.bind(this);
