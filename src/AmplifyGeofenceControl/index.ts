@@ -27,6 +27,7 @@ export class AmplifyGeofenceControl {
   _drawGeofencesOutput?: DrawGeofencesOutput;
   _highlightedGeofenceOutput?: DrawGeofencesOutput;
   _editingGeofenceId?: string;
+  _listGeofencesNextToken?: string;
 
   // HTML Element References
   _ui;
@@ -40,7 +41,8 @@ export class AmplifyGeofenceControl {
     this._loadedGeofences = {};
     this._displayedGeofences = [];
     this.changeMode = this.changeMode.bind(this);
-    this.listGeofences = this.listGeofences.bind(this);
+    this.loadInitialGeofences = this.loadInitialGeofences.bind(this);
+    this.loadMoreGeofences = this.loadMoreGeofences.bind(this);
     this._loadGeofence = this._loadGeofence.bind(this);
     this.updateInputRadius = this.updateInputRadius.bind(this);
     this.saveGeofence = this.saveGeofence.bind(this);
@@ -119,7 +121,7 @@ export class AmplifyGeofenceControl {
           }
         );
 
-        this.listGeofences();
+        this.loadInitialGeofences();
       }.bind(this)
     );
 
@@ -165,17 +167,34 @@ export class AmplifyGeofenceControl {
     return savedGeofence.geofenceId;
   }
 
-  // FIXME: Add infinite scroll plus next tokens here
   // Each page loads 100 geofences
-  async listGeofences(): Promise<void> {
+  async loadInitialGeofences(): Promise<void> {
     try {
-      const { entries } = await Geo.listGeofences();
+      const { entries, nextToken } = await Geo.listGeofences();
+      this._listGeofencesNextToken = nextToken;
 
       const loadGeofence = this._loadGeofence;
       entries.forEach((geofence) => loadGeofence(geofence));
-      this._ui.updateGeofenceCount(entries.length);
+      this._ui.updateGeofenceCount(Object.keys(this._loadedGeofences).length);
     } catch (e) {
       throw new Error(`Error calling listGeofences: ${e}`);
+    }
+  }
+
+  async loadMoreGeofences(): Promise<void> {
+    if (this._listGeofencesNextToken) {
+      try {
+        const { entries, nextToken } = await Geo.listGeofences({
+          nextToken: this._listGeofencesNextToken,
+        });
+        this._listGeofencesNextToken = nextToken;
+
+        const loadGeofence = this._loadGeofence;
+        entries.forEach((geofence) => loadGeofence(geofence));
+        this._ui.updateGeofenceCount(Object.keys(this._loadedGeofences).length);
+      } catch (e) {
+        throw new Error(`Error calling listGeofences: ${e}`);
+      }
     }
   }
 

@@ -230,7 +230,7 @@ describe("AmplifyGeofenceControl", () => {
       ],
     });
 
-    await control.listGeofences();
+    await control.loadInitialGeofences();
     expect(control._loadedGeofences["foobar"]).toBeDefined();
     expect(control._loadedGeofences["barbaz"]).toBeDefined();
   });
@@ -242,6 +242,58 @@ describe("AmplifyGeofenceControl", () => {
       throw new Error();
     });
 
-    await expect(control.listGeofences()).rejects.toThrow();
+    await expect(control.loadInitialGeofences()).rejects.toThrow();
+  });
+
+  test("Load More Geofences", async () => {
+    const control = createMockControl();
+    control._listGeofencesNextToken = "anything";
+
+    (Geo.listGeofences as jest.Mock).mockReturnValueOnce({
+      entries: [
+        {
+          geofenceId: "foobar",
+          createTime: "2020-04-01T21:00:00.000Z",
+          updateTime: "2020-04-01T21:00:00.000Z",
+          geometry: { polygon: [] },
+        },
+        {
+          geofenceId: "barbaz",
+          createTime: "2020-04-01T21:00:00.000Z",
+          updateTime: "2020-04-01T21:00:00.000Z",
+          geometry: { polygon: [] },
+        },
+      ],
+    });
+
+    await control.loadMoreGeofences();
+    expect(control._loadedGeofences["foobar"]).toBeDefined();
+    expect(control._loadedGeofences["barbaz"]).toBeDefined();
+  });
+
+  test("Load More Geofences no next token no geofences should be loaded", async () => {
+    const control = createMockControl();
+    control._listGeofencesNextToken = undefined;
+
+    (Geo.listGeofences as jest.Mock).mockReturnValueOnce({
+      entries: [
+        {
+          geofenceId: "foobar",
+          createTime: "2020-04-01T21:00:00.000Z",
+          updateTime: "2020-04-01T21:00:00.000Z",
+          geometry: { polygon: [] },
+        },
+        {
+          geofenceId: "barbaz",
+          createTime: "2020-04-01T21:00:00.000Z",
+          updateTime: "2020-04-01T21:00:00.000Z",
+          geometry: { polygon: [] },
+        },
+      ],
+      nextToken: undefined,
+    });
+
+    await control.loadMoreGeofences();
+    expect(control._loadedGeofences["foobar"]).toBeUndefined();
   });
 });
