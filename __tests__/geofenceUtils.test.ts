@@ -47,10 +47,10 @@ describe("geofence utils", () => {
 
     expect((feature.geometry as Polygon).coordinates[0].length).toBe(5);
     expect((feature.geometry as Polygon).coordinates[0][0]).toStrictEqual([
-      -119.57688132240456, 34.96945504363627,
+      -129.43864865991324, 34.96945504363627,
     ]);
     expect((feature.geometry as Polygon).coordinates[0][4]).toStrictEqual([
-      -119.57688132240456, 34.96945504363627,
+      -129.43864865991324, 34.96945504363627,
     ]);
   });
 
@@ -73,10 +73,10 @@ describe("geofence utils", () => {
 
     expect((feature.geometry as Polygon).coordinates[0].length).toBe(5);
     expect((feature.geometry as Polygon).coordinates[0][0]).toStrictEqual([
-      0, 45.00000000000001,
+      270, 45.00000000000001,
     ]);
     expect((feature.geometry as Polygon).coordinates[0][4]).toStrictEqual([
-      0, 45.00000000000001,
+      270, 45.00000000000001,
     ]);
   });
 });

@@ -101,13 +101,16 @@
   justify-content: center;
 }
 
-.amplify-ctrl-list-item-title {
+.amplify-ctrl-list-item-title-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
   padding: 4px 0px 4px 8px;
   margin-left: 8px;
   border-left: 1px solid #e9e9e9;
 }
 
-.amplify-ctrl-list-selected-item .amplify-ctrl-list-item-title {
+.amplify-ctrl-list-selected-item .amplify-ctrl-list-item-title-container {
   border: unset;
   color: white;
 }
@@ -365,13 +368,12 @@
 }
 
 .amplify-ctrl-edit-button {
-  position: absolute;
-  right: 11px;
+  margin-right: 12px;
   display: none;
   cursor: pointer;
   background: rgba(255, 255, 255, 0.3);
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
 }
 
