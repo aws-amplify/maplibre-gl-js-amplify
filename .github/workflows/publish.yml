@@ -3,7 +3,7 @@ name: publish
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 jobs:
   publish:
@@ -23,8 +23,16 @@ jobs:
         run: |
           yarn
 
-      - name: Publish
-        run: |
-          yarn publish --access=public --non-interactive
+      - name: publish:release
+        if: ${{ github.ref == "refs/heads/main" }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
+        run: |
+          yarn publish:release
+
+      - name: publish:geo
+        if: ${{ github.ref == "refs/heads/geo" }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
+        run: |
+          yarn publish:geo
