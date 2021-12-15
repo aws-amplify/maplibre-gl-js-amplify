@@ -24,14 +24,14 @@ jobs:
           yarn
 
       - name: publish:release
-        if: ${{ github.ref == "refs/heads/main" }}
+        if: ${{ github.ref == 'refs/heads/main' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
         run: |
           yarn publish:release
 
       - name: publish:geo
-        if: ${{ github.ref == "refs/heads/geo" }}
+        if: ${{ github.ref == 'refs/heads/geo' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
         run: |
