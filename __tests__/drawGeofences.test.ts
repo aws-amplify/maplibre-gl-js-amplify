@@ -17,7 +17,7 @@ describe("drawGeofences", () => {
         ],
       ],
     ];
-    const { hide } = drawGeofences("my-geofence", data, map);
+    const { show, hide, fillLayerId } = drawGeofences("my-geofence", data, map);
 
     const mockInstance = (maplibreMap as jest.Mock).mock.instances[0];
 
@@ -25,7 +25,7 @@ describe("drawGeofences", () => {
       "my-geofence-source"
     );
     expect(
-      mockInstance.addSource.mock.calls[0][1].data.geometry.coordinates.length
+      mockInstance.addSource.mock.calls[0][1].data.features.length
     ).toEqual(1);
     expect(mockInstance.addLayer).toHaveBeenCalledTimes(2);
 
