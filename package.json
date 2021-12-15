@@ -18,6 +18,8 @@
     "compile": "npm run tsc",
     "copy:files": "mkdir -p dist/public/ && cp src/public/* dist/public/",
     "prepublish": "npm run build",
+    "publish:release": "yarn publish --access=public --non-interactive",
+    "publish:geo": "yarn publish --access=public --non-interactive --tag geo",
     "test": "jest",
     "tsc": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json"
   },
