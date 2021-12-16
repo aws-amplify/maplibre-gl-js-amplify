@@ -50,7 +50,6 @@
     "@typescript-eslint/eslint-plugin": "^4.25.0",
     "@typescript-eslint/parser": "^4.25.0",
     "babel-jest": "^27.3.1",
-    "debounce": "^1.2.1",
     "eslint": "^7.16.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-standard": "^16.0.3",
@@ -82,6 +81,7 @@
     "@turf/helpers": "^6.5.0",
     "@turf/length": "^6.5.0",
     "@turf/line-slice": "^6.5.0",
+    "debounce": "^1.2.1",
     "mapbox-gl-draw-circle": "^1.1.2"
   }
 }
