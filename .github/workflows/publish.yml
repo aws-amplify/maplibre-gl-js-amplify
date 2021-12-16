@@ -2,8 +2,9 @@ name: publish
 
 on:
   push:
-    tags:
-      - "v*"
+    branches:
+      - release
+      - geo
 
 jobs:
   publish:
@@ -24,7 +25,7 @@ jobs:
           yarn
 
       - name: publish:release
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/release'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
         run: |
