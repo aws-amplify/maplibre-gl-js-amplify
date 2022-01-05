@@ -86,7 +86,7 @@ export class AmplifyGeofenceControl {
 
     this.reorderMapLibreClassNames();
 
-    this._container = createElement("div", "amplify-ctrl maplibregl-ctrl");
+    this._container = createElement("div", "geofence-ctrl maplibregl-ctrl");
 
     this._ui = AmplifyGeofenceControlUI(this, this._container);
     this._amplifyDraw = new AmplifyMapDraw(map, this._ui);
@@ -282,7 +282,7 @@ export class AmplifyGeofenceControl {
     this._displayedGeofences.push(...Object.values(this._loadedGeofences));
     this._updateDisplayedGeofences();
     const checkboxes = document.getElementsByClassName(
-      "amplify-ctrl-list-item-checkbox"
+      "geofence-ctrl-list-item-checkbox"
     ) as HTMLCollectionOf<HTMLInputElement>;
     Array.from(checkboxes).forEach(
       (checkbox) => (checkbox.checked = this._ui.getCheckboxAllValue())
@@ -301,7 +301,7 @@ export class AmplifyGeofenceControl {
     this._displayedGeofences = [];
     this._updateDisplayedGeofences();
     const checkboxes = document.getElementsByClassName(
-      "amplify-ctrl-list-item-checkbox"
+      "geofence-ctrl-list-item-checkbox"
     ) as HTMLCollectionOf<HTMLInputElement>;
     Array.from(checkboxes).forEach(
       (checkbox) => (checkbox.checked = this._ui.getCheckboxAllValue())
