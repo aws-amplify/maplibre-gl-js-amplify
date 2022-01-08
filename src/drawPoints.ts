@@ -1,5 +1,5 @@
 import { Feature, Point } from "geojson";
-import { GeoJSONSource, LngLatBounds, Map as maplibreMap } from "maplibre-gl";
+import { GeoJSONSource, Map as maplibreMap } from "maplibre-gl";
 import { getFeaturesFromData } from "./utils";
 import {
   ClusterOptions,
