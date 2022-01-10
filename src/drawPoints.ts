@@ -1,4 +1,4 @@
-import { Feature } from "geojson";
+import { Feature, Point } from "geojson";
 import { GeoJSONSource, Map as maplibreMap } from "maplibre-gl";
 import { getFeaturesFromData } from "./utils";
 import {
@@ -15,11 +15,13 @@ import { MAP_STYLES } from "./constants";
  * @param {boolean} showCluster Default: true, determines whether or not points close together should be clustered into a single point
  * @param {Object} clusterOptions Object for determining cluster options, see ClusterOptions for more details
  * @param {Object} unclusteredOptions Object for determining cluster options, see UnclusteredOptions for more details
+ * @param {boolean} autoFit Default: true, determines whether the map should zoom to fit all points into the map view or not
  */
 export interface DrawPointsOptions {
   showCluster?: boolean;
   clusterOptions?: ClusterOptions;
   unclusteredOptions?: UnclusteredOptions;
+  autoFit?: boolean;
 }
 
 export interface DrawPointsOutput {
@@ -56,6 +58,7 @@ export function drawPoints(
     showCluster = true,
     clusterOptions = {},
     unclusteredOptions: unclusteredMarkerOptions = {},
+    autoFit = true,
   }: DrawPointsOptions = {},
   mapStyle?: MAP_STYLES
 ): DrawPointsOutput {
@@ -106,6 +109,18 @@ export function drawPoints(
     map,
     unclusteredMarkerOptions || {}
   );
+
+  if (autoFit) {
+    const mapBounds = map.getBounds();
+
+    features.forEach(function (feature) {
+      mapBounds.extend(
+        (feature.geometry as Point).coordinates as [number, number]
+      );
+    });
+
+    map.fitBounds(mapBounds);
+  }
 
   // utility function for setting layer visibility to none
   const hide = () => {
