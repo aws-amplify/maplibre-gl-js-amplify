@@ -8,6 +8,7 @@
 - [AmplifyGeocoderAPI](#amplifygeocoderapi)
 - [createDefaultIcon](#createdefaulticon)
 - [drawGeofences](#drawgeofences)
+- [AmplifyGeofenceControl][#amplifygeofencecontrol]
 
 ## createMap
 
@@ -124,6 +125,24 @@ drawGeofences utility function for polygonal shapes geofences to a map based on 
   - `options.borderOpacity` **number** Opacity value between 0 and 1.0 for the interior of the polygon (optional, default `0.5`)
 
 Returns **DrawGeofencesOutput** output An object containing the string id's of the sources and layers used to draw the points to the map. This includes the sourceId, outlineLayerId, and fillLayerId. Also returns utility functions `show()` and `hide()` which toggle on or off the visibility of the geofences.
+
+## AmplifyGeofenceControl
+
+A MapLibre control for managing geofences with Amplify CRUD APIs.
+
+### Parameters
+
+- `options` **[Object][14]** An object containing options for changing the geofence control
+  - `options.geofenceCollectionId` **[String][8]** The id of an Amazon Location Service `geofenceCollectionId` to use for performing CRUD operations on (optional, defaults to whatever is the default collection in the aws-exports.js file)
+
+Returns **[AmplifyGeofenceControl][9]** `this`
+
+### Example
+
+```js
+const geofenceControl = new AmplifyGeofenceControl();
+map.addControl(geofenceControl);
+```
 
 [1]: #amplifymaplibrerequest
 [2]: #parameters
