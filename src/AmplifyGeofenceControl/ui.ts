@@ -1,14 +1,14 @@
 import { Geofence } from "../types";
 import { debounce } from "debounce";
 import { createElement, removeElement } from "../utils";
-import editIcon from "../public/editIcon.svg";
-import trashIcon from "../public/trashIcon.svg";
-import popupStep1 from "../public/popupStep1.svg";
-import popupStep2 from "../public/popupStep2.svg";
-import popupStep3 from "../public/popupStep3.svg";
-import popupStep4 from "../public/popupStep4.svg";
-
-import "../public/amplify-ctrl-geofence.css";
+import {
+  createEditIcon,
+  createPopupStep1Icon,
+  createPopupStep2Icon,
+  createPopupStep3Icon,
+  createPopupStep4Icon,
+  createTrashIcon,
+} from "./icons";
 
 export function AmplifyGeofenceControlUI(
   geofenceControl: any,
@@ -203,21 +203,25 @@ export function AmplifyGeofenceControlUI(
       popupContainer
     );
 
-    const imageIcon1 = new Image(32, 32);
-    imageIcon1.src = popupStep1;
-    createPopupStep(popup, "Move dots to desired position", imageIcon1);
+    createPopupStep(
+      popup,
+      "Move dots to desired position",
+      createPopupStep1Icon()
+    );
 
-    const imageIcon2 = new Image(32, 32);
-    imageIcon2.src = popupStep2;
-    createPopupStep(popup, "Click on a border to create a dot", imageIcon2);
+    createPopupStep(
+      popup,
+      "Click on a border to create a dot",
+      createPopupStep2Icon()
+    );
 
-    const imageIcon3 = new Image(32, 32);
-    imageIcon3.src = popupStep3;
-    createPopupStep(popup, "Click into shape to move", imageIcon3);
+    createPopupStep(popup, "Click into shape to move", createPopupStep3Icon());
 
-    const imageIcon4 = new Image(64, 32);
-    imageIcon4.src = popupStep4;
-    createPopupStep(popup, "Press delete to remove a dot", imageIcon4);
+    createPopupStep(
+      popup,
+      "Press delete to remove a dot",
+      createPopupStep4Icon()
+    );
 
     return popup;
   }
@@ -225,7 +229,7 @@ export function AmplifyGeofenceControlUI(
   function createPopupStep(
     container: HTMLElement,
     text: string,
-    image: HTMLImageElement
+    image: SVGSVGElement
   ): void {
     const popupStep = createElement(
       "div",
@@ -395,9 +399,7 @@ export function AmplifyGeofenceControlUI(
       listItem.classList.remove("geofence-ctrl-list-item");
       listItem.classList.add("geofence-ctrl-list-selected-item");
     });
-    const imageIcon = new Image(15, 15);
-    imageIcon.src = editIcon;
-    editButton.appendChild(imageIcon);
+    editButton.appendChild(createEditIcon());
   }
 
   function createEditControls(
@@ -536,9 +538,7 @@ export function AmplifyGeofenceControlUI(
     deleteButton.addEventListener("click", function () {
       createConfirmDeleteContainer(id);
     });
-    const imageIcon = new Image(15, 15);
-    imageIcon.src = trashIcon;
-    deleteButton.appendChild(imageIcon);
+    deleteButton.appendChild(createTrashIcon());
   }
 
   function createConfirmDeleteContainer(geofenceId: string): void {
