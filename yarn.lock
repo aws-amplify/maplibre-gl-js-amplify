@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@aws-amplify/core@4.3.11-geo.8+b97a90f4e":
-  version "4.3.11-geo.8"
-  resolved "https://registry.yarnpkg.com/@aws-amplify/core/-/core-4.3.11-geo.8.tgz#53eb2bb12edc0d442946820772b350a00c1e2ac6"
-  integrity sha512-Q5RVMVWFUYjB041FASqR9/NtfL705JGWXMqsPAgStTQCbcIgV7Wv8uTY/w0qjbfA1S/T3fFC57Ey0gjnIqpU4A==
+"@aws-amplify/core@4.3.11-geo.11+a73d76867", "@aws-amplify/core@geo":
+  version "4.3.11-geo.11"
+  resolved "https://registry.yarnpkg.com/@aws-amplify/core/-/core-4.3.11-geo.11.tgz#2f5dfc7398d3592e974c9de042674accbc035b70"
+  integrity sha512-tT83jH4DBZhoLaFdM320uVptYcJpWenoGGyxkymGtOLwIu+61e39C/YCRJ20x6peMqGdCAFcpLSFXXBi/luTaQ==
   dependencies:
     "@aws-crypto/sha256-js" "1.0.0-alpha.0"
     "@aws-sdk/client-cloudwatch-logs" "3.6.1"
@@ -16,26 +16,12 @@
     universal-cookie "^4.0.4"
     zen-observable-ts "0.8.19"
 
-"@aws-amplify/core@^4.3.1":
-  version "4.3.10"
-  resolved "https://registry.yarnpkg.com/@aws-amplify/core/-/core-4.3.10.tgz#0b0b716c3758a0c001c5df513ee8a49a86545604"
-  integrity sha512-WNR8QcVfXqmqCUuy96TlTHmPoCSWKB12j6r2sEwVb7UGGTa+F9FnmgyXdefjcEocw/6HxHxQPfiFK2va2sdaGA==
+"@aws-amplify/geo@geo":
+  version "1.1.11-geo.11"
+  resolved "https://registry.yarnpkg.com/@aws-amplify/geo/-/geo-1.1.11-geo.11.tgz#bc762ef458d1d1ef7c31ec823d67d180bdcf93dd"
+  integrity sha512-tdSOk1Uzyv+q9LRtjaKjCbVdGasGQy6rPi/c2J/CAiA0iQNGk2MksDznzMS2nnu3XF6QqNQxtSXjltxnMzgqmw==
   dependencies:
-    "@aws-crypto/sha256-js" "1.0.0-alpha.0"
-    "@aws-sdk/client-cloudwatch-logs" "3.6.1"
-    "@aws-sdk/client-cognito-identity" "3.6.1"
-    "@aws-sdk/credential-provider-cognito-identity" "3.6.1"
-    "@aws-sdk/types" "3.6.1"
-    "@aws-sdk/util-hex-encoding" "3.6.1"
-    universal-cookie "^4.0.4"
-    zen-observable-ts "0.8.19"
-
-"@aws-amplify/geo@1.1.11-geo.8":
-  version "1.1.11-geo.8"
-  resolved "https://registry.yarnpkg.com/@aws-amplify/geo/-/geo-1.1.11-geo.8.tgz#baa9f7230ba3b6f4669f4a6370211663dd391697"
-  integrity sha512-G64w2DARN9m6e/sDJVJ2rpNa0ZX97LtlzMK+R9ooQi+y6a8jXx2RjJTba1a9LvadwZ4v1szIbLI7oqasf9AKTQ==
-  dependencies:
-    "@aws-amplify/core" "4.3.11-geo.8+b97a90f4e"
+    "@aws-amplify/core" "4.3.11-geo.11+a73d76867"
     "@aws-sdk/client-location" "3.41.0"
     camelcase-keys "6.2.2"
 

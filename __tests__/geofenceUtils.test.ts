@@ -1,6 +1,8 @@
 import { Polygon } from "@turf/helpers";
 import { LngLatBounds } from "maplibre-gl";
+import { Geofence, Polygon as Poly } from "../src/types";
 import {
+  getGeofenceFeatureArray,
   getCircleFeatureFromCoords,
   getPolygonFeatureFromBounds,
 } from "../src/geofenceUtils";
@@ -78,5 +80,58 @@ describe("geofence utils", () => {
     expect((feature.geometry as Polygon).coordinates[0][4]).toStrictEqual([
       270, 45.00000000000001,
     ]);
+  });
+
+  test("getGeofenceFeatureFromArray - both data type options work", () => {
+    const polygons: Poly[] = [
+      [
+        [
+          [-122.4992749052739, 37.776957051070596],
+          [-122.4937817412115, 37.71560362460596],
+          [-122.39284485156284, 37.737327467087184],
+          [-122.41207092578165, 37.785911481104975],
+          [-122.4992749052739, 37.776957051070596],
+        ],
+      ],
+    ];
+    const fromData = getGeofenceFeatureArray(polygons);
+
+    expect(fromData.type).toEqual("Feature");
+    expect((fromData.geometry as Polygon).coordinates).toEqual(polygons);
+  });
+
+  test("getGeofenceFeatureFromArray - both data type options work", () => {
+    const polygons: Poly[] = [
+      [
+        [
+          [-122.4992749052739, 37.776957051070596],
+          [-122.4937817412115, 37.71560362460596],
+          [-122.39284485156284, 37.737327467087184],
+          [-122.41207092578165, 37.785911481104975],
+          [-122.4992749052739, 37.776957051070596],
+        ],
+      ],
+    ];
+
+    const geofences: Geofence[] = [
+      {
+        geometry: {
+          polygon: [
+            [
+              [-122.4992749052739, 37.776957051070596],
+              [-122.4937817412115, 37.71560362460596],
+              [-122.39284485156284, 37.737327467087184],
+              [-122.41207092578165, 37.785911481104975],
+              [-122.4992749052739, 37.776957051070596],
+            ],
+          ],
+        },
+        geofenceId: "foobar",
+      },
+    ];
+    const fromData = getGeofenceFeatureArray(polygons);
+    const fromGeofences = getGeofenceFeatureArray(geofences);
+
+    expect(fromData).toEqual(fromGeofences);
   });
 });
