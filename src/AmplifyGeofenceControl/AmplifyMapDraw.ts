@@ -4,7 +4,7 @@ import {
   CircleMode,
   SimpleSelectMode,
   DirectMode,
-} from "mapbox-gl-draw-circle";
+} from "maplibre-gl-draw-circle";
 import { Coordinates } from "../types";
 import { Feature, Geometry } from "geojson";
 import {
