@@ -8,7 +8,7 @@
 - [AmplifyGeocoderAPI](#amplifygeocoderapi)
 - [createDefaultIcon](#createdefaulticon)
 - [drawGeofences](#drawgeofences)
-- [AmplifyGeofenceControl][#amplifygeofencecontrol]
+- [AmplifyGeofenceControl](#amplifygeofencecontrol)
 
 ## createMap
 
