@@ -11,7 +11,7 @@ export const AmplifyGeocoderAPI = {
       const data = await Geo.searchByText(config.query, {
         biasPosition: config.proximity,
         searchAreaConstraints: config.bbox,
-        countries: config.countires,
+        countries: config.countries,
         maxResults: config.limit,
       });
 
@@ -57,6 +57,21 @@ export const AmplifyGeocoderAPI = {
     }
 
     return { features };
+  },
+  getSuggestions: async (config) => {
+    let response = [];
+    try {
+      response = await Geo.searchForSuggestions(config.query, {
+        biasPosition: config.proximity,
+        searchAreaConstraints: config.bbox,
+        countries: config.countries,
+        maxResults: config.limit,
+      });
+    } catch (e) {
+      console.error(`Failed to get suggetions with error: ${e}`);
+    }
+
+    return { suggestions: response };
   },
 };
 
