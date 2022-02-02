@@ -58,6 +58,21 @@ export const AmplifyGeocoderAPI = {
 
     return { features };
   },
+  getSuggestions: async (config) => {
+    let response;
+    try {
+      response = await Geo.searchForSuggestions(config.query, {
+        biasPosition: config.proximity,
+        searchAreaConstraints: config.bbox,
+        countries: config.countries,
+        maxResults: config.limit,
+      });
+    } catch (e) {
+      console.error(`Failed to get suggestions with error: ${e}`);
+    }
+
+    return { suggestions: response };
+  },
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
