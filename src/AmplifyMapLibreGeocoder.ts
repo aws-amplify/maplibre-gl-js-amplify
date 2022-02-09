@@ -75,12 +75,52 @@ export const AmplifyGeocoderAPI = {
   },
 };
 
+function processResults(searchResults, suggestions, limit) {
+  if (!suggestions || suggestions.length === 0) {
+    return searchResults;
+  }
+
+  // Filter out the suggestions that are already in the search results
+  const featureLabels = searchResults.map((feature) => feature.place_name);
+  const filteredSuggestions = suggestions.filter(
+    (result) => !featureLabels.includes(result)
+  );
+
+  if (filteredSuggestions.length + searchResults.length >= limit) {
+    // Restrict suggestions to < half of the limit at most
+    let suggestionsLimit = Math.min(
+      filteredSuggestions.length,
+      Math.floor(limit / 2)
+    );
+    // If there are not enough results to fill to limit, add more suggestions
+    while (searchResults.length + suggestionsLimit < limit) {
+      suggestionsLimit++;
+    }
+
+    // Add the suggestions to the search results
+    const limitedResults = [];
+    for (let i = 0; i < suggestionsLimit; i++) {
+      limitedResults.push(filteredSuggestions[i]);
+    }
+    for (let i = 0; i < limit - suggestionsLimit; i++) {
+      limitedResults.push(searchResults[i]);
+    }
+
+    return limitedResults;
+  }
+
+  return filteredSuggestions.length > 0
+    ? [...filteredSuggestions, ...searchResults]
+    : searchResults;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function createAmplifyGeocoder(options?: any): IControl {
   return new MaplibreGeocoder(AmplifyGeocoderAPI, {
-    maplibregl: maplibregl,
+    maplibregl,
     showResultMarkers: { element: createDefaultIcon() },
     marker: { element: createDefaultIcon() },
+    processResults,
     ...options,
   });
 }
