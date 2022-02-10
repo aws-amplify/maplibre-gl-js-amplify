@@ -69,7 +69,7 @@ export const AmplifyGeocoderAPI = {
       });
       suggestions.push(...response);
     } catch (e) {
-      console.error(`Failed to get suggetions with error: ${e}`);
+      console.error(`Failed to get suggestions with error: ${e}`);
     }
 
     return { suggestions };
@@ -82,6 +82,7 @@ export function createAmplifyGeocoder(options?: any): IControl {
     maplibregl: maplibregl,
     showResultMarkers: { element: createDefaultIcon() },
     marker: { element: createDefaultIcon() },
+    showResultsWhileTyping: options?.autocomplete ? options.autocomplete : true,
     ...options,
   });
 }
