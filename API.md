@@ -5,6 +5,7 @@
 - [createMap](#createmap)
 - [AmplifyMapLibreRequest][1]
 - [drawPoints][5]
+- [createAmplifyGeocoder](#createAmplifyGeocoder)
 - [AmplifyGeocoderAPI](#amplifygeocoderapi)
 - [createDefaultIcon](#createdefaulticon)
 - [drawGeofences](#drawgeofences)
@@ -84,9 +85,26 @@ Returns **DrawPointsOutput** output An object containing the string id's of the 
 - `hide` **[function(): void]** Utility function for setting the all layer's visibilty to "none"
 - `setData` **[function([Array][13]\<Coordinate> | [Array][13]\<Feature> | [Array][13]\<NamedLocation>): void]** Utility function for setting/updating draw data points
 
+## createAmplifyGeocoder
+
+A utility method for constructing a `MaplibreGeocoder` with an `AmplifyGeocoderAPI` based on Amplify recommended settings.
+
+### Parameters
+
+- `options` **Object** An optional object containing [MaplibreGeocoder optional parameters](https://github.com/maplibre/maplibre-gl-geocoder/blob/main/API.md#parameters) and some `AmplifyGeocoder` specific options (optional, default `undefined`)
+  - `options.autocomplete` **boolean** Determines whether or not the geocoder will perform suggestion API calls while typing (optional, default `true`)
+
+```js
+import { createAmplifyGeocoder } from "maplibre-gl-js-amplify";
+import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
+...
+const geocoder = createAmplifyGeocoder();
+map.addControl(geocoder);
+```
+
 ## AmplifyGeocoderAPI
 
-An object wrapping Amplify Geo search APIs and returns `forwardGeocode` and `reverseGeocode` methods which are used by [maplibre-gl-geocoder][22] to perform search
+An object wrapping Amplify Geo search APIs and returns `forwardGeocode`, `reverseGeocode`, and `getSuggestions` methods which are used by [maplibre-gl-geocoder][22] to perform search and suggestion queries
 
 ## createDefaultIcon
 
