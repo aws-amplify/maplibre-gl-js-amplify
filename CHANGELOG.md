@@ -1,5 +1,17 @@
 ## master
 
+## 1.2.5
+
+- Temporarily disable autocomplete by default [#116](https://github.com/aws-amplify/maplibre-gl-js-amplify/pull/116)
+
+### Features / Improvements 🚀
+
+- Added `getSuggestions` API to `AmplifyGeocoderAPI` [#106](https://github.com/aws-amplify/maplibre-gl-js-amplify/pull/106)
+
+### Bug fixes 🐛
+
+- N/A
+
 ## 1.2.4
 
 ### Features / Improvements 🚀
