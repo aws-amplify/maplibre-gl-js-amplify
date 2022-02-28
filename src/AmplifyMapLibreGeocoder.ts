@@ -9,7 +9,7 @@ export const AmplifyGeocoderAPI = {
     const features = [];
     try {
       const data = await Geo.searchByText(config.query, {
-        biasPosition: config.proximity,
+        biasPosition: config.bbox ? undefined : config.proximity,
         searchAreaConstraints: config.bbox,
         countries: config.countries,
         maxResults: config.limit,
@@ -62,7 +62,7 @@ export const AmplifyGeocoderAPI = {
     const suggestions = [];
     try {
       const response = await Geo.searchForSuggestions(config.query, {
-        biasPosition: config.proximity,
+        biasPosition: config.bbox ? undefined : config.proximity,
         searchAreaConstraints: config.bbox,
         countries: config.countries,
         maxResults: config.limit,
