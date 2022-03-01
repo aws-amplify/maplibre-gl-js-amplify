@@ -78,7 +78,7 @@ export function drawPoints(
   /*
    * Data source for features
    */
-  const sourceId = `${sourceName}-source-points`;
+  const sourceId = sourceName;
   map.addSource(sourceId, {
     type: "geojson",
     data: {
