@@ -66,6 +66,8 @@ DrawPoints utility function for adding points to a map based on coordinate data 
     - `options.clusterOptions.showCount` **boolean** Default: false, determines whether to show the count for the number of points aggregated by a cluster
     - See [ClusterOptions][15] for more details
   - `options.unclusteredOptions` **[String][8]** Object for determining unclustered point options (optional, default `{}`)
+    - `options.unclusteredOptions.markerImageElement` **HTMLImageElement** optional, an image to use in place of the default marker. If only markerImageElement is passed then it will be used for both `markerImageElement` and `activateMarkerImageElement`. Images should be defined before the map `load` [event](https://maplibre.org/maplibre-gl-js-docs/api/map/#map.event:load) is fired.
+    - `options.unclusteredOptions.activeMarkerImageElement` **HTMLImageElement** optional, an image to use in place of the default active marker. If only markerImageElement is passed then it will be used for both `markerImageElement` and `activateMarkerImageElement`. Images should be defined before the map `load` [event](https://maplibre.org/maplibre-gl-js-docs/api/map/#map.event:load) is fired.
     - `options.unclusteredOptions.showMarkerPopup` **boolean** Default: false, determines whether to show a popup on selection
     - `options.unclusteredOptions.popupRender` **function** Optional, overrides the [default popup render](https://github.com/aws-amplify/maplibre-gl-js-amplify/blob/main/src/popupRender.ts#L18) function with function that accepts a Carmen GeoJSON feature and returns an HTML string
     - See [UnclusteredOptions][16] for more details
