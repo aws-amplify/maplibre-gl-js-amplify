@@ -45,7 +45,7 @@ describe("drawPoints", () => {
       MAP_STYLES.ESRI_NAVIGATION
     );
 
-    expect(addSourceMock.mock.calls[0][0]).toEqual("foo-source-points");
+    expect(addSourceMock.mock.calls[0][0]).toEqual("foo");
     expect(addSourceMock.mock.calls[0][1].data.features.length).toEqual(2);
     expect(addLayerMock).toHaveBeenCalledTimes(2);
     expect(fitBoundsMock).toHaveBeenCalledTimes(1);
@@ -66,7 +66,7 @@ describe("drawPoints", () => {
       MAP_STYLES.ESRI_NAVIGATION
     );
 
-    expect(addSourceMock.mock.calls[0][0]).toEqual("foo-source-points");
+    expect(addSourceMock.mock.calls[0][0]).toEqual("foo");
     expect(addSourceMock.mock.calls[0][1].data.features.length).toEqual(2);
     expect(addLayerMock).toHaveBeenCalledTimes(2);
     expect(fitBoundsMock).toHaveBeenCalledTimes(0);
