@@ -47,6 +47,8 @@ export interface UnclusteredOptions {
   popupPadding?: number;
   popupFontColor?: string;
   popupTitleFontWeight?: string;
+  markerImageElement?: HTMLImageElement;
+  activeMarkerImageElement?: HTMLImageElement;
   popupRender?: (selectedFeature: Feature) => string;
   onClick?: (e: maplibregl.MapMouseEvent) => void;
 }

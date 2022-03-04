@@ -125,18 +125,25 @@ function addUnclusteredMarkerImages(
     defaultBorderColor = COLOR_WHITE,
     defaultBorderWidth = 4,
     defaultColor: fillColor = MARKER_COLOR,
+    markerImageElement,
+    activeMarkerImageElement,
   }: UnclusteredOptions
 ) {
-  const inactiveMarker = createMarker({
-    fillColor: fillColor,
-    strokeColor: defaultBorderColor,
-    lineWidth: defaultBorderWidth,
-  });
-  const activeMarker = createMarker({
-    fillColor: selectedColor,
-    strokeColor: selectedBorderColor,
-    lineWidth: selectedBorderWidth,
-  });
+  const inactiveMarker =
+    markerImageElement ||
+    createMarker({
+      fillColor: fillColor,
+      strokeColor: defaultBorderColor,
+      lineWidth: defaultBorderWidth,
+    });
+  const activeMarker =
+    activeMarkerImageElement ||
+    markerImageElement ||
+    createMarker({
+      fillColor: selectedColor,
+      strokeColor: selectedBorderColor,
+      lineWidth: selectedBorderWidth,
+    });
 
   map.addImage("inactive-marker", inactiveMarker, { pixelRatio: 2 });
   map.addImage("active-marker", activeMarker, { pixelRatio: 2 });
