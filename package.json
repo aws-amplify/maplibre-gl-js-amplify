@@ -21,6 +21,7 @@
     "publish:release": "yarn publish --access=public --non-interactive",
     "publish:geo": "yarn publish --access=public --non-interactive --tag geo",
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "tsc": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json"
   },
   "repository": {
