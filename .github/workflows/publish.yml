@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - release
+      - main
       - geo
 
 jobs:
@@ -24,16 +25,9 @@ jobs:
         run: |
           yarn
 
-      - name: publish:release
-        if: github.ref == 'refs/heads/release'
+      - name: Semantic Release
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          yarn publish:release
-
-      - name: publish:geo
-        if: github.ref == 'refs/heads/geo'
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
-        run: |
-          yarn publish:geo
+          yarn semantic-release
