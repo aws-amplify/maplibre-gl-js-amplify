@@ -52,6 +52,11 @@
         "name": "geo",
         "prerelease": "geo",
         "channel": "geo"
+      },
+      {
+        "name": "ci-test",
+        "prerelease": "ci-test",
+        "channel": "ci-test"
       }
     ]
   },
