@@ -6,7 +6,6 @@ on:
       - release
       - main
       - geo
-      - ci-test
 
 jobs:
   publish:
