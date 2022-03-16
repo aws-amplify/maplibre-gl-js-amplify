@@ -161,7 +161,7 @@ export function AmplifyGeofenceControlUI(
 
     const letterI = createElement(
       "div",
-      "geofence-ctrl-create-polygon-mode-icon-i",
+      "geofence-ctrl-create-polygon-mode-info-icon",
       moreInfoIcon
     );
     letterI.innerHTML = "i";

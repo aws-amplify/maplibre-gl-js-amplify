@@ -175,7 +175,6 @@
   background: white;
   padding: 12px;
   pointer-events: auto;
-  height: 88px;
 }
 
 .geofence-ctrl-create-prompt-buttons {
@@ -253,6 +252,10 @@
 .geofence-ctrl-create-polygon-mode-reset-button {
   border-radius: 4px;
   background: black;
+}
+
+.geofence-ctrl-create-polygon-mode-info-icon {
+  text-align: center;
 }
 
 /* Popup container */
