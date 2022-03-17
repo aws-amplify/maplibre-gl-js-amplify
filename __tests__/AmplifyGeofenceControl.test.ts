@@ -91,6 +91,7 @@ describe("AmplifyGeofenceControl", () => {
     await control.saveGeofence();
     expect(control._loadedGeofences["foobar"]).toBeDefined();
     expect(control._loadedGeofences["foobar"].geofenceId).toBe("foobar");
+    expect(control._ui.updateGeofenceCount).toHaveBeenCalled();
   });
 
   test("Create Geofence API error", async () => {
@@ -180,6 +181,7 @@ describe("AmplifyGeofenceControl", () => {
 
     await control.deleteGeofence("foobar");
     expect(control._loadedGeofences["foobar"]).toBeUndefined();
+    expect(control._ui.updateGeofenceCount).toHaveBeenCalled();
   });
 
   test("Delete Geofence API error", async () => {

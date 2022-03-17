@@ -230,6 +230,7 @@ export class AmplifyGeofenceControl {
     this._ui.removeGeofenceListItem(geofenceId);
 
     delete this._loadedGeofences[geofenceId];
+    this._ui.updateGeofenceCount(Object.keys(this._loadedGeofences).length);
 
     this._displayedGeofences = this._displayedGeofences.filter(
       (geofence) => geofence.geofenceId !== geofenceId
@@ -270,6 +271,8 @@ export class AmplifyGeofenceControl {
       this._ui.renderListItem(geofence);
     }
     this._loadedGeofences[geofence.geofenceId] = geofence;
+
+    this._ui.updateGeofenceCount(Object.keys(this._loadedGeofences).length);
   }
 
   displayGeofence(geofenceId: string): void {
