@@ -9,9 +9,9 @@ export const AmplifyGeocoderAPI = {
     const features = [];
     try {
       const data = await Geo.searchByText(config.query, {
-        biasPosition: config.proximity,
+        biasPosition: config.bbox ? undefined : config.proximity,
         searchAreaConstraints: config.bbox,
-        countries: config.countires,
+        countries: config.countries,
         maxResults: config.limit,
       });
 
@@ -58,6 +58,22 @@ export const AmplifyGeocoderAPI = {
 
     return { features };
   },
+  getSuggestions: async (config) => {
+    const suggestions = [];
+    try {
+      const response = await Geo.searchForSuggestions(config.query, {
+        biasPosition: config.bbox ? undefined : config.proximity,
+        searchAreaConstraints: config.bbox,
+        countries: config.countries,
+        maxResults: config.limit,
+      });
+      suggestions.push(...response);
+    } catch (e) {
+      console.error(`Failed to get suggestions with error: ${e}`);
+    }
+
+    return { suggestions };
+  },
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -66,6 +82,9 @@ export function createAmplifyGeocoder(options?: any): IControl {
     maplibregl: maplibregl,
     showResultMarkers: { element: createDefaultIcon() },
     marker: { element: createDefaultIcon() },
+    // autocomplete temporarily disabled by default until CLI is updated
+    showResultsWhileTyping: options?.autocomplete,
+    // showResultsWhileTyping: options?.autocomplete === false ? false : true,
     ...options,
   });
 }

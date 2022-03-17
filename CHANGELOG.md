@@ -1,6 +1,35 @@
 ## master
 
-## 1.2.0
+## 1.2.5
+
+- Temporarily disable autocomplete by default [#116](https://github.com/aws-amplify/maplibre-gl-js-amplify/pull/116)
+
+### Features / Improvements 🚀
+
+- Added `getSuggestions` API to `AmplifyGeocoderAPI` [#106](https://github.com/aws-amplify/maplibre-gl-js-amplify/pull/106)
+
+### Bug fixes 🐛
+
+- N/A
+
+## 1.2.4
+
+### Features / Improvements 🚀
+
+- Added `getSuggestions` API to `AmplifyGeocoderAPI` [#106](https://github.com/aws-amplify/maplibre-gl-js-amplify/pull/106)
+
+### Bug fixes 🐛
+
+## 1.2.3
+
+### Features / Improvements 🚀
+
+- Added `amplify-map-.css` for static map styles [#98](https://github.com/aws-amplify/maplibre-gl-js-amplify/pull/98)
+- Updated `drawPoints` to have an `autoFit` option to fit the map to points drawn [#94](https://github.com/aws-amplify/maplibre-gl-js-amplify/pull/94)
+
+### Bug fixes 🐛
+
+## 1.2.1
 
 - Added `AmplifyGeofenceControl` [#81](https://github.com/aws-amplify/maplibre-gl-js-amplify/pull/81)
 
