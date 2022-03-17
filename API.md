@@ -5,6 +5,7 @@
 - [createMap](#createmap)
 - [AmplifyMapLibreRequest][1]
 - [drawPoints][5]
+- [createAmplifyGeocoder](#createAmplifyGeocoder)
 - [AmplifyGeocoderAPI](#amplifygeocoderapi)
 - [createDefaultIcon](#createdefaulticon)
 - [drawGeofences](#drawgeofences)
@@ -61,14 +62,17 @@ DrawPoints utility function for adding points to a map based on coordinate data 
 - `map` **maplibre-gl-js-Map** A maplibre-gl-js [map][10] on which the points will be drawn
 - `options` **[Object][14]** An object containing options for changing the styles and features of the points rendered to the map, see the options for more details on available settings
 
-  - `options.showCluster` **[String][8]** Determines whether or not points close together should be clustered into a single point (optional, default `true`)
+  - `options.showCluster` **boolean** Determines whether or not points close together should be clustered into a single point (optional, default `true`)
   - `options.clusterOptions` **[String][8]** Object for determining cluster options (optional, default `{}`)
     - `options.clusterOptions.showCount` **boolean** Default: false, determines whether to show the count for the number of points aggregated by a cluster
     - See [ClusterOptions][15] for more details
   - `options.unclusteredOptions` **[String][8]** Object for determining unclustered point options (optional, default `{}`)
+    - `options.unclusteredOptions.markerImageElement` **HTMLImageElement** optional, an image to use in place of the default marker. If only markerImageElement is passed then it will be used for both `markerImageElement` and `activateMarkerImageElement`. Images should be defined before the map `load` [event](https://maplibre.org/maplibre-gl-js-docs/api/map/#map.event:load) is fired.
+    - `options.unclusteredOptions.activeMarkerImageElement` **HTMLImageElement** optional, an image to use in place of the default active marker. If only markerImageElement is passed then it will be used for both `markerImageElement` and `activateMarkerImageElement`. Images should be defined before the map `load` [event](https://maplibre.org/maplibre-gl-js-docs/api/map/#map.event:load) is fired.
     - `options.unclusteredOptions.showMarkerPopup` **boolean** Default: false, determines whether to show a popup on selection
     - `options.unclusteredOptions.popupRender` **function** Optional, overrides the [default popup render](https://github.com/aws-amplify/maplibre-gl-js-amplify/blob/main/src/popupRender.ts#L18) function with function that accepts a Carmen GeoJSON feature and returns an HTML string
     - See [UnclusteredOptions][16] for more details
+  - `options.autoFit` **boolean** Fits the map view around the points drawn if they are not currently in view (optional, default `true`)
 
 - `mapStyle` **MAP_STYLE** A required parameter that indicates the map style returned from Amazon Location Service. This is used to determine the default fonts to be used with maplibre-gl-js. View existing styles [here][17]
 
@@ -84,9 +88,26 @@ Returns **DrawPointsOutput** output An object containing the string id's of the 
 - `hide` **[function(): void]** Utility function for setting the all layer's visibilty to "none"
 - `setData` **[function([Array][13]\<Coordinate> | [Array][13]\<Feature> | [Array][13]\<NamedLocation>): void]** Utility function for setting/updating draw data points
 
+## createAmplifyGeocoder
+
+A utility method for constructing a `MaplibreGeocoder` with an `AmplifyGeocoderAPI` based on Amplify recommended settings.
+
+### Parameters
+
+- `options` **Object** An optional object containing [MaplibreGeocoder optional parameters](https://github.com/maplibre/maplibre-gl-geocoder/blob/main/API.md#parameters) and some `AmplifyGeocoder` specific options (optional, default `undefined`)
+  - `options.autocomplete` **boolean** Determines whether or not the geocoder will perform suggestion API calls while typing (optional, default `true`)
+
+```js
+import { createAmplifyGeocoder } from "maplibre-gl-js-amplify";
+import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
+...
+const geocoder = createAmplifyGeocoder();
+map.addControl(geocoder);
+```
+
 ## AmplifyGeocoderAPI
 
-An object wrapping Amplify Geo search APIs and returns `forwardGeocode` and `reverseGeocode` methods which are used by [maplibre-gl-geocoder][22] to perform search
+An object wrapping Amplify Geo search APIs and returns `forwardGeocode`, `reverseGeocode`, and `getSuggestions` methods which are used by [maplibre-gl-geocoder][22] to perform search and suggestion queries
 
 ## createDefaultIcon
 
