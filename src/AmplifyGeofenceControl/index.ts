@@ -7,6 +7,7 @@ import {
   isValidGeofenceId,
   getGeofenceFeatureFromPolygon,
   getGeofenceFeatureArray,
+  isExistingGeofenceId,
 } from "../geofenceUtils";
 import { GEOFENCE_COLOR, GEOFENCE_BORDER_COLOR } from "../constants";
 import { AmplifyGeofenceControlUI } from "./ui";
@@ -129,10 +130,21 @@ export class AmplifyGeofenceControl {
   }
 
   async saveGeofence(geofenceId?: string): Promise<string | null> {
+    if (!geofenceId || geofenceId.length === 0) {
+      this._ui.createAddGeofencePromptError("Geofence id is empty");
+      return;
+    }
+
     if (geofenceId) {
-      if (!isValidGeofenceId(geofenceId, this._loadedGeofences)) {
-        console.error("Geofence ID invalid");
-        this._ui.createAddGeofencePromptError("Invalid Geofence ID");
+      if (!isValidGeofenceId(geofenceId)) {
+        this._ui.createAddGeofencePromptError(
+          "Geofence id contains special characters"
+        );
+        return;
+      }
+
+      if (!isExistingGeofenceId(geofenceId, this._loadedGeofences)) {
+        this._ui.createAddGeofencePromptError("Geofence id already exists");
         return;
       }
     }

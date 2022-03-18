@@ -236,3 +236,25 @@ export function createCloseIcon(): SVGSVGElement {
 
   return customIcon;
 }
+
+export function createErrorIcon(): SVGSVGElement {
+  const customIcon = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "svg"
+  );
+  customIcon.setAttribute("viewBox", "0 0 12 10");
+  customIcon.setAttribute("width", "12");
+  customIcon.setAttribute("height", "10");
+  customIcon.setAttribute("fill", "none");
+
+  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path.setAttribute(
+    "d",
+    "M0 10H11.5789L5.78947 0L0 10ZM6.31579 8.42105H5.26316V7.36842H6.31579V8.42105ZM6.31579 6.31579H5.26316V4.21053H6.31579V6.31579Z"
+  );
+  path.setAttribute("fill", "#FF5050");
+
+  customIcon.appendChild(path);
+
+  return customIcon;
+}
