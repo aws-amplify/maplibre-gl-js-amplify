@@ -135,19 +135,18 @@ export class AmplifyGeofenceControl {
       return;
     }
 
-    if (geofenceId) {
-      if (!isValidGeofenceId(geofenceId)) {
-        this._ui.createAddGeofencePromptError(
-          "Geofence id contains special characters"
-        );
-        return;
-      }
-
-      if (!isExistingGeofenceId(geofenceId, this._loadedGeofences)) {
-        this._ui.createAddGeofencePromptError("Geofence id already exists");
-        return;
-      }
+    if (!isValidGeofenceId(geofenceId)) {
+      this._ui.createAddGeofencePromptError(
+        "Geofence id contains special characters"
+      );
+      return;
     }
+
+    if (!isExistingGeofenceId(geofenceId, this._loadedGeofences)) {
+      this._ui.createAddGeofencePromptError("Geofence id already exists");
+      return;
+    }
+
     const feature = this._amplifyDraw.get(this._editingGeofenceId);
 
     const idToSave = geofenceId || this._editingGeofenceId;
