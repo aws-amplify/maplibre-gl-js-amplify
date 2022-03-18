@@ -356,17 +356,16 @@ export function AmplifyGeofenceControlUI(
     );
     container.id = `list-item-${geofence.geofenceId}`;
     const listItem = createElement("li", "geofence-ctrl-list-item", container);
-    listItem.addEventListener("mouseover", function () {
-      geofenceControl.displayHighlightedGeofence(geofence.geofenceId);
-    });
-    listItem.addEventListener("mouseout", function () {
-      geofenceControl.hideHighlightedGeofence();
-    });
 
+    const leftContainer = createElement(
+      "div",
+      "geofence-ctrl-list-item-left-container",
+      listItem
+    );
     const checkbox = createElement(
       "input",
       "geofence-ctrl-list-item-checkbox",
-      listItem
+      leftContainer
     );
     checkbox.id = `list-item-checkbox-${geofence.geofenceId}`;
     (checkbox as HTMLInputElement).type = "checkbox";
@@ -378,11 +377,24 @@ export function AmplifyGeofenceControlUI(
       }
     });
 
+    const rightContainer = createElement(
+      "div",
+      "geofence-ctrl-list-item-right-container",
+      listItem
+    );
+
     const geofenceTitleContainer = createElement(
       "div",
       "geofence-ctrl-list-item-title-container",
-      listItem
+      rightContainer
     );
+    geofenceTitleContainer.addEventListener("mouseover", function () {
+      geofenceControl.displayHighlightedGeofence(geofence.geofenceId);
+    });
+    geofenceTitleContainer.addEventListener("mouseout", function () {
+      geofenceControl.hideHighlightedGeofence();
+    });
+
     const geofenceTitle = createElement(
       "div",
       "geofence-ctrl-list-item-title",
@@ -397,7 +409,12 @@ export function AmplifyGeofenceControlUI(
     );
     editButton.addEventListener("click", function () {
       geofenceControl.editGeofence(geofence.geofenceId);
-      createEditControls(container, listItem, geofence.geofenceId);
+      createEditControls(
+        listItem,
+        rightContainer,
+        leftContainer,
+        geofence.geofenceId
+      );
       listItem.classList.remove("geofence-ctrl-list-item");
       listItem.classList.add("geofence-ctrl-list-selected-item");
     });
@@ -405,34 +422,30 @@ export function AmplifyGeofenceControlUI(
   }
 
   function createEditControls(
-    itemContainer: HTMLElement,
     item: HTMLElement,
+    rightContainer: HTMLElement,
+    leftContainer: HTMLElement,
     id: string
   ): void {
     const editContainer = createElement(
       "div",
       "geofence-ctrl-list-item-controls",
-      itemContainer
+      rightContainer
     );
 
-    renderDeleteButton(editContainer, id);
-
-    const rightContainer = createElement(
-      "div",
-      "geofence-ctrl-list-item-controls-right",
-      editContainer
-    );
+    const deleteButton = renderDeleteButton(leftContainer, id);
 
     const removeEditContainer = () => {
       item.classList.remove("geofence-ctrl-list-selected-item");
       item.classList.add("geofence-ctrl-list-item");
       removeElement(editContainer);
+      removeElement(deleteButton);
     };
 
     const cancelButton = createElement(
       "div",
       "geofence-ctrl-cancel-button",
-      rightContainer
+      editContainer
     );
     cancelButton.classList.add("geofence-ctrl-button");
     cancelButton.innerHTML = "Cancel";
@@ -444,7 +457,7 @@ export function AmplifyGeofenceControlUI(
     const saveGeofenceButton = createElement(
       "div",
       "geofence-ctrl-save-button geofence-ctrl-button",
-      rightContainer
+      editContainer
     );
     saveGeofenceButton.addEventListener("click", async () => {
       await geofenceControl.saveGeofence();
@@ -530,7 +543,7 @@ export function AmplifyGeofenceControlUI(
    * Delete Controls
    *************************************************************/
 
-  function renderDeleteButton(container: HTMLElement, id: string): void {
+  function renderDeleteButton(container: HTMLElement, id: string): HTMLElement {
     const deleteButton = createElement(
       "div",
       "geofence-ctrl-delete-button",
@@ -541,6 +554,8 @@ export function AmplifyGeofenceControlUI(
       createConfirmDeleteContainer(id);
     });
     deleteButton.appendChild(createTrashIcon());
+
+    return deleteButton;
   }
 
   function createConfirmDeleteContainer(geofenceId: string): void {
