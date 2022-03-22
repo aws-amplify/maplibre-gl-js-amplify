@@ -505,7 +505,7 @@ export function AmplifyGeofenceControlUI(
       "geofence-ctrl-add-geofence-input",
       addGeofencePrompt
     );
-    (nameInput as HTMLInputElement).placeholder = "Name";
+    (nameInput as HTMLInputElement).placeholder = "Enter name";
 
     const buttonContainer = createElement(
       "div",
