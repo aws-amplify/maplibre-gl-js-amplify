@@ -149,7 +149,7 @@ export class AmplifyGeofenceControl {
 
     const feature = this._amplifyDraw.get(this._editingGeofenceId);
 
-    const idToSave = geofenceId || this._editingGeofenceId;
+    const idToSave = geofenceId;
     const response = await Geo.saveGeofences({
       geofenceId: idToSave,
       geometry: { polygon: feature.geometry["coordinates"] },
