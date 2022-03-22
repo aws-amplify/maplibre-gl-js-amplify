@@ -7,6 +7,7 @@ import {
   isValidGeofenceId,
   getGeofenceFeatureFromPolygon,
   getGeofenceFeatureArray,
+  isExistingGeofenceId,
 } from "../geofenceUtils";
 import { GEOFENCE_COLOR, GEOFENCE_BORDER_COLOR } from "../constants";
 import { AmplifyGeofenceControlUI } from "./ui";
@@ -131,16 +132,26 @@ export class AmplifyGeofenceControl {
   }
 
   async saveGeofence(geofenceId?: string): Promise<string | null> {
-    if (geofenceId) {
-      if (!isValidGeofenceId(geofenceId, this._loadedGeofences)) {
-        console.error("Geofence ID invalid");
-        this._ui.createAddGeofencePromptError("Invalid Geofence ID");
-        return;
-      }
+    if (!geofenceId || geofenceId.length === 0) {
+      this._ui.createAddGeofencePromptError("Geofence id is empty");
+      return;
     }
+
+    if (!isValidGeofenceId(geofenceId)) {
+      this._ui.createAddGeofencePromptError(
+        "Geofence id contains special characters"
+      );
+      return;
+    }
+
+    if (!isExistingGeofenceId(geofenceId, this._loadedGeofences)) {
+      this._ui.createAddGeofencePromptError("Geofence id already exists");
+      return;
+    }
+
     const feature = this._amplifyDraw.get(this._editingGeofenceId);
 
-    const idToSave = geofenceId || this._editingGeofenceId;
+    const idToSave = geofenceId;
     const response = await Geo.saveGeofences({
       geofenceId: idToSave,
       geometry: { polygon: feature.geometry["coordinates"] },

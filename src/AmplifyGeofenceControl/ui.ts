@@ -1,6 +1,7 @@
 import { Geofence } from "../types";
 import { debounce } from "debounce";
 import { createElement, removeElement } from "../utils";
+import { createErrorIcon } from "./icons";
 import {
   createEditIcon,
   createPopupStep1Icon,
@@ -28,6 +29,7 @@ export function AmplifyGeofenceControlUI(
   let _circleModeContainer: HTMLElement;
   let _polygonModeContainer: HTMLElement;
   let _deletePopdownContainer: HTMLElement;
+  let _errorDiv: HTMLElement;
 
   function registerControlPosition(map, positionName): void {
     if (map._controlPositions[positionName]) {
@@ -473,7 +475,15 @@ export function AmplifyGeofenceControlUI(
 
   function removeAddGeofenceContainer(): void {
     removeElement(_addGeofenceContainer);
+    clearAddGeofenceError();
     showCheckboxAllContainer();
+  }
+
+  function clearAddGeofenceError(): void {
+    if (_errorDiv) {
+      removeElement(_errorDiv);
+      _errorDiv = undefined;
+    }
   }
 
   function createAddGeofenceContainer(): void {
@@ -521,6 +531,7 @@ export function AmplifyGeofenceControlUI(
     );
     saveButton.innerHTML = "Save";
     saveButton.addEventListener("click", async function () {
+      clearAddGeofenceError();
       const output = await geofenceControl.saveGeofence(
         escape((nameInput as HTMLInputElement).value)
       );
@@ -531,12 +542,26 @@ export function AmplifyGeofenceControlUI(
   }
 
   function createAddGeofencePromptError(error: string): void {
-    const errorDiv = createElement(
+    if (_errorDiv) {
+      return;
+    }
+    _errorDiv = createElement(
       "div",
       "geofence-ctrl-add-geofence-error",
       _addGeofenceContainer
     );
-    errorDiv.innerHTML = error;
+    const errorIconContainer = createElement(
+      "div",
+      "geofence-ctrl-add-geofence-error-icon",
+      _errorDiv
+    );
+    errorIconContainer.appendChild(createErrorIcon());
+    const errorText = createElement(
+      "div",
+      "geofence-ctrl-add-geofence-error-text",
+      _errorDiv
+    );
+    errorText.innerHTML = error;
   }
 
   /************************************************************

@@ -122,11 +122,15 @@ export const doesGeofenceExist = (
   return !!loadedGeofences[id];
 };
 
-export const isValidGeofenceId = (
+export const isValidGeofenceId = (id: string): boolean => {
+  return !!id.match(GEOFENCE_ID_REGEX);
+};
+
+export const isExistingGeofenceId = (
   id: string,
   loadedGeofences: any
 ): boolean => {
-  return id.match(GEOFENCE_ID_REGEX) && !doesGeofenceExist(id, loadedGeofences);
+  return !doesGeofenceExist(id, loadedGeofences);
 };
 
 export const isGeofenceDisplayed = (

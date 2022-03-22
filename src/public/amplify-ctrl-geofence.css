@@ -354,6 +354,20 @@
   padding: 0 8px 8px 0px;
 }
 
+.geofence-ctrl-add-geofence-error {
+  display: flex;
+  color: #ff5050;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 16px;
+  padding: 8px;
+  align-items: center;
+}
+
+.geofence-ctrl-add-geofence-error-text {
+  padding-left: 8px;
+}
+
 /* Delete Popup */
 .geofence-ctrl-delete-popdown-container {
   position: absolute;
