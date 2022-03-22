@@ -17,8 +17,7 @@
   height: 100vh;
   left: 0;
   top: 0;
-  width: 15%;
-  max-width: 240px;
+  width: 240px;
   background: white;
   z-index: 100;
   line-height: 24px;
