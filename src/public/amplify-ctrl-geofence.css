@@ -17,8 +17,7 @@
   height: 100vh;
   left: 0;
   top: 0;
-  width: 15%;
-  max-width: 240px;
+  width: 240px;
   background: white;
   z-index: 100;
   line-height: 24px;
@@ -340,10 +339,12 @@
 .geofence-ctrl-delete-popdown-container {
   position: absolute;
   right: 0;
+  width: 30%;
 }
 
 .geofence-ctrl-delete-popdown {
-  padding: 12px;
+  display: flex;
+  padding: 20px 12px 12px 12px;
   font-weight: 600;
   color: white;
   background: #459844;
@@ -351,8 +352,16 @@
 }
 
 .geofence-ctrl-delete-popdown-close-button {
-  text-align: right;
+  position: absolute;
+  right: 8px;
+  top: 8px;
   cursor: pointer;
+}
+
+.geofence-ctrl-delete-popdown-icon {
+  display: flex;
+  align-items: center;
+  padding-right: 5px;
 }
 
 /* Other Styles */

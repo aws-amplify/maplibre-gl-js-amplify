@@ -190,3 +190,49 @@ export function createPopupStep4Icon(): SVGSVGElement {
 
   return customIcon;
 }
+
+export function createDeleteSuccessIcon(): SVGSVGElement {
+  const customIcon = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "svg"
+  );
+  customIcon.setAttribute("viewBox", "0 0 12 12");
+  customIcon.setAttribute("width", "12");
+  customIcon.setAttribute("height", "12");
+  customIcon.setAttribute("fill", "none");
+
+  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path.setAttribute(
+    "d",
+    "M6 0C2.688 0 0 2.688 0 6C0 9.312 2.688 12 6 12C9.312 12 12 9.312 12 6C12 2.688 9.312 0 6 0ZM6 10.8C3.354 10.8 1.2 8.646 1.2 6C1.2 3.354 3.354 1.2 6 1.2C8.646 1.2 10.8 3.354 10.8 6C10.8 8.646 8.646 10.8 6 10.8ZM8.754 3.348L4.8 7.302L3.246 5.754L2.4 6.6L4.8 9L9.6 4.2L8.754 3.348Z"
+  );
+  path.setAttribute("fill", "white");
+
+  customIcon.appendChild(path);
+
+  return customIcon;
+}
+
+export function createCloseIcon(): SVGSVGElement {
+  const customIcon = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "svg"
+  );
+  customIcon.setAttribute("viewBox", "0 0 12 12");
+  customIcon.setAttribute("width", "12");
+  customIcon.setAttribute("height", "12");
+  customIcon.setAttribute("fill", "none");
+
+  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path.setAttribute(
+    "d",
+    "M10.773 2.28762L9.71231 1.22696L6 4.93927L2.28769 1.22696L1.22703 2.28762L4.93934 5.99993L1.22703 9.71224L2.28769 10.7729L6 7.06059L9.71231 10.7729L10.773 9.71224L7.06066 5.99993L10.773 2.28762Z"
+  );
+  path.setAttribute("fill", "white");
+  path.setAttribute("fill-rule", "evenodd");
+  path.setAttribute("clip-rule", "evenodd");
+
+  customIcon.appendChild(path);
+
+  return customIcon;
+}

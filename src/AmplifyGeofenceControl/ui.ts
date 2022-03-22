@@ -8,6 +8,8 @@ import {
   createPopupStep3Icon,
   createPopupStep4Icon,
   createTrashIcon,
+  createDeleteSuccessIcon,
+  createCloseIcon,
 } from "./icons";
 
 export function AmplifyGeofenceControlUI(
@@ -480,7 +482,7 @@ export function AmplifyGeofenceControlUI(
       "geofence-ctrl-add-geofence-input",
       addGeofencePrompt
     );
-    (nameInput as HTMLInputElement).placeholder = "Name";
+    (nameInput as HTMLInputElement).placeholder = "Enter name";
 
     const buttonContainer = createElement(
       "div",
@@ -616,12 +618,19 @@ export function AmplifyGeofenceControlUI(
     const deletePopdownCloseButton = createElement(
       "div",
       "geofence-ctrl-delete-popdown-close-button",
-      deletePopdown
+      _deletePopdownContainer
     );
-    deletePopdownCloseButton.innerHTML = "X";
+    deletePopdownCloseButton.appendChild(createCloseIcon());
     deletePopdownCloseButton.addEventListener("click", () => {
       removeElement(_deletePopdownContainer);
     });
+
+    const deleteSuccessIcon = createElement(
+      "div",
+      "geofence-ctrl-delete-popdown-icon",
+      deletePopdown
+    );
+    deleteSuccessIcon.appendChild(createDeleteSuccessIcon());
 
     const deletePopdownText = createElement(
       "div",
