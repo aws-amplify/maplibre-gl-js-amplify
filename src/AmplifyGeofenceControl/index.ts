@@ -124,7 +124,10 @@ export class AmplifyGeofenceControl {
 
         this.loadInitialGeofences();
 
-        map.addControl(new maplibregl.NavigationControl(), "bottom-right");
+        map.addControl(
+          new maplibregl.NavigationControl({ showCompass: false }),
+          "bottom-right"
+        );
       }.bind(this)
     );
 
@@ -133,19 +136,19 @@ export class AmplifyGeofenceControl {
 
   async saveGeofence(geofenceId?: string): Promise<string | null> {
     if (!geofenceId || geofenceId.length === 0) {
-      this._ui.createAddGeofencePromptError("Geofence id is empty");
+      this._ui.createAddGeofencePromptError("Geofence ID is empty.");
       return;
     }
 
     if (!isValidGeofenceId(geofenceId)) {
       this._ui.createAddGeofencePromptError(
-        "Geofence id contains special characters"
+        "Geofence ID contains special characters."
       );
       return;
     }
 
     if (!isExistingGeofenceId(geofenceId, this._loadedGeofences)) {
-      this._ui.createAddGeofencePromptError("Geofence id already exists");
+      this._ui.createAddGeofencePromptError("Geofence ID already exists.");
       return;
     }
 

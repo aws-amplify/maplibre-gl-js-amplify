@@ -123,7 +123,7 @@ describe("AmplifyGeofenceControl", () => {
     control.saveGeofence("");
     expect(control._ui.createAddGeofencePromptError).toHaveBeenCalled();
     expect(control._ui.createAddGeofencePromptError).toHaveBeenCalledWith(
-      "Geofence id is empty"
+      "Geofence ID is empty."
     );
   });
 
@@ -133,7 +133,7 @@ describe("AmplifyGeofenceControl", () => {
     control.saveGeofence();
     expect(control._ui.createAddGeofencePromptError).toHaveBeenCalled();
     expect(control._ui.createAddGeofencePromptError).toHaveBeenCalledWith(
-      "Geofence id is empty"
+      "Geofence ID is empty."
     );
   });
 
@@ -143,7 +143,7 @@ describe("AmplifyGeofenceControl", () => {
     control.saveGeofence("..,/.,/.,/.,.");
     expect(control._ui.createAddGeofencePromptError).toHaveBeenCalled();
     expect(control._ui.createAddGeofencePromptError).toHaveBeenCalledWith(
-      "Geofence id contains special characters"
+      "Geofence ID contains special characters."
     );
   });
 
@@ -157,7 +157,7 @@ describe("AmplifyGeofenceControl", () => {
     control.saveGeofence("foobar");
     expect(control._ui.createAddGeofencePromptError).toHaveBeenCalled();
     expect(control._ui.createAddGeofencePromptError).toHaveBeenCalledWith(
-      "Geofence id already exists"
+      "Geofence ID already exists."
     );
   });
 
