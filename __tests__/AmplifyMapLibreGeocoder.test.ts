@@ -138,5 +138,13 @@ describe("AmplifyGeocoderAPI", () => {
       ],
       promixity: [-122.431297, 37.773972],
     };
+    (Geo.searchForSuggestions as jest.Mock).mockRejectedValueOnce("an error");
+    expect(
+      (Geo.searchForSuggestions as jest.Mock).mock.calls[0][1].biasPosition
+    ).toBeUndefined();
+    expect(
+      (Geo.searchForSuggestions as jest.Mock).mock.calls[0][1]
+        .searchAreaConstraints
+    ).toBeDefined();
   });
 });
