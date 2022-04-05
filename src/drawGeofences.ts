@@ -1,8 +1,8 @@
-import { Feature } from "geojson";
-import { Map as maplibreMap } from "maplibre-gl";
-import { isGeofence } from "./utils";
+import { GeoJSONSource, Map as maplibreMap } from "maplibre-gl";
 import { Geofence, Polygon } from "./types";
 import { COLOR_BLACK } from "./constants";
+import { getGeofenceFeatureArray } from "./geofenceUtils";
+import { isGeofenceArray, isPolygonArray } from "./utils";
 
 const FILL_OPACITY = 0.3;
 const BORDER_OPACITY = 0.5;
@@ -16,6 +16,8 @@ export interface DrawGeofencesOptions {
   borderColor?: string;
   borderWidth?: number;
   borderOpacity?: number;
+  borderOffset?: number;
+  visible?: boolean; // default true
 }
 
 export interface DrawGeofencesOutput {
@@ -24,6 +26,8 @@ export interface DrawGeofencesOutput {
   fillLayerId: string;
   show: () => void;
   hide: () => void;
+  isVisible: () => void;
+  setData: (data) => void;
 }
 
 /**
@@ -43,35 +47,35 @@ export function drawGeofences(
     throw new Error("Please use a maplibre map");
   }
 
-  /*
-   * Convert data passed in as coordinates into features
-   */
-  const features = getGeofenceFeaturesFromData(data);
+  if (data.length > 0 && !isGeofenceArray(data) && !isPolygonArray(data)) {
+    throw new Error(
+      "Please pass in an array of Geofences or an array of Polygons"
+    );
+  }
 
   /*
    * Data source for features
+   * Convert data passed in as coordinates into feature data
    */
   const sourceId = `${sourceName}-source`;
   map.addSource(sourceId, {
     type: "geojson",
-    data: {
-      type: "FeatureCollection",
-      features,
-    },
+    data: getGeofenceFeatureArray(data),
     generateId: true,
   });
+
+  const initialVisiblity = options.visible ?? true ? "visible" : "none";
 
   /*
    * Draw ui layers for source data
    */
-  // Add a new layer to visualize the polygon.
   const fillLayerId = `${sourceName}-fill-layer`;
   map.addLayer({
     id: fillLayerId,
     type: "fill",
     source: sourceId, // reference the data source
     layout: {
-      visibility: "visible",
+      visibility: initialVisiblity,
     },
     paint: {
       "fill-color": options.fillColor ?? COLOR_BLACK,
@@ -86,12 +90,15 @@ export function drawGeofences(
     type: "line",
     source: sourceId,
     layout: {
-      visibility: "visible",
+      visibility: initialVisiblity,
     },
     paint: {
       "line-color": options.borderColor ?? COLOR_BLACK,
       "line-opacity": options.borderOpacity ?? BORDER_OPACITY,
       "line-width": options.borderWidth ?? BORDER_WIDTH,
+      "line-offset":
+        options.borderOffset ??
+        ((options.borderWidth ?? BORDER_WIDTH) / 2) * -1,
     },
   });
 
@@ -107,22 +114,24 @@ export function drawGeofences(
     map.setLayoutProperty(outlineLayerId, "visibility", "visible");
   };
 
-  return { sourceId, outlineLayerId, fillLayerId, show, hide };
-}
+  // utility function for checking layer visibility
+  const isVisible = () => {
+    const visibility = map.getLayoutProperty(fillLayerId, "visibility");
+    return visibility === "visible";
+  };
 
-const getGeofenceFeaturesFromData = (
-  data: Geofence[] | Polygon[]
-): Feature[] => {
-  const features: any = data.map((item: Geofence | Polygon) => {
-    const coordinates = isGeofence(item) ? item.geometry.polygon : item;
-    return {
-      type: "Feature",
-      geometry: {
-        type: "Polygon",
-        coordinates,
-      },
-      properties: {},
-    };
-  });
-  return features;
-};
+  // utility function for setting layer visibility to visible
+  const setData = (data) => {
+    (map.getSource(sourceId) as GeoJSONSource).setData(data);
+  };
+
+  return {
+    sourceId,
+    outlineLayerId,
+    fillLayerId,
+    show,
+    hide,
+    isVisible,
+    setData,
+  };
+}
