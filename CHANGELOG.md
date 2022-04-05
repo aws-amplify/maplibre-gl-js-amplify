@@ -31,7 +31,12 @@
 
 ## 1.2.1
 
-- Re-release of 1.1.3 to revert broken 1.2.0 version
+- Added `AmplifyGeofenceControl` [#81](https://github.com/aws-amplify/maplibre-gl-js-amplify/pull/81)
+
+### Features / Improvements 🚀
+
+- Added `drawGeofences` function [#62](https://github.com/aws-amplify/maplibre-gl-js-amplify/pull/62)
+- add setData, show, hide, utility functions to drawPoints return [#70](https://github.com/aws-amplify/maplibre-gl-js-amplify/pull/70)
 
 ## 1.1.3
 
