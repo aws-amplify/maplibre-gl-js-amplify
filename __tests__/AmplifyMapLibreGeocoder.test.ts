@@ -7,6 +7,7 @@ describe("AmplifyGeocoderAPI", () => {
   beforeEach(() => {
     (Geo.searchByText as jest.Mock).mockClear();
     (Geo.searchByCoordinates as jest.Mock).mockClear();
+    (Geo.searchForSuggestions as jest.Mock).mockClear();
   });
 
   test("forwardGeocode returns some values in the expected format", async () => {
@@ -138,5 +139,13 @@ describe("AmplifyGeocoderAPI", () => {
       ],
       promixity: [-122.431297, 37.773972],
     };
+    (Geo.searchForSuggestions as jest.Mock).mockRejectedValueOnce("an error");
+    expect(
+      (Geo.searchForSuggestions as jest.Mock).mock.calls[0][1].biasPosition
+    ).toBeUndefined();
+    expect(
+      (Geo.searchForSuggestions as jest.Mock).mock.calls[0][1]
+        .searchAreaConstraints
+    ).toBeDefined();
   });
 });
