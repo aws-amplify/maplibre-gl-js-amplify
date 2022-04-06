@@ -130,6 +130,49 @@ describe("AmplifyGeocoderAPI", () => {
     expect(response.features).toHaveLength(0);
   });
 
+  test("getSuggestions returns some values in the expected format", async () => {
+    const config = {
+      query: "a map query",
+    };
+    (Geo.searchForSuggestions as jest.Mock).mockReturnValueOnce([
+      "a suggestion result",
+    ]);
+    const response = await AmplifyGeocoderAPI.getSuggestions(config);
+    expect(Geo.searchForSuggestions).toHaveBeenCalledTimes(1);
+    expect(response.suggestions).toHaveLength(1);
+    expect(response.suggestions[0]).toBe("a suggestion result");
+  });
+
+  test("getSuggestions returns empty array on empty response", async () => {
+    const config = {
+      query: "a map query",
+    };
+    (Geo.searchForSuggestions as jest.Mock).mockReturnValueOnce([]);
+    const response = await AmplifyGeocoderAPI.getSuggestions(config);
+    expect(Geo.searchForSuggestions).toHaveBeenCalledTimes(1);
+    expect(response.suggestions).toHaveLength(0);
+  });
+
+  test("getSuggestions returns empty feature array on undefined response", async () => {
+    const config = {
+      query: "a map query",
+    };
+    (Geo.searchForSuggestions as jest.Mock).mockReturnValueOnce(undefined);
+    const response = await AmplifyGeocoderAPI.getSuggestions(config);
+    expect(Geo.searchForSuggestions).toHaveBeenCalledTimes(1);
+    expect(response.suggestions).toHaveLength(0);
+  });
+
+  test("getSuggestions returns empty feature array on error", async () => {
+    const config = {
+      query: "a map query",
+    };
+    (Geo.searchForSuggestions as jest.Mock).mockRejectedValueOnce("an error");
+    const response = await AmplifyGeocoderAPI.getSuggestions(config);
+    expect(Geo.searchForSuggestions).toHaveBeenCalledTimes(1);
+    expect(response.suggestions).toHaveLength(0);
+  });
+
   test("forwardGeocode prioritizes bbox over proximity value", async () => {
     const config = {
       query: "a map query",
@@ -140,6 +183,7 @@ describe("AmplifyGeocoderAPI", () => {
       promixity: [-122.431297, 37.773972],
     };
     (Geo.searchForSuggestions as jest.Mock).mockRejectedValueOnce("an error");
+    await AmplifyGeocoderAPI.getSuggestions(config);
     expect(
       (Geo.searchForSuggestions as jest.Mock).mock.calls[0][1].biasPosition
     ).toBeUndefined();
