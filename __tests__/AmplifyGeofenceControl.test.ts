@@ -89,7 +89,7 @@ describe("AmplifyGeofenceControl", () => {
     });
 
     control._editingGeofenceId = "foobar";
-    await control.saveGeofence(control._editingGeofenceId);
+    await control.createGeofence(control._editingGeofenceId);
     expect(control._loadedGeofences["foobar"]).toBeDefined();
     expect(control._loadedGeofences["foobar"].geofenceId).toBe("foobar");
     expect(control._ui.updateGeofenceCount).toHaveBeenCalled();
@@ -113,34 +113,34 @@ describe("AmplifyGeofenceControl", () => {
 
     control._editingGeofenceId = "foobar";
     await expect(
-      control.saveGeofence(control._editingGeofenceId)
+      control.createGeofence(control._editingGeofenceId)
     ).rejects.toThrow();
   });
 
-  test("Save Geofence empty string", async () => {
+  test("Create Geofence empty string", async () => {
     const control = createMockControl();
 
-    control.saveGeofence("");
+    control.createGeofence("");
     expect(control._ui.createAddGeofencePromptError).toHaveBeenCalled();
     expect(control._ui.createAddGeofencePromptError).toHaveBeenCalledWith(
       "Geofence ID is empty."
     );
   });
 
-  test("Save Geofence undefined id", async () => {
+  test("Create Geofence undefined id", async () => {
     const control = createMockControl();
 
-    control.saveGeofence();
+    control.createGeofence();
     expect(control._ui.createAddGeofencePromptError).toHaveBeenCalled();
     expect(control._ui.createAddGeofencePromptError).toHaveBeenCalledWith(
       "Geofence ID is empty."
     );
   });
 
-  test("Save Geofence special characters", async () => {
+  test("Create Geofence special characters", async () => {
     const control = createMockControl();
 
-    control.saveGeofence("..,/.,/.,/.,.");
+    control.createGeofence("..,/.,/.,/.,.");
     expect(control._ui.createAddGeofencePromptError).toHaveBeenCalled();
     expect(control._ui.createAddGeofencePromptError).toHaveBeenCalledWith(
       "Geofence ID contains special characters."
@@ -154,14 +154,14 @@ describe("AmplifyGeofenceControl", () => {
       geometry: { polygon: [] },
     };
 
-    control.saveGeofence("foobar");
+    control.createGeofence("foobar");
     expect(control._ui.createAddGeofencePromptError).toHaveBeenCalled();
     expect(control._ui.createAddGeofencePromptError).toHaveBeenCalledWith(
       "Geofence ID already exists."
     );
   });
 
-  test("Update Geofence", async () => {
+  test("Save Geofence", async () => {
     const control = createMockControl();
 
     (Geo.saveGeofences as jest.Mock).mockReturnValueOnce({
@@ -181,7 +181,29 @@ describe("AmplifyGeofenceControl", () => {
     expect(control._loadedGeofences["foobar"].geofenceId).toBe("foobar");
   });
 
-  test("Update Geofence API error", async () => {
+  test("Save Geofence with empty string uses editing geofence id", async () => {
+    const control = createMockControl();
+
+    (Geo.saveGeofences as jest.Mock).mockReturnValueOnce({
+      successes: [
+        {
+          geofenceId: "foobar",
+          createTime: "2020-04-01T21:00:00.000Z",
+          updateTime: "2020-04-01T21:00:00.000Z",
+        },
+      ],
+      errors: [],
+    });
+
+    control._editingGeofenceId = "foobar";
+    await control.saveGeofence();
+    expect(control._loadedGeofences["foobar"]).toBeDefined();
+    expect(control._loadedGeofences["foobar"].geofenceId).toBe(
+      control._editingGeofenceId
+    );
+  });
+
+  test("Save Geofence API error", async () => {
     const control = createMockControl();
 
     (Geo.saveGeofences as jest.Mock).mockReturnValueOnce({
