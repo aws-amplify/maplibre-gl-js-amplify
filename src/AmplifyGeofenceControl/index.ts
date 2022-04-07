@@ -134,7 +134,7 @@ export class AmplifyGeofenceControl {
     return this._container;
   }
 
-  async saveGeofence(geofenceId?: string): Promise<string | null> {
+  async createGeofence(geofenceId?: string): Promise<string | null> {
     if (!geofenceId || geofenceId.length === 0) {
       this._ui.createAddGeofencePromptError("Geofence ID is empty.");
       return;
@@ -152,9 +152,12 @@ export class AmplifyGeofenceControl {
       return;
     }
 
+    return this.saveGeofence(geofenceId);
+  }
+  async saveGeofence(geofenceId?: string): Promise<string | null> {
     const feature = this._amplifyDraw.get(this._editingGeofenceId);
 
-    const idToSave = geofenceId;
+    const idToSave = geofenceId || this._editingGeofenceId;
     const response = await Geo.saveGeofences({
       geofenceId: idToSave,
       geometry: { polygon: feature.geometry["coordinates"] },
