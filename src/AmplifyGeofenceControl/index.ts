@@ -147,7 +147,7 @@ export class AmplifyGeofenceControl {
       return;
     }
 
-    if (!isExistingGeofenceId(geofenceId, this._loadedGeofences)) {
+    if (isExistingGeofenceId(geofenceId, this._loadedGeofences)) {
       this._ui.createAddGeofencePromptError("Geofence ID already exists.");
       return;
     }
@@ -360,6 +360,17 @@ export class AmplifyGeofenceControl {
 
     if (mode === "draw_circle") {
       this._amplifyDraw.drawCircularGeofence(this._editingGeofenceId);
+    } else {
+      this._amplifyDraw.drawPolygonGeofence(this._editingGeofenceId);
+    }
+  }
+
+  resetGeofence(): void {
+    // erase existing mapbox draw content
+    this._amplifyDraw.delete(this._editingGeofenceId);
+
+    if (isExistingGeofenceId(this._editingGeofenceId, this._loadedGeofences)) {
+      this.editGeofence(this._editingGeofenceId);
     } else {
       this._amplifyDraw.drawPolygonGeofence(this._editingGeofenceId);
     }

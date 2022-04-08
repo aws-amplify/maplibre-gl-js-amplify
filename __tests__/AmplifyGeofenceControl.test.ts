@@ -49,6 +49,9 @@ describe("AmplifyGeofenceControl", () => {
           ]),
         disable: jest.fn(),
         enable: jest.fn(),
+        delete: jest.fn(),
+        add: jest.fn(),
+        drawPolygonGeofence: jest.fn(),
       };
     });
   });
@@ -368,5 +371,64 @@ describe("AmplifyGeofenceControl", () => {
 
     await control.loadMoreGeofences();
     expect(control._loadedGeofences["foobar"]).toBeUndefined();
+  });
+
+  test("Reset Existing Geofence", async () => {
+    const control = createMockControl();
+
+    (Geo.listGeofences as jest.Mock).mockReturnValueOnce({
+      entries: [
+        {
+          geofenceId: "foobar",
+          createTime: "2020-04-01T21:00:00.000Z",
+          updateTime: "2020-04-01T21:00:00.000Z",
+          geometry: { polygon: [] },
+        },
+        {
+          geofenceId: "barbaz",
+          createTime: "2020-04-01T21:00:00.000Z",
+          updateTime: "2020-04-01T21:00:00.000Z",
+          geometry: { polygon: [] },
+        },
+      ],
+    });
+
+    await control.loadInitialGeofences();
+
+    control._editingGeofenceId = "foobar";
+    await control.resetGeofence();
+
+    expect(control._amplifyDraw.delete).toHaveBeenCalled();
+    expect((control._amplifyDraw.add as jest.Mock).mock.calls[0][0].id).toEqual(
+      "foobar"
+    );
+  });
+
+  test("Reset New Geofence", async () => {
+    const control = createMockControl();
+
+    (Geo.listGeofences as jest.Mock).mockReturnValueOnce({
+      entries: [
+        {
+          geofenceId: "foobar",
+          createTime: "2020-04-01T21:00:00.000Z",
+          updateTime: "2020-04-01T21:00:00.000Z",
+          geometry: { polygon: [] },
+        },
+        {
+          geofenceId: "barbaz",
+          createTime: "2020-04-01T21:00:00.000Z",
+          updateTime: "2020-04-01T21:00:00.000Z",
+          geometry: { polygon: [] },
+        },
+      ],
+    });
+
+    await control.loadInitialGeofences();
+
+    await control.resetGeofence();
+
+    expect(control._amplifyDraw.delete).toHaveBeenCalled();
+    expect(control._amplifyDraw.drawPolygonGeofence).toHaveBeenCalled();
   });
 });

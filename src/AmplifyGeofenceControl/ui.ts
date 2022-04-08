@@ -184,7 +184,7 @@ export function AmplifyGeofenceControlUI(
     );
     resetButton.innerHTML = "Reset";
     resetButton.addEventListener("click", () => {
-      geofenceControl.changeMode("draw_polygon");
+      geofenceControl.resetGeofence();
     });
 
     // Add popup onClick
