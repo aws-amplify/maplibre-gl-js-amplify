@@ -323,7 +323,7 @@ export class AmplifyGeofenceControl {
     geofence.geometry.polygon[0].forEach((coord) => {
       mapBounds.extend(coord);
     });
-    this._map.fitBounds(mapBounds, { padding: FIT_BOUNDS_PADDING });
+    this._map.fitBounds(mapBounds);
   }
 
   fitAllGeofences(): void {
