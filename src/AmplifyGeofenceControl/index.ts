@@ -60,7 +60,6 @@ export class AmplifyGeofenceControl {
     this.hideHighlightedGeofence = this.hideHighlightedGeofence.bind(this);
     this.displayGeofence = this.displayGeofence.bind(this);
     this.hideGeofence = this.hideGeofence.bind(this);
-    this.fitGeofence = this.fitGeofence.bind(this);
     this.fitAllGeofences = this.fitAllGeofences.bind(this);
   }
 
@@ -302,6 +301,8 @@ export class AmplifyGeofenceControl {
     this._displayedGeofences.push(this._loadedGeofences[geofenceId]);
     this._updateDisplayedGeofences();
     this._ui.updateCheckbox(geofenceId, true);
+
+    this.fitAllGeofences();
   }
 
   displayAllGeofences(): void {
@@ -317,23 +318,21 @@ export class AmplifyGeofenceControl {
     this.fitAllGeofences();
   }
 
-  fitGeofence(geofenceId: string): void {
-    const mapBounds = this._map.getBounds();
-    const geofence = this._loadedGeofences[geofenceId];
-    geofence.geometry.polygon[0].forEach((coord) => {
-      mapBounds.extend(coord);
-    });
-    this._map.fitBounds(mapBounds);
-  }
-
   fitAllGeofences(): void {
+    let shouldFitBounds = false;
     const mapBounds = this._map.getBounds();
-    Object.values(this._loadedGeofences).forEach(function (loadedGeofence) {
-      loadedGeofence.geometry.polygon[0].forEach((coord) => {
-        mapBounds.extend(coord);
+
+    this._displayedGeofences.forEach((geofence) => {
+      geofence.geometry.polygon[0].forEach((coord) => {
+        if (!mapBounds.contains(coord)) {
+          mapBounds.extend(coord);
+          shouldFitBounds = true;
+        }
       });
     });
-    this._map.fitBounds(mapBounds, { padding: FIT_BOUNDS_PADDING });
+
+    if (shouldFitBounds)
+      this._map.fitBounds(mapBounds, { padding: FIT_BOUNDS_PADDING });
   }
 
   hideGeofence(geofenceId: string): void {

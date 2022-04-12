@@ -374,7 +374,6 @@ export function AmplifyGeofenceControlUI(
     checkbox.addEventListener("click", function () {
       if ((checkbox as HTMLInputElement).checked) {
         geofenceControl.displayGeofence(geofence.geofenceId);
-        geofenceControl.fitGeofence(geofence.geofenceId);
       } else {
         geofenceControl.hideGeofence(geofence.geofenceId);
       }
