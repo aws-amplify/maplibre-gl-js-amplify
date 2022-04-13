@@ -8,6 +8,7 @@ import {
   getGeofenceFeatureFromPolygon,
   getGeofenceFeatureArray,
   isExistingGeofenceId,
+  getDistanceBetweenCoordinates,
 } from "../geofenceUtils";
 import { GEOFENCE_COLOR, GEOFENCE_BORDER_COLOR } from "../constants";
 import { AmplifyGeofenceControlUI } from "./ui";
@@ -134,6 +135,18 @@ export class AmplifyGeofenceControl {
         );
       }.bind(this)
     );
+
+    this._map.on("draw.update", () => {
+      const coordinates = (
+        this._amplifyDraw._mapBoxDraw.getAll().features[0].geometry as any
+      ).coordinates[0];
+      const radius =
+        getDistanceBetweenCoordinates(
+          coordinates[0],
+          coordinates[Math.floor(coordinates.length / 2)]
+        ) / 2;
+      this._ui.updateGeofenceRadius(radius.toFixed(2));
+    });
 
     return this._container;
   }
@@ -403,7 +416,7 @@ export class AmplifyGeofenceControl {
 
   // Disables add button and selecting items from geofence list
   setEditingModeEnabled(enabled: boolean): void {
-    enabled ? this._amplifyDraw.enable() : this._amplifyDraw.disable();
+    enabled ? this._amplifyDraw.enable(enabled) : this._amplifyDraw.disable();
     enabled
       ? this._drawGeofencesOutput.hide()
       : this._drawGeofencesOutput.show();
@@ -420,8 +433,8 @@ export class AmplifyGeofenceControl {
   }
 
   addEditableGeofence(): void {
+    this.setEditingModeEnabled(true);
     this._editingGeofenceId = "tempGeofence";
     this._amplifyDraw.drawCircularGeofence("tempGeofence");
-    this.setEditingModeEnabled(true);
   }
 }
