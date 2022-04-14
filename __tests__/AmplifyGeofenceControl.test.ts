@@ -1,4 +1,4 @@
-import { Map as maplibreMap } from "maplibre-gl";
+import { Map, Map as maplibreMap } from "maplibre-gl";
 import { AmplifyGeofenceControl } from "../src/AmplifyGeofenceControl";
 import { getGeofenceFeatureFromPolygon } from "../src/geofenceUtils";
 import { AmplifyGeofenceControlUI } from "../src/AmplifyGeofenceControl/ui";
@@ -54,6 +54,18 @@ describe("AmplifyGeofenceControl", () => {
         drawPolygonGeofence: jest.fn(),
       };
     });
+
+    (Map as jest.Mock).mockImplementation(() => {
+      return {
+        getBounds: jest.fn().mockImplementation(() => {
+          return {
+            extend: jest.fn(),
+            contains: jest.fn(),
+          };
+        }),
+        fitBounds: jest.fn(),
+      };
+    });
   });
 
   const createMockControl = () => {
@@ -96,6 +108,7 @@ describe("AmplifyGeofenceControl", () => {
     expect(control._loadedGeofences["foobar"]).toBeDefined();
     expect(control._loadedGeofences["foobar"].geofenceId).toBe("foobar");
     expect(control._ui.updateGeofenceCount).toHaveBeenCalled();
+    expect(control._map.fitBounds).toHaveBeenCalled();
   });
 
   test("Create Geofence API error", async () => {
@@ -182,6 +195,7 @@ describe("AmplifyGeofenceControl", () => {
     await control.saveGeofence(control._editingGeofenceId);
     expect(control._loadedGeofences["foobar"]).toBeDefined();
     expect(control._loadedGeofences["foobar"].geofenceId).toBe("foobar");
+    expect(control._map.fitBounds).toHaveBeenCalled();
   });
 
   test("Save Geofence with empty string uses editing geofence id", async () => {
