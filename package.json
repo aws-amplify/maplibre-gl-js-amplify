@@ -56,12 +56,13 @@
     ]
   },
   "devDependencies": {
-    "@aws-amplify/core": "^4.5.1",
-    "@aws-amplify/geo": "^1.3.0",
+    "@aws-amplify/core": "geo",
+    "@aws-amplify/geo": "geo",
     "@babel/preset-env": "^7.16.4",
+    "@types/debounce": "^1.2.1",
     "@commitlint/cli": "^16.2.1",
     "@commitlint/config-conventional": "^16.2.1",
-    "@types/debounce": "^1.2.1",
+    "@maplibre/maplibre-gl-geocoder": "^1.3.0",
     "@types/geojson": "^7946.0.7",
     "@types/jest": "^26.0.23",
     "@types/mapbox__mapbox-gl-draw": "^1.2.3",
@@ -90,13 +91,13 @@
     "typescript": "^4.3.2"
   },
   "peerDependencies": {
-    "@aws-amplify/core": "^4.5.1",
-    "@aws-amplify/geo": "^1.3.0",
+    "@aws-amplify/core": "geo",
+    "@aws-amplify/geo": "geo",
     "maplibre-gl": "^1.15.2"
   },
   "dependencies": {
     "@mapbox/mapbox-gl-draw": "^1.3.0",
-    "@maplibre/maplibre-gl-geocoder": "^1.3.0",
+    "@maplibre/maplibre-gl-geocoder": "^1.1.0",
     "@turf/along": "^6.5.0",
     "@turf/circle": "^6.5.0",
     "@turf/distance": "^6.5.0",
