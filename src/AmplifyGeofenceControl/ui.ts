@@ -532,7 +532,7 @@ export function AmplifyGeofenceControlUI(
     saveButton.innerHTML = "Save";
     saveButton.addEventListener("click", async function () {
       clearAddGeofenceError();
-      const output = await geofenceControl.createGeofence(
+      const output = await geofenceControl.saveGeofence(
         escape((nameInput as HTMLInputElement).value)
       );
       if (output) removeAddGeofenceContainer();
