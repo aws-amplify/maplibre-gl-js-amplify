@@ -130,7 +130,7 @@ export const isExistingGeofenceId = (
   id: string,
   loadedGeofences: any
 ): boolean => {
-  return doesGeofenceExist(id, loadedGeofences);
+  return !doesGeofenceExist(id, loadedGeofences);
 };
 
 export const isGeofenceDisplayed = (
