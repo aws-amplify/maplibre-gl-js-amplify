@@ -14,8 +14,6 @@ import { AmplifyGeofenceControlUI } from "./ui";
 import { AmplifyMapDraw } from "./AmplifyMapDraw";
 import { createElement } from "../utils";
 
-const FIT_BOUNDS_PADDING = { left: 240 }; // Default to 240px right now because of the left nav
-
 export interface AmplifyGeofenceControlOptions {
   geofenceCollectionId?: string;
 }
@@ -60,7 +58,6 @@ export class AmplifyGeofenceControl {
     this.hideHighlightedGeofence = this.hideHighlightedGeofence.bind(this);
     this.displayGeofence = this.displayGeofence.bind(this);
     this.hideGeofence = this.hideGeofence.bind(this);
-    this.fitAllGeofences = this.fitAllGeofences.bind(this);
   }
 
   /**********************************************************************
@@ -301,8 +298,6 @@ export class AmplifyGeofenceControl {
     this._displayedGeofences.push(this._loadedGeofences[geofenceId]);
     this._updateDisplayedGeofences();
     this._ui.updateCheckbox(geofenceId, true);
-
-    this.fitAllGeofences();
   }
 
   displayAllGeofences(): void {
@@ -314,25 +309,6 @@ export class AmplifyGeofenceControl {
     Array.from(checkboxes).forEach(
       (checkbox) => (checkbox.checked = this._ui.getCheckboxAllValue())
     );
-
-    this.fitAllGeofences();
-  }
-
-  fitAllGeofences(): void {
-    let shouldFitBounds = false;
-    const mapBounds = this._map.getBounds();
-
-    this._displayedGeofences.forEach((geofence) => {
-      geofence.geometry.polygon[0].forEach((coord) => {
-        if (!mapBounds.contains(coord)) {
-          mapBounds.extend(coord);
-          shouldFitBounds = true;
-        }
-      });
-    });
-
-    if (shouldFitBounds)
-      this._map.fitBounds(mapBounds, { padding: FIT_BOUNDS_PADDING });
   }
 
   hideGeofence(geofenceId: string): void {
