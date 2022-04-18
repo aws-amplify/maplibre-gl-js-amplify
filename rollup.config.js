@@ -1,5 +1,4 @@
 import svg from "rollup-plugin-svg";
-import css from "rollup-plugin-import-css";
 
 export default {
   external: ["maplibre-gl", "@aws-amplify/core", "@aws-amplify/geo"],
@@ -14,5 +13,5 @@ export default {
       "@aws-amplify/geo": "aws_amplify_geo",
     },
   },
-  plugins: [svg(), css()],
+  plugins: [svg()],
 };
