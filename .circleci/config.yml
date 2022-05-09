@@ -191,12 +191,18 @@ workflows:
       - integ_setup:
           requires:
             - build
+          filters:
+            <<: *releasable_branches
       - integ_test_cra4:
           requires:
             - integ_setup
+          filters:
+            <<: *releasable_branches
       - integ_test_cra5:
           requires:
             - integ_setup
+          filters:
+            <<: *releasable_branches
       - integ_test_ts:
           requires:
             - integ_setup
