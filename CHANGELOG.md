@@ -1,5 +1,68 @@
 ## master
 
+## 1.2.5
+
+- Temporarily disable autocomplete by default [#116](https://github.com/aws-amplify/maplibre-gl-js-amplify/pull/116)
+
+### Features / Improvements 🚀
+
+- Added `getSuggestions` API to `AmplifyGeocoderAPI` [#106](https://github.com/aws-amplify/maplibre-gl-js-amplify/pull/106)
+
+### Bug fixes 🐛
+
+- N/A
+
+## 1.2.4
+
+### Features / Improvements 🚀
+
+- Added `getSuggestions` API to `AmplifyGeocoderAPI` [#106](https://github.com/aws-amplify/maplibre-gl-js-amplify/pull/106)
+
+### Bug fixes 🐛
+
+## 1.2.3
+
+### Features / Improvements 🚀
+
+- Added `amplify-map-.css` for static map styles [#98](https://github.com/aws-amplify/maplibre-gl-js-amplify/pull/98)
+- Updated `drawPoints` to have an `autoFit` option to fit the map to points drawn [#94](https://github.com/aws-amplify/maplibre-gl-js-amplify/pull/94)
+
+### Bug fixes 🐛
+
+## 1.2.1
+
+- Re-release of 1.1.3 to revert broken 1.2.0 version
+
+## 1.1.3
+
+### Features / Improvements 🚀
+
+- Added `drawGeofences` function [#62](https://github.com/aws-amplify/maplibre-gl-js-amplify/pull/62)
+- add setData, show, hide, utility functions to drawPoints return [#70](https://github.com/aws-amplify/maplibre-gl-js-amplify/pull/70)
+
+### Bug fixes 🐛
+
+## 1.1.2
+
+### Features / Improvements 🚀
+
+### Bug fixes 🐛
+
+- Update types for createAmplifyGeocoder [#63](https://github.com/aws-amplify/maplibre-gl-js-amplify/pull/63)
+- Add cjs modules [#64](https://github.com/aws-amplify/maplibre-gl-js-amplify/pull/64)
+
+## 1.1.1
+
+### Features / Improvements 🚀
+
+### Bug fixes 🐛
+
+- Added error messaging when region is undefined [#59](https://github.com/aws-amplify/maplibre-gl-js-amplify/pull/59)
+- Fix cluster distances to match cluster circle size [#56](https://github.com/aws-amplify/maplibre-gl-js-amplify/pull/56)
+- Deselecting Point by Clicking outside map [#54](https://github.com/aws-amplify/maplibre-gl-js-amplify/pull/54)
+- update mouse pointer when mousing over marker layer [#55](https://github.com/aws-amplify/maplibre-gl-js-amplify/pull/55)
+- Allow popupRender to work properly [#50](https://github.com/aws-amplify/maplibre-gl-js-amplify/pull/50)
+
 ## 1.1.0
 
 ### Features / Improvements 🚀

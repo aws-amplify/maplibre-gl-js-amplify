@@ -6,7 +6,7 @@ export default {
     name: "AmplifyMapLibre",
     format: "umd",
     file: "dist/maplibre-gl-js-amplify.umd.js",
-    sourcemap: true,
+    sourcemap: false,
     globals: {
       "maplibre-gl": "maplibregl",
       "@aws-amplify/core": "aws_amplify_core",

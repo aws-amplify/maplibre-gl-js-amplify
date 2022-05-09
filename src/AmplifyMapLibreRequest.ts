@@ -78,17 +78,21 @@ export default class AmplifyMapLibreRequest {
   };
 
   refreshCredentialsWithRetry = async (): Promise<void> => {
-    const MAX_DELAY_MS = 5 * 60 * 1000; // 5 minutes
-    await jitteredExponentialRetry(this.refreshCredentials, [], MAX_DELAY_MS);
+    try {
+      const MAX_DELAY_MS = 5 * 60 * 1000; // 5 minutes
+      await jitteredExponentialRetry(this.refreshCredentials, [], MAX_DELAY_MS);
 
-    // Refresh credentials on a timer because HubEvents do not trigger on credential refresh currently
-    this.activeTimeout && clearTimeout(this.activeTimeout);
-    const expiration = new Date(this.credentials.expiration);
-    const timeout = expiration.getTime() - new Date().getTime() - 10000; // Adds a 10 second buffer time before the next refresh
-    this.activeTimeout = window.setTimeout(
-      this.refreshCredentialsWithRetry,
-      timeout
-    );
+      // Refresh credentials on a timer because HubEvents do not trigger on credential refresh currently
+      this.activeTimeout && clearTimeout(this.activeTimeout);
+      const expiration = new Date(this.credentials.expiration);
+      const timeout = expiration.getTime() - new Date().getTime() - 10000; // Adds a 10 second buffer time before the next refresh
+      this.activeTimeout = window.setTimeout(
+        this.refreshCredentialsWithRetry,
+        timeout
+      );
+    } catch (e) {
+      console.error(`Failed to refresh credentials: ${e}`);
+    }
   };
 
   /**
@@ -99,6 +103,11 @@ export default class AmplifyMapLibreRequest {
    */
   transformRequest = (url: string, resourceType: string): RequestParameters => {
     if (resourceType === "Style" && !url.includes("://")) {
+      if (this.region == undefined) {
+        throw new Error(
+          "AWS region for map is undefined. Please verify that the region is set in aws-exports.js or that you are providing an AWS region parameter to createMap"
+        );
+      }
       url = `https://maps.geo.${this.region}.amazonaws.com/maps/v0/maps/${url}/style-descriptor`;
     }
 

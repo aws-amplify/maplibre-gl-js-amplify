@@ -5,6 +5,7 @@ import {
   createAmplifyGeocoder,
 } from "./AmplifyMapLibreGeocoder";
 import { createDefaultIcon } from "./createDefaultIcon";
+import { drawGeofences } from "./drawGeofences";
 
 export {
   AmplifyMapLibreRequest,
@@ -13,4 +14,5 @@ export {
   createMap,
   createDefaultIcon,
   createAmplifyGeocoder,
+  drawGeofences,
 };

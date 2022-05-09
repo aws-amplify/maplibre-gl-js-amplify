@@ -3,7 +3,12 @@ import { Feature } from "geojson";
 export type Latitude = number;
 export type Longitude = number;
 
-export type Coordinates = [Latitude, Longitude];
+export type Coordinates = [Longitude, Latitude];
+
+export type LinearRing = Coordinates[]; // Array of 4 or more coordinates, where the first and last coordinate are the same to form a closed boundary
+export type Polygon = LinearRing[]; // An array of one or more linear rings, this allows shapes where there are holes in the middle
+export type Geometry = { polygon: Polygon };
+export type Geofence = { id: string; geometry: Geometry };
 
 export type NamedLocation = {
   coordinates: Coordinates;
@@ -42,6 +47,8 @@ export interface UnclusteredOptions {
   popupPadding?: number;
   popupFontColor?: string;
   popupTitleFontWeight?: string;
+  markerImageElement?: HTMLImageElement;
+  activeMarkerImageElement?: HTMLImageElement;
   popupRender?: (selectedFeature: Feature) => string;
   onClick?: (e: maplibregl.MapMouseEvent) => void;
 }

@@ -1,5 +1,5 @@
-import { Feature } from "geojson";
-import { Map as maplibreMap } from "maplibre-gl";
+import { Feature, Point } from "geojson";
+import { GeoJSONSource, Map as maplibreMap } from "maplibre-gl";
 import { getFeaturesFromData } from "./utils";
 import {
   ClusterOptions,
@@ -15,11 +15,13 @@ import { MAP_STYLES } from "./constants";
  * @param {boolean} showCluster Default: true, determines whether or not points close together should be clustered into a single point
  * @param {Object} clusterOptions Object for determining cluster options, see ClusterOptions for more details
  * @param {Object} unclusteredOptions Object for determining cluster options, see UnclusteredOptions for more details
+ * @param {boolean} autoFit Default: true, determines whether the map should zoom to fit all points into the map view or not
  */
 export interface DrawPointsOptions {
   showCluster?: boolean;
   clusterOptions?: ClusterOptions;
   unclusteredOptions?: UnclusteredOptions;
+  autoFit?: boolean;
 }
 
 export interface DrawPointsOutput {
@@ -27,6 +29,9 @@ export interface DrawPointsOutput {
   clusterLayerId: string;
   clusterSymbolLayerId?: string;
   unclusteredLayerId: string;
+  setData: (data: Coordinates[] | Feature[] | NamedLocation[]) => void;
+  show: () => void;
+  hide: () => void;
 }
 
 /**
@@ -53,6 +58,7 @@ export function drawPoints(
     showCluster = true,
     clusterOptions = {},
     unclusteredOptions: unclusteredMarkerOptions = {},
+    autoFit = true,
   }: DrawPointsOptions = {},
   mapStyle?: MAP_STYLES
 ): DrawPointsOutput {
@@ -72,7 +78,7 @@ export function drawPoints(
   /*
    * Data source for features
    */
-  const sourceId = `${sourceName}-source-points`;
+  const sourceId = sourceName;
   map.addSource(sourceId, {
     type: "geojson",
     data: {
@@ -81,6 +87,7 @@ export function drawPoints(
     },
     cluster: showCluster,
     clusterMaxZoom: clusterOptions.clusterMaxZoom ?? 14,
+    clusterRadius: clusterOptions.smCircleSize ?? 60,
     generateId: true,
   });
 
@@ -103,5 +110,52 @@ export function drawPoints(
     unclusteredMarkerOptions || {}
   );
 
-  return { sourceId, unclusteredLayerId, clusterLayerId, clusterSymbolLayerId };
+  if (autoFit) {
+    const mapBounds = map.getBounds();
+
+    features.forEach(function (feature) {
+      mapBounds.extend(
+        (feature.geometry as Point).coordinates as [number, number]
+      );
+    });
+
+    map.fitBounds(mapBounds);
+  }
+
+  // utility function for setting layer visibility to none
+  const hide = () => {
+    map.setLayoutProperty(unclusteredLayerId, "visibility", "none");
+    if (clusterLayerId)
+      map.setLayoutProperty(clusterLayerId, "visibility", "none");
+    if (clusterSymbolLayerId)
+      map.setLayoutProperty(clusterSymbolLayerId, "visibility", "none");
+  };
+
+  // utility function for setting layer visibility to visible
+  const show = () => {
+    map.setLayoutProperty(unclusteredLayerId, "visibility", "visible");
+    if (clusterLayerId)
+      map.setLayoutProperty(clusterLayerId, "visibility", "visible");
+    if (clusterSymbolLayerId)
+      map.setLayoutProperty(clusterSymbolLayerId, "visibility", "visible");
+  };
+
+  // utility function updating the data source
+  const setData = (data: Coordinates[] | Feature[] | NamedLocation[]) => {
+    const features = getFeaturesFromData(data);
+    (map.getSource(sourceId) as GeoJSONSource).setData({
+      type: "FeatureCollection",
+      features,
+    });
+  };
+
+  return {
+    sourceId,
+    unclusteredLayerId,
+    clusterLayerId,
+    clusterSymbolLayerId,
+    setData,
+    show,
+    hide,
+  };
 }

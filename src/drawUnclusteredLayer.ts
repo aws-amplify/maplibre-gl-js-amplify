@@ -14,8 +14,22 @@ export function drawUnclusteredLayer(
   { showMarkerPopup = false, ...options }: UnclusteredOptions
 ): { unclusteredLayerId: string } {
   const unclusteredLayerId = `${sourceName}-layer-unclustered-point`;
+  let selectedId = null;
 
-  const popupRender = options.popupRender ? options.popupRender : getPopupRenderFunction(unclusteredLayerId, options);
+  function deselectPoint() {
+    if (selectedId !== null) {
+      map.setLayoutProperty(
+        unclusteredLayerId,
+        "icon-image",
+        "inactive-marker"
+      );
+      selectedId = null;
+    }
+  }
+
+  const popupRender = options.popupRender
+    ? options.popupRender
+    : getPopupRenderFunction(unclusteredLayerId, options);
 
   addUnclusteredMarkerImages(map, options);
 
@@ -43,16 +57,22 @@ export function drawUnclusteredLayer(
     }
   }
 
+  map.on("click", function () {
+    deselectPoint();
+  });
+
   /*
    * Set active state on markers when clicked
    */
   map.on("click", unclusteredLayerId, function (e) {
     if (typeof options.onClick === "function") options.onClick(e);
 
+    selectedId = e.features[0].id;
+
     map.setLayoutProperty(unclusteredLayerId, "icon-image", [
       "match",
       ["id"],
-      e.features[0].id, // check if the clicked id matches
+      selectedId, // check if the clicked id matches
       "active-marker", //image when id is the clicked feature id
       "inactive-marker", // default
     ]);
@@ -63,13 +83,31 @@ export function drawUnclusteredLayer(
       const coordinates = (selectedFeature.geometry as Point).coordinates;
 
       if (isCoordinates(coordinates)) {
-        new Popup()
+        const popup = new Popup()
           .setLngLat(coordinates as Coordinates)
           .setHTML(popupRender(selectedFeature))
           .setOffset(15)
           .addTo(map);
+
+        popup.on("close", function () {
+          if (selectedId === selectedFeature.id) deselectPoint();
+        });
       }
     }
+  });
+
+  /*
+   * Set cursor style to pointer when mousing over point layer
+   */
+  map.on("mouseover", unclusteredLayerId, function () {
+    map.getCanvas().style.cursor = "pointer";
+  });
+
+  /*
+   * Reset cursor style when the point layer
+   */
+  map.on("mouseleave", unclusteredLayerId, () => {
+    map.getCanvas().style.cursor = "";
   });
 
   return { unclusteredLayerId };
@@ -87,18 +125,25 @@ function addUnclusteredMarkerImages(
     defaultBorderColor = COLOR_WHITE,
     defaultBorderWidth = 4,
     defaultColor: fillColor = MARKER_COLOR,
+    markerImageElement,
+    activeMarkerImageElement,
   }: UnclusteredOptions
 ) {
-  const inactiveMarker = createMarker({
-    fillColor: fillColor,
-    strokeColor: defaultBorderColor,
-    lineWidth: defaultBorderWidth,
-  });
-  const activeMarker = createMarker({
-    fillColor: selectedColor,
-    strokeColor: selectedBorderColor,
-    lineWidth: selectedBorderWidth,
-  });
+  const inactiveMarker =
+    markerImageElement ||
+    createMarker({
+      fillColor: fillColor,
+      strokeColor: defaultBorderColor,
+      lineWidth: defaultBorderWidth,
+    });
+  const activeMarker =
+    activeMarkerImageElement ||
+    markerImageElement ||
+    createMarker({
+      fillColor: selectedColor,
+      strokeColor: selectedBorderColor,
+      lineWidth: selectedBorderWidth,
+    });
 
   map.addImage("inactive-marker", inactiveMarker, { pixelRatio: 2 });
   map.addImage("active-marker", activeMarker, { pixelRatio: 2 });

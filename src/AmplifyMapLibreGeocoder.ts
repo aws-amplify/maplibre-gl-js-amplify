@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Geo } from "@aws-amplify/geo";
 import MaplibreGeocoder from "@maplibre/maplibre-gl-geocoder";
-import maplibregl from "maplibre-gl";
+import maplibregl, { IControl } from "maplibre-gl";
 import { createDefaultIcon } from "./createDefaultIcon";
 
 export const AmplifyGeocoderAPI = {
@@ -8,9 +9,9 @@ export const AmplifyGeocoderAPI = {
     const features = [];
     try {
       const data = await Geo.searchByText(config.query, {
-        biasPosition: config.proximity,
+        biasPosition: config.bbox ? undefined : config.proximity,
         searchAreaConstraints: config.bbox,
-        countries: config.countires,
+        countries: config.countries,
         maxResults: config.limit,
       });
 
@@ -59,10 +60,15 @@ export const AmplifyGeocoderAPI = {
   },
 };
 
-export function createAmplifyGeocoder(options): unknown {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function createAmplifyGeocoder(options?: any): IControl {
   return new MaplibreGeocoder(AmplifyGeocoderAPI, {
     maplibregl: maplibregl,
     showResultMarkers: { element: createDefaultIcon() },
+    marker: { element: createDefaultIcon() },
+    // autocomplete temporarily disabled by default until CLI is updated
+    showResultsWhileTyping: options?.autocomplete,
+    // showResultsWhileTyping: options?.autocomplete === false ? false : true,
     ...options,
   });
 }

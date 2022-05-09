@@ -43,10 +43,34 @@ import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
 
 Amplify.configure(awsconfig);
 ...
-  const geocoder = new MaplibreGeocoder(AmplifyGeocoderAPI, {
-    maplibregl: maplibregl,
-  });
+  const geocoder = createAmplifyGeocoder();
   map.addControl(geocoder);
+```
+
+#### Using Custom Icon with [drawPoints](https://github.com/aws-amplify/maplibre-gl-js-amplify/blob/main/API.md#drawpoints)
+
+```js
+import spiderManIcon from "./spiderman.svg"
+...
+const icon = new Image(100, 100);
+icon.src = spiderManIcon;
+
+map.on("load", function () {
+  drawPoints(
+    'mySourceName',
+    [
+      {
+        coordinates: [-122.477, 37.8105],
+      },
+    ],
+    map,
+    {
+      unclusteredOptions: {
+        markerImageElement: icon,
+      }
+    }
+  );
+});
 ```
 
 ### Deeper dive

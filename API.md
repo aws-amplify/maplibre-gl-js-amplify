@@ -2,15 +2,28 @@
 
 ### Table of Contents
 
+- [createMap](#createmap)
 - [AmplifyMapLibreRequest][1]
-  - [Parameters][2]
-  - [transformRequest][3]
-    - [Parameters][4]
 - [drawPoints][5]
-  - [Parameters][6]
-  - [Properties][7]
+- [createAmplifyGeocoder](#createAmplifyGeocoder)
 - [AmplifyGeocoderAPI](#amplifygeocoderapi)
 - [createDefaultIcon](#createdefaulticon)
+- [drawGeofences](#drawgeofences)
+
+## createMap
+
+A utility function for creating a MapLibre Map object with an AmplifyMapLibreRequest object hooked into the map's `requestTransformer`
+
+### Create Map Parameters
+
+- `options` **[Object][14]** An object containing options for `createMap`. Extends MapLibre constructor options and select options are listed below. For a full list of constructor options check the MapLibre docs outlined [here](https://maplibre.org/maplibre-gl-js-docs/api/map/)
+  - `options.mapConstructor` **[MaplibreMap](https://maplibre.org/maplibre-gl-js-docs/api/map/)** A map constructor which should be similar in shape to a MapLibre map. This argument allows you to specify at runtime whether the map should be constructed with MapLibre, MapBox, or any other forks of similar projects (optional, default: the peer dependency MapLibre version installed in your project)
+  - `options.region` **[String][8]** AWS region (optional, default: selects the default region set in `aws-exports` or set in the `Amplify.configure` method)
+  - `options.container` **[String][8]** MapLibre option for an HTML element in which MapLibre will render the map, or the element's string id
+  - `options.center` **[Array][13]\<Coordinate>** MapLibre option for the inital geographical centerpoint of the map. If it is not specified in the style, either, it will default to [0, 0] Note: Mapbox GL uses longitude, latitude coordinate order (as opposed to latitude, longitude) to match GeoJSON.
+  - `options.zoom` **[Array][13]\<Coordinate>** MapLibre option for the initial zoom level of the map. If zoom is not specified in the constructor options, Mapbox GL JS will look for it in the map's style object. If it is not specified in the style, either, it will default to 0 .
+
+Returns **[Promise\<MapLibreMap>](https://maplibre.org/maplibre-gl-js-docs/api/map/)** Promise object containing a MapLibre map object
 
 ## AmplifyMapLibreRequest
 
@@ -48,14 +61,17 @@ DrawPoints utility function for adding points to a map based on coordinate data 
 - `map` **maplibre-gl-js-Map** A maplibre-gl-js [map][10] on which the points will be drawn
 - `options` **[Object][14]** An object containing options for changing the styles and features of the points rendered to the map, see the options for more details on available settings
 
-  - `options.showCluster` **[String][8]** Determines whether or not points close together should be clustered into a single point (optional, default `true`)
+  - `options.showCluster` **boolean** Determines whether or not points close together should be clustered into a single point (optional, default `true`)
   - `options.clusterOptions` **[String][8]** Object for determining cluster options (optional, default `{}`)
     - `options.clusterOptions.showCount` **boolean** Default: false, determines whether to show the count for the number of points aggregated by a cluster
     - See [ClusterOptions][15] for more details
   - `options.unclusteredOptions` **[String][8]** Object for determining unclustered point options (optional, default `{}`)
+    - `options.unclusteredOptions.markerImageElement` **HTMLImageElement** optional, an image to use in place of the default marker. If only markerImageElement is passed then it will be used for both `markerImageElement` and `activateMarkerImageElement`. Images should be defined before the map `load` [event](https://maplibre.org/maplibre-gl-js-docs/api/map/#map.event:load) is fired.
+    - `options.unclusteredOptions.activeMarkerImageElement` **HTMLImageElement** optional, an image to use in place of the default active marker. If only markerImageElement is passed then it will be used for both `markerImageElement` and `activateMarkerImageElement`. Images should be defined before the map `load` [event](https://maplibre.org/maplibre-gl-js-docs/api/map/#map.event:load) is fired.
     - `options.unclusteredOptions.showMarkerPopup` **boolean** Default: false, determines whether to show a popup on selection
     - `options.unclusteredOptions.popupRender` **function** Optional, overrides the [default popup render](https://github.com/aws-amplify/maplibre-gl-js-amplify/blob/main/src/popupRender.ts#L18) function with function that accepts a Carmen GeoJSON feature and returns an HTML string
     - See [UnclusteredOptions][16] for more details
+  - `options.autoFit` **boolean** Fits the map view around the points drawn if they are not currently in view (optional, default `true`)
 
 - `mapStyle` **MAP_STYLE** A required parameter that indicates the map style returned from Amazon Location Service. This is used to determine the default fonts to be used with maplibre-gl-js. View existing styles [here][17]
 
@@ -67,10 +83,30 @@ Returns **DrawPointsOutput** output An object containing the string id's of the 
 - `clusterLayerId` **[String][8]** The [layer][19] used for creating and styling the points that are clustered together
 - `clusterSymbolLayerId` **[String][8]** The [layer][20] used for creating styling the number that shows the count of points in a cluster
 - `unclusteredLayerId` **[String][8]** The [layer][21] used for creating and styling the individual points on the map and the popup when clicking on a point
+- `show` **[function(): void]** Utility function for setting the all layer's visibilty to "visible"
+- `hide` **[function(): void]** Utility function for setting the all layer's visibilty to "none"
+- `setData` **[function([Array][13]\<Coordinate> | [Array][13]\<Feature> | [Array][13]\<NamedLocation>): void]** Utility function for setting/updating draw data points
+
+## createAmplifyGeocoder
+
+A utility method for constructing a `MaplibreGeocoder` with an `AmplifyGeocoderAPI` based on Amplify recommended settings.
+
+### Parameters
+
+- `options` **Object** An optional object containing [MaplibreGeocoder optional parameters](https://github.com/maplibre/maplibre-gl-geocoder/blob/main/API.md#parameters) and some `AmplifyGeocoder` specific options (optional, default `undefined`)
+  - `options.autocomplete` **boolean** Determines whether or not the geocoder will perform suggestion API calls while typing (optional, default `true`)
+
+```js
+import { createAmplifyGeocoder } from "maplibre-gl-js-amplify";
+import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
+...
+const geocoder = createAmplifyGeocoder();
+map.addControl(geocoder);
+```
 
 ## AmplifyGeocoderAPI
 
-An object wrapping Amplify Geo search APIs and returns `forwardGeocode` and `reverseGeocode` methods which are used by [maplibre-gl-geocoder][22] to perform search
+An object wrapping Amplify Geo search APIs and returns `forwardGeocode`, `reverseGeocode`, and `getSuggestions` methods which are used by [maplibre-gl-geocoder][22] to perform search and suggestion queries
 
 ## createDefaultIcon
 
@@ -88,6 +124,27 @@ const geocoder = new MaplibreGeocoder(AmplifyGeocoderAPI, {
 });
 map.addControl(geocoder);
 ```
+
+## drawGeofences
+
+drawGeofences utility function for polygonal shapes geofences to a map based on geojson coordinate data or Geofences objects. Includes limited options for customizing the styles of the border and fill of the polygons.
+
+### Parameters
+
+- `sourceName` **[String][8]** A user defined name prefix used for determining the maplibre data source and the maplibre layers
+- `data` **([Array][13]\<Polygon> | [Array][13]\<Geofence> )** An array of [polygon](https://github.com/aws-amplify/maplibre-gl-js-amplify/blob/main/src/types.ts#L9) data or [Geofence](https://github.com/aws-amplify/maplibre-gl-js-amplify/blob/main/src/types.ts#L11) used as the data source for maplibre
+  - Polygon data is an array of [LinearRing](Array of 4 or more coordinates, where the first and last coordinate are the same to form a closed boundary) where Linear Rings are an array of 4 or more coordinates, where the first and last coordinate are the same to form a closed boundary
+  - Geofences are the object shape of values returned by Amplify Geo or Amazon Location Service
+- `map` **maplibre-gl-js-Map** A maplibre-gl-js [map][10] on which the points will be drawn
+- `options` **[Object][14]** An object containing options for changing the styles and features of the geofences rendered to the map, see the options below for more details on available settings
+
+  - `options.fillColor` **[String][8]** Determines the color to use to fill in the interior of the polygon (optional, default `black`)
+  - `options.fillOpacity` **number** Opacity value between 0 and 1.0 for the interior of the polygon (optional, default `0.3`)
+  - `options.borderColor` **[String][8]** Color of the border line around the polygon (optional, default `black`)
+  - `options.borderWidth` **number** Pixel width of the border (optional, default `4`)
+  - `options.borderOpacity` **number** Opacity value between 0 and 1.0 for the interior of the polygon (optional, default `0.5`)
+
+Returns **DrawGeofencesOutput** output An object containing the string id's of the sources and layers used to draw the points to the map. This includes the sourceId, outlineLayerId, and fillLayerId. Also returns utility functions `show()` and `hide()` which toggle on or off the visibility of the geofences.
 
 [1]: #amplifymaplibrerequest
 [2]: #parameters

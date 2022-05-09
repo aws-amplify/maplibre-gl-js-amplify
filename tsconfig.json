@@ -1,17 +1,18 @@
 {
     "compilerOptions": {
         "module": "esnext",
-        "target": "es6",
+        "target": "es2015",
         "moduleResolution": "node",
         "declaration": true,
-        "sourceMap": true,  
+        "sourceMap": false,  
         "esModuleInterop": true,
-        "outDir": "./dist"
+        "outDir": "./lib/esm",
     },
     "include": [
         "src/**/*"
     ],
     "exclude": [
+        "lib",
         "dist",
         "node_modules"
     ]
