@@ -109,48 +109,71 @@ jobs:
           paths:
             - amplify-js-samples-staging
 
-  integ_test_display:
+  integ_test_cra4:
     executor: integ-test-executor
     working_directory: ~/
     steps:
       - prepare_test_env
       - integ_test_js:
-          test_name: "React Geo Display Map"
+          test_name: "CRA4 React Geo Display Map"
           framework: react
           category: geo
           sample_name: display-map
-
-  integ_test_marker:
-    executor: integ-test-executor
-    working_directory: ~/
-    steps:
-      - prepare_test_env
+          spec: display-map
       - integ_test_js:
-          test_name: "React Geo Marker Map"
-          framework: react
-          category: geo
-          sample_name: marker-map
-      - integ_test_js:
-          test_name: "React Geo Cluster Marker Map"
-          framework: react
-          category: geo
-          sample_name: cluster-marker-map
-
-  integ_test_search:
-    executor: integ-test-executor
-    working_directory: ~/
-    steps:
-      - prepare_test_env
-      - integ_test_js:
-          test_name: "React Geo Search Map"
-          framework: react
-          category: geo
-          sample_name: search-map
-      - integ_test_js:
-          test_name: "React Geo Search Outside Map"
+          test_name: "CRA4 React Geo Search Outside Map"
           framework: react
           category: geo
           sample_name: search-outside-map
+          spec: search-outside-map
+
+  integ_test_cra5:
+    executor: integ-test-executor
+    working_directory: ~/
+    steps:
+      - prepare_test_env
+      - integ_test_js:
+          test_name: "CRA5 React Geo Display Map"
+          framework: react
+          category: geo
+          sample_name: cra5-display-map
+          spec: display-map
+
+  integ_test_ts:
+    executor: integ-test-executor
+    working_directory: ~/
+    steps:
+      - prepare_test_env
+      - integ_test_js:
+          test_name: "TS React Geo Display Map"
+          framework: react
+          category: geo
+          sample_name: ts-display-map
+          spec: display-map
+
+  integ_test_vue:
+    executor: integ-test-executor
+    working_directory: ~/
+    steps:
+      - prepare_test_env
+      - integ_test_js:
+          test_name: "Vue Geo Display Map"
+          framework: vue
+          category: geo
+          sample_name: display-map
+          spec: display-map
+
+  integ_test_next:
+    executor: integ-test-executor
+    working_directory: ~/
+    steps:
+      - prepare_test_env
+      - integ_test_js:
+          test_name: "Next Geo Display Map"
+          framework: next
+          category: geo
+          sample_name: ts-display-map
+          spec: display-map
 
 releasable_branches: &releasable_branches
   branches:
@@ -168,19 +191,23 @@ workflows:
       - integ_setup:
           requires:
             - build
-          filters:
-            <<: *releasable_branches
-      - integ_test_display:
+      - integ_test_cra4:
+          requires:
+            - integ_setup
+      - integ_test_cra5:
+          requires:
+            - integ_setup
+      - integ_test_ts:
           requires:
             - integ_setup
           filters:
             <<: *releasable_branches
-      - integ_test_marker:
+      - integ_test_vue:
           requires:
             - integ_setup
           filters:
             <<: *releasable_branches
-      - integ_test_search:
+      - integ_test_next:
           requires:
             - integ_setup
           filters:
