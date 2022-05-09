@@ -12,7 +12,7 @@ executors:
 
   integ-test-executor:
     docker:
-      - image: cypress/included:5.2.0
+      - image: cypress/included:9.0.0
         auth:
           username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_ACCESS_TOKEN
@@ -209,11 +209,6 @@ workflows:
           filters:
             <<: *releasable_branches
       - integ_test_vue:
-          requires:
-            - integ_setup
-          filters:
-            <<: *releasable_branches
-      - integ_test_next:
           requires:
             - integ_setup
           filters:
