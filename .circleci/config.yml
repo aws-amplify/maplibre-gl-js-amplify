@@ -12,7 +12,7 @@ executors:
 
   integ-test-executor:
     docker:
-      - image: cypress/included:9.0.0
+      - image: cypress/included:8.7.0
         auth:
           username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_ACCESS_TOKEN
@@ -118,14 +118,26 @@ jobs:
           test_name: "CRA4 React Geo Display Map"
           framework: react
           category: geo
-          sample_name: display-map
+          sample_name: cra4-display-map
           spec: display-map
       - integ_test_js:
           test_name: "CRA4 React Geo Search Outside Map"
           framework: react
           category: geo
-          sample_name: search-outside-map
+          sample_name: cra4-search-outside-map
           spec: search-outside-map
+      - integ_test_js:
+          test_name: "CRA4 React Geo Geofence Control Map"
+          framework: react
+          category: geo
+          sample_name: cra4-geofence-control-map
+          spec: geofence-control-map
+      - integ_test_js:
+          test_name: "CRA4 TS React Geo Geofence Control Map"
+          framework: react
+          category: geo
+          sample_name: cra4-ts-geofence-control-map
+          spec: geofence-control-map
 
   integ_test_cra5:
     executor: integ-test-executor
@@ -138,30 +150,36 @@ jobs:
           category: geo
           sample_name: cra5-display-map
           spec: display-map
-
-  integ_test_ts:
-    executor: integ-test-executor
-    working_directory: ~/
-    steps:
-      - prepare_test_env
       - integ_test_js:
-          test_name: "TS React Geo Display Map"
+          test_name: "CRA5 TS React Geo Display Map"
           framework: react
           category: geo
-          sample_name: ts-display-map
+          sample_name: cra5-ts-display-map
           spec: display-map
+      - integ_test_js:
+          test_name: "CRA5 React Geo Geofence Control Map"
+          framework: react
+          category: geo
+          sample_name: cra5-geofence-control-map
+          spec: geofence-control-map
 
-  integ_test_vue:
+  integ_test_vite:
     executor: integ-test-executor
     working_directory: ~/
     steps:
       - prepare_test_env
       - integ_test_js:
-          test_name: "Vue Geo Display Map"
+          test_name: "Vite Geo Display Map"
           framework: vue
           category: geo
-          sample_name: display-map
+          sample_name: vite-display-map
           spec: display-map
+      - integ_test_js:
+          test_name: "Vite Geo Geofence Control Map"
+          framework: vue
+          category: geo
+          sample_name: vite-geofence-control-map
+          spec: geofence-control-map
 
   integ_test_next:
     executor: integ-test-executor
@@ -172,8 +190,14 @@ jobs:
           test_name: "Next Geo Display Map"
           framework: next
           category: geo
-          sample_name: ts-display-map
+          sample_name: next-display-map
           spec: display-map
+      - integ_test_js:
+          test_name: "Next Geo Geofence Control Map"
+          framework: next
+          category: geo
+          sample_name: next-geofence-control-map
+          spec: geofence-control-map
 
 releasable_branches: &releasable_branches
   branches:
@@ -204,11 +228,6 @@ workflows:
           filters:
             <<: *releasable_branches
       - integ_test_ts:
-          requires:
-            - integ_setup
-          filters:
-            <<: *releasable_branches
-      - integ_test_vue:
           requires:
             - integ_setup
           filters:
