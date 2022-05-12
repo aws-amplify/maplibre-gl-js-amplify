@@ -104,6 +104,8 @@
     "@turf/length": "^6.5.0",
     "@turf/line-slice": "^6.5.0",
     "debounce": "^1.2.1",
-    "maplibre-gl-draw-circle": "^0.0.1"
+    "fs": "npm:empty-npm-package@1.0.0",
+    "maplibre-gl-draw-circle": "^0.0.1",
+    "path": "npm:empty-npm-package@1.0.0"
   }
 }
