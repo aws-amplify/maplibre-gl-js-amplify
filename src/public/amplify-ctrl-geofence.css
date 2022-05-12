@@ -1,0 +1,439 @@
+.geofence-ctrl {
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.geofence-ctrl-button {
+  background: unset;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 4px 16px;
+}
+
+/* List Styles */
+.geofence-ctrl-list-container {
+  position: absolute;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  width: 240px;
+  background: white;
+  z-index: 100;
+  line-height: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.geofence-ctrl-list {
+  height: 100%;
+  overflow: scroll;
+}
+
+.geofence-ctrl-noHover {
+  pointer-events: none;
+}
+
+.geofence-ctrl-list-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: initial;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  font-weight: 600;
+}
+
+.geofence-ctrl-list-header-title {
+  border-bottom: 1px solid #e2e2e2;
+  padding: 4px 12px;
+}
+
+.geofence-ctrl-list-checkbox-all-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 4px 12px 4px 8px;
+}
+
+.geofence-ctrl-list-checkbox-all-title {
+  padding-left: 8px;
+}
+
+.geofence-ctrl-list-header-add-button {
+  border: none;
+  background: none;
+  position: absolute;
+  right: 8px;
+  cursor: pointer;
+}
+
+.geofence-ctrl-list-item-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.geofence-ctrl-list-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.geofence-ctrl-list-selected-item {
+  display: flex;
+  background: #003560;
+}
+
+.geofence-ctrl-list-item-left-container {
+  padding: 0px 8px;
+  display: flex;
+  border-right: 1px solid #e9e9e9;
+}
+
+.geofence-ctrl-list-item-right-container {
+  width: 100%;
+}
+
+.geofence-ctrl-list-item-checkbox {
+  margin: 10px 4px;
+}
+
+.geofence-ctrl-list-selected-item .geofence-ctrl-list-item-checkbox {
+  display: none;
+}
+
+.geofence-ctrl-list-item:hover {
+  background: #003560;
+  color: white;
+}
+
+.geofence-ctrl-list-item:hover .geofence-ctrl-edit-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.geofence-ctrl-delete-button {
+  margin: 4px;
+  padding: 0px 1px 0px 0px;
+  display: flex;
+  align-items: center;
+  pointer-events: auto;
+}
+
+.geofence-ctrl-list-item-title-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 4px 0px 4px 8px;
+}
+
+.geofence-ctrl-list-selected-item .geofence-ctrl-list-item-title-container {
+  border: unset;
+  color: white;
+  font-weight: bold;
+}
+
+/* Delete Geofence Prompt Styles */
+
+.geofence-ctrl-delete-prompt-container {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.4);
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.geofence-ctrl-delete-prompt {
+  background: white;
+  padding: 24px;
+  border-radius: 4px;
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.12);
+}
+
+.geofence-ctrl-delete-geofence-buttons {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 8px;
+  font-weight: bold;
+}
+
+.geofence-ctrl-delete-geofence-confirm-button {
+  background: black;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.geofence-ctrl-delete-geofence-cancel-button {
+  color: #6e6e6e;
+  cursor: pointer;
+  padding: 8px;
+}
+
+/* Create Geofence Prompt Styles */
+
+.geofence-ctrl-create-prompt-container {
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  pointer-events: none;
+}
+
+.geofence-ctrl-create-prompt {
+  box-shadow: 0px -2px 4px rgb(0 0 0 / 12%);
+  border-radius: 4px;
+  background: white;
+  padding: 12px;
+  pointer-events: auto;
+}
+
+.geofence-ctrl-create-prompt-buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.geofence-ctrl-create-prompt-button {
+  color: black;
+  background: white;
+  border: 1px solid #d8d8d8;
+  font-weight: 600;
+  padding: 8px 24px;
+  cursor: pointer;
+}
+
+.geofence-ctrl-create-prompt-selected {
+  color: white;
+  background: black;
+  border-color: black;
+}
+
+.geofence-ctrl-create-prompt-button-circle {
+  border-radius: 4px 0 0 4px;
+  border-right: unset;
+}
+
+.geofence-ctrl-create-prompt-button-polygon {
+  border-radius: 0 4px 4px 0;
+  border-left: unset;
+}
+
+.geofence-ctrl-create-circle-mode-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.geofence-ctrl-create-circle-mode-title {
+  padding: 4px 0;
+  width: 124px;
+  text-align: initial;
+}
+
+.geofence-ctrl-create-circle-mode-input {
+  width: 124px;
+}
+
+.geofence-ctrl-create-polygon-mode-container {
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 8px;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.geofence-ctrl-create-polygon-mode-info-container {
+  display: flex;
+}
+
+.geofence-ctrl-create-polygon-mode-icon {
+  background: black;
+  color: white;
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+}
+
+.geofence-ctrl-create-polygon-mode-title {
+  padding-left: 8px;
+}
+
+.geofence-ctrl-create-polygon-mode-reset-button {
+  border-radius: 4px;
+  background: black;
+}
+
+.geofence-ctrl-create-polygon-mode-info-icon {
+  text-align: center;
+}
+
+/* Popup container */
+.geofence-ctrl-create-polygon-mode-popup-container {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* The actual popup (appears on top) */
+.geofence-ctrl-create-polygon-mode-popup-container
+  .geofence-ctrl-create-polygon-mode-popup {
+  visibility: hidden;
+  width: 560px;
+  height: 100px;
+  background-color: white;
+  box-sizing: border-box;
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  text-align: center;
+  padding: 8px 24px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -280px;
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Popup arrow */
+.geofence-ctrl-create-polygon-mode-popup-container
+  .geofence-ctrl-create-polygon-mode-popup::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: white transparent transparent transparent;
+}
+
+/* Toggle this class when clicking on the popup container (hide and show the popup) */
+.geofence-ctrl-create-polygon-mode-popup-container .show {
+  visibility: visible;
+}
+
+.geofence-ctrl-create-polygon-mode-popup-step {
+  color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-weight: 500;
+  text-align: initial;
+  width: 116px;
+}
+
+/* Add Geofence Prompt Styles */
+
+.geofence-ctrl-add-geofence {
+  background: #003560;
+  display: flex;
+  flex-direction: column;
+}
+
+.geofence-ctrl-add-geofence-input {
+  padding: 5px 8px;
+  border: 1px solid #b0b8bf;
+  border-radius: 4px;
+  margin: 8px;
+}
+
+.geofence-ctrl-add-geofence-buttons {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 8px 8px 0px;
+}
+
+.geofence-ctrl-add-geofence-error {
+  display: flex;
+  color: #ff5050;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 16px;
+  padding: 8px;
+  align-items: center;
+}
+
+.geofence-ctrl-add-geofence-error-text {
+  padding-left: 8px;
+}
+
+/* Delete Popup */
+.geofence-ctrl-delete-popdown-container {
+  position: absolute;
+  right: 0;
+  width: 30%;
+}
+
+.geofence-ctrl-delete-popdown {
+  display: flex;
+  padding: 20px 12px 12px 12px;
+  font-weight: 600;
+  color: white;
+  background: #459844;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+}
+
+.geofence-ctrl-delete-popdown-close-button {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  cursor: pointer;
+}
+
+.geofence-ctrl-delete-popdown-icon {
+  display: flex;
+  align-items: center;
+  padding-right: 5px;
+}
+
+/* Other Styles */
+
+.geofence-ctrl-list-item-controls {
+  display: flex;
+  flex-direction: row;
+  background: #003560;
+  pointer-events: auto;
+  justify-content: flex-end;
+  padding: 0px 8px 8px 0px;
+}
+
+.geofence-ctrl-list-item-controls-right {
+  display: flex;
+}
+
+.geofence-ctrl-edit-button {
+  margin-right: 12px;
+  display: none;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.3);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.geofence-ctrl-save-button {
+  background: #ffffff;
+  border-radius: 4px;
+  padding: 4px 16px;
+  font-weight: bold;
+  cursor: pointer;
+  color: black;
+}
+
+.maplibregl-ctrl-full-screen {
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+  pointer-events: none;
+}
