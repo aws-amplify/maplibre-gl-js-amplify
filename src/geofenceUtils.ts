@@ -99,6 +99,7 @@ export const getCircleFeatureFromCoords = (
     properties: {
       isCircle: true,
       center,
+      radius: circleRadius,
     },
     geometry: {
       type: "Polygon",
@@ -138,4 +139,14 @@ export const isGeofenceDisplayed = (
   displayedGeofences: Geofence[]
 ): boolean => {
   return !!displayedGeofences.find((geofence) => geofence.geofenceId === id);
+};
+
+export const getDistanceBetweenCoordinates = (
+  startCoord: Coordinates,
+  endCoord: Coordinates
+): number => {
+  const line = lineString([startCoord, endCoord]);
+  const distanceInMiles = length(line, { units: "miles" });
+
+  return distanceInMiles;
 };

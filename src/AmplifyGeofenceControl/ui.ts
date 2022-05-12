@@ -30,6 +30,7 @@ export function AmplifyGeofenceControlUI(
   let _polygonModeContainer: HTMLElement;
   let _deletePopdownContainer: HTMLElement;
   let _errorDiv: HTMLElement;
+  let _geofenceCreateRadiusInput: HTMLInputElement;
 
   function registerControlPosition(map, positionName): void {
     if (map._controlPositions[positionName]) {
@@ -72,7 +73,6 @@ export function AmplifyGeofenceControlUI(
         buttonContainer
       );
       circleModeButton.addEventListener("click", () => {
-        geofenceControl.changeMode("draw_circle");
         // Change button selected style
         circleModeButton.classList.add("geofence-ctrl-create-prompt-selected");
         polygonModeButton.classList.remove(
@@ -86,6 +86,8 @@ export function AmplifyGeofenceControlUI(
         }
         if (!_circleModeContainer)
           createCircleModeCreateContainer(_createContainer);
+
+        geofenceControl.changeMode("draw_circle");
       });
       circleModeButton.innerHTML = "Circle";
 
@@ -134,12 +136,12 @@ export function AmplifyGeofenceControlUI(
     );
     radiusTitle.innerHTML = "Radius";
 
-    const geofenceCreateInput = createElement(
+    _geofenceCreateRadiusInput = createElement(
       "input",
       "geofence-ctrl-create-circle-mode-input",
       _circleModeContainer
-    );
-    geofenceCreateInput.addEventListener(
+    ) as HTMLInputElement;
+    _geofenceCreateRadiusInput.addEventListener(
       "keydown",
       debounce(geofenceControl.updateInputRadius, 200)
     );
@@ -374,6 +376,7 @@ export function AmplifyGeofenceControlUI(
     checkbox.addEventListener("click", function () {
       if ((checkbox as HTMLInputElement).checked) {
         geofenceControl.displayGeofence(geofence.geofenceId);
+        geofenceControl.fitGeofence(geofence.geofenceId);
       } else {
         geofenceControl.hideGeofence(geofence.geofenceId);
       }
@@ -730,6 +733,11 @@ export function AmplifyGeofenceControlUI(
     _geofenceTitle.innerHTML = `Geofences (${count})`;
   }
 
+  function updateGeofenceRadius(radius: number): void {
+    if (_geofenceCreateRadiusInput)
+      _geofenceCreateRadiusInput.value = `${radius}`;
+  }
+
   function hideCheckboxAllContainer(): void {
     _checkBoxAllContainer.style.display = "none";
   }
@@ -752,5 +760,6 @@ export function AmplifyGeofenceControlUI(
     getCheckboxAllValue,
     removeGeofenceCreateContainer,
     updateGeofenceCount,
+    updateGeofenceRadius,
   };
 }

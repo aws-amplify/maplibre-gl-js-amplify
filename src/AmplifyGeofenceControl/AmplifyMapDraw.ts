@@ -168,6 +168,10 @@ export class AmplifyMapDraw {
       this._map.getCenter().toArray() as Coordinates,
       { bounds: mapBounds, radius }
     );
+
+    this._ui.updateGeofenceRadius(
+      radius || circleFeature.properties.radius.toFixed(2)
+    );
     this.add(circleFeature);
   }
 }
