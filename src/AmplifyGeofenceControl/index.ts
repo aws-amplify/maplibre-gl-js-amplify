@@ -425,7 +425,7 @@ export class AmplifyGeofenceControl {
 
   // Disables add button and selecting items from geofence list
   setEditingModeEnabled(enabled: boolean): void {
-    enabled ? this._amplifyDraw.enable(enabled) : this._amplifyDraw.disable();
+    enabled ? this._amplifyDraw.enable() : this._amplifyDraw.disable();
     enabled
       ? this._drawGeofencesOutput.hide()
       : this._drawGeofencesOutput.show();
@@ -442,8 +442,8 @@ export class AmplifyGeofenceControl {
   }
 
   addEditableGeofence(): void {
-    this.setEditingModeEnabled(true);
     this._editingGeofenceId = "tempGeofence";
     this._amplifyDraw.drawCircularGeofence("tempGeofence");
+    this.setEditingModeEnabled(true);
   }
 }
