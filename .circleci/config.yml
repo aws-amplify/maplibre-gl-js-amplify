@@ -227,11 +227,6 @@ workflows:
             - integ_setup
           filters:
             <<: *releasable_branches
-      - integ_test_vite:
-          requires:
-            - integ_setup
-          filters:
-            <<: *releasable_branches
       - integ_test_next:
           requires:
             - integ_setup
