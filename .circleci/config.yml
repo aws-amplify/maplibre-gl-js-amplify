@@ -170,13 +170,13 @@ jobs:
       - prepare_test_env
       - integ_test_js:
           test_name: "Vite Geo Display Map"
-          framework: vue
+          framework: vite
           category: geo
           sample_name: vite-display-map
           spec: display-map
       - integ_test_js:
           test_name: "Vite Geo Geofence Control Map"
-          framework: vue
+          framework: vite
           category: geo
           sample_name: vite-geofence-control-map
           spec: geofence-control-map
@@ -188,13 +188,13 @@ jobs:
       - prepare_test_env
       - integ_test_js:
           test_name: "Next Geo Display Map"
-          framework: next
+          framework: react
           category: geo
           sample_name: next-display-map
           spec: display-map
       - integ_test_js:
           test_name: "Next Geo Geofence Control Map"
-          framework: next
+          framework: react
           category: geo
           sample_name: next-geofence-control-map
           spec: geofence-control-map
