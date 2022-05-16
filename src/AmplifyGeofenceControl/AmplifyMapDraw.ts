@@ -169,9 +169,10 @@ export class AmplifyMapDraw {
       { bounds: mapBounds, radius }
     );
 
+    this.add(circleFeature);
+
     this._ui.updateGeofenceRadius(
       radius || circleFeature.properties.radius.toFixed(2)
     );
-    this.add(circleFeature);
   }
 }
