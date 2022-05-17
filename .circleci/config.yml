@@ -186,12 +186,12 @@ jobs:
     working_directory: ~/
     steps:
       - prepare_test_env
-      - integ_test_js:
-          test_name: "Next Geo Display Map"
-          framework: react
-          category: geo
-          sample_name: next-display-map
-          spec: display-map
+      # - integ_test_js:
+      #     test_name: "Next Geo Display Map"
+      #     framework: react
+      #     category: geo
+      #     sample_name: next-display-map
+      #     spec: display-map
       - integ_test_js:
           test_name: "Next Geo Geofence Control Map"
           framework: react
