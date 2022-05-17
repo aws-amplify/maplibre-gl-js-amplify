@@ -12,7 +12,7 @@ executors:
 
   integ-test-executor:
     docker:
-      - image: cypress/included:5.2.0
+      - image: cypress/included:8.7.0
         auth:
           username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_ACCESS_TOKEN
@@ -109,48 +109,95 @@ jobs:
           paths:
             - amplify-js-samples-staging
 
-  integ_test_display:
+  integ_test_cra4:
     executor: integ-test-executor
     working_directory: ~/
     steps:
       - prepare_test_env
       - integ_test_js:
-          test_name: "React Geo Display Map"
+          test_name: "CRA4 React Geo Display Map"
           framework: react
           category: geo
-          sample_name: display-map
+          sample_name: cra4-display-map
+          spec: display-map
+      - integ_test_js:
+          test_name: "CRA4 React Geo Search Outside Map"
+          framework: react
+          category: geo
+          sample_name: cra4-search-outside-map
+          spec: search-outside-map
+      - integ_test_js:
+          test_name: "CRA4 React Geo Geofence Control Map"
+          framework: react
+          category: geo
+          sample_name: cra4-geofence-control-map
+          spec: geofence-control-map
+      - integ_test_js:
+          test_name: "CRA4 TS React Geo Geofence Control Map"
+          framework: react
+          category: geo
+          sample_name: cra4-ts-geofence-control-map
+          spec: geofence-control-map
 
-  integ_test_marker:
+  integ_test_cra5:
     executor: integ-test-executor
     working_directory: ~/
     steps:
       - prepare_test_env
       - integ_test_js:
-          test_name: "React Geo Marker Map"
+          test_name: "CRA5 React Geo Display Map"
           framework: react
           category: geo
-          sample_name: marker-map
+          sample_name: cra5-display-map
+          spec: display-map
       - integ_test_js:
-          test_name: "React Geo Cluster Marker Map"
+          test_name: "CRA5 TS React Geo Display Map"
           framework: react
           category: geo
-          sample_name: cluster-marker-map
+          sample_name: cra5-ts-display-map
+          spec: display-map
+      - integ_test_js:
+          test_name: "CRA5 React Geo Geofence Control Map"
+          framework: react
+          category: geo
+          sample_name: cra5-geofence-control-map
+          spec: geofence-control-map
 
-  integ_test_search:
+  integ_test_vite:
     executor: integ-test-executor
     working_directory: ~/
     steps:
       - prepare_test_env
       - integ_test_js:
-          test_name: "React Geo Search Map"
+          test_name: "Vite Geo Display Map"
           framework: react
           category: geo
-          sample_name: search-map
+          sample_name: vite-display-map
+          spec: display-map
       - integ_test_js:
-          test_name: "React Geo Search Outside Map"
+          test_name: "Vite Geo Geofence Control Map"
           framework: react
           category: geo
-          sample_name: search-outside-map
+          sample_name: vite-geofence-control-map
+          spec: geofence-control-map
+
+  integ_test_next:
+    executor: integ-test-executor
+    working_directory: ~/
+    steps:
+      - prepare_test_env
+      # - integ_test_js:
+      #     test_name: "Next Geo Display Map"
+      #     framework: react
+      #     category: geo
+      #     sample_name: next-display-map
+      #     spec: display-map
+      - integ_test_js:
+          test_name: "Next Geo Geofence Control Map"
+          framework: react
+          category: geo
+          sample_name: next-geofence-control-map
+          spec: geofence-control-map
 
 releasable_branches: &releasable_branches
   branches:
@@ -170,17 +217,17 @@ workflows:
             - build
           filters:
             <<: *releasable_branches
-      - integ_test_display:
+      - integ_test_cra4:
           requires:
             - integ_setup
           filters:
             <<: *releasable_branches
-      - integ_test_marker:
+      - integ_test_cra5:
           requires:
             - integ_setup
           filters:
             <<: *releasable_branches
-      - integ_test_search:
+      - integ_test_next:
           requires:
             - integ_setup
           filters:
