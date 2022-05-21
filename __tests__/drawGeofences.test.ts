@@ -21,9 +21,7 @@ describe("drawGeofences", () => {
 
     const mockInstance = (maplibreMap as jest.Mock).mock.instances[0];
 
-    expect(mockInstance.addSource.mock.calls[0][0]).toEqual(
-      "my-geofence-source"
-    );
+    expect(mockInstance.addSource.mock.calls[0][0]).toEqual("my-geofence");
     expect(
       mockInstance.addSource.mock.calls[0][1].data.geometry.coordinates.length
     ).toEqual(1);

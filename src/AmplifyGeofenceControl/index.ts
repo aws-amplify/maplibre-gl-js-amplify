@@ -1,4 +1,4 @@
-import maplibregl, { Map } from "maplibre-gl";
+import maplibregl, { IControl, Map } from "maplibre-gl";
 import { Geo } from "@aws-amplify/geo";
 import { drawGeofences, DrawGeofencesOutput } from "../drawGeofences";
 import { Geofence } from "../types";
@@ -102,9 +102,14 @@ export class AmplifyGeofenceControl {
     this._ui.createGeofenceListContainer();
 
     // Draw the geofences source to the map so we can update it on geofences load/creation
-    this._map.on(
+    this._map.once(
       "load",
       function () {
+        // Prevents warnings on multiple re-renders, especially when rendered in react
+        if (this._map.getSource("displayedGeofences")) {
+          return;
+        }
+
         this._drawGeofencesOutput = drawGeofences(
           "displayedGeofences",
           [],
