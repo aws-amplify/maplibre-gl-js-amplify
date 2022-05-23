@@ -1,4 +1,4 @@
-import maplibregl, { IControl, Map } from "maplibre-gl";
+import maplibregl, { Map } from "maplibre-gl";
 import { Geo } from "@aws-amplify/geo";
 import { drawGeofences, DrawGeofencesOutput } from "../drawGeofences";
 import { Geofence } from "../types";
