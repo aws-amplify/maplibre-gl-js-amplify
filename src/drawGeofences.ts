@@ -57,7 +57,7 @@ export function drawGeofences(
    * Data source for features
    * Convert data passed in as coordinates into feature data
    */
-  const sourceId = `${sourceName}-source`;
+  const sourceId = `${sourceName}`;
   map.addSource(sourceId, {
     type: "geojson",
     data: getGeofenceFeatureArray(data),
