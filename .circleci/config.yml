@@ -203,6 +203,7 @@ releasable_branches: &releasable_branches
   branches:
     only:
       - main
+      - release
       - integ-test
 
 workflows:
