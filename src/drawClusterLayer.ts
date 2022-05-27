@@ -1,16 +1,16 @@
 import { Geo } from "@aws-amplify/geo";
 import { Point } from "geojson";
-import {
-  CircleLayer,
-  CirclePaint,
+import type {
+  CircleLayerSpecification,
   LngLatLike,
   Map as maplibreMap,
-  SymbolLayer,
+  SymbolLayerSpecification,
 } from "maplibre-gl";
-import { ClusterOptions } from "./types";
+
 import { COLOR_WHITE, MARKER_COLOR } from "./constants";
 import { isGeoJsonSource } from "./utils";
 import { FONT_DEFAULT_BY_STYLE } from "./constants";
+import type { ClusterOptions } from "./types";
 
 export function drawClusterLayer(
   sourceName: string,
@@ -38,7 +38,7 @@ export function drawClusterLayer(
   const clusterSymbolLayerId = `${sourceName}-layer-cluster-count`;
 
   // Use step expressions for clusters (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-step)
-  const paintOptions: CirclePaint = {
+  const paintOptions: CircleLayerSpecification["paint"] = {
     "circle-color": [
       "step",
       ["get", "point_count"],
@@ -65,7 +65,7 @@ export function drawClusterLayer(
     "circle-stroke-color": borderColor,
     ...clusterPaint,
   };
-  const defaultClusterLayer: CircleLayer = {
+  const defaultClusterLayer: CircleLayerSpecification = {
     id: clusterLayerId,
     type: "circle",
     source: sourceName,
@@ -120,7 +120,7 @@ export function drawClusterLayer(
     const paintOptions = {
       "text-color": fontColor,
     };
-    const defaultClusterCount: SymbolLayer = {
+    const defaultClusterCount: SymbolLayerSpecification = {
       id: clusterSymbolLayerId,
       type: "symbol",
       source: sourceName,

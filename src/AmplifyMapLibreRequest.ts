@@ -10,11 +10,11 @@ import { Geo, AmazonLocationServiceMapStyle } from "@aws-amplify/geo";
 import {
   Map as MaplibreMap,
   RequestParameters,
-  MapboxOptions,
+  MapOptions,
 } from "maplibre-gl";
 import { urlEncodePeriods } from "./utils";
 
-interface CreateMapOptions extends MapboxOptions {
+interface CreateMapOptions extends MapOptions {
   region?: string;
   mapConstructor?: typeof MaplibreMap;
 }

@@ -1,10 +1,12 @@
 import { Point } from "geojson";
-import { Map as maplibreMap, Popup, SymbolLayer } from "maplibre-gl";
-import { Coordinates, UnclusteredOptions } from "./types";
+import { Popup } from 'maplibre-gl';
+import type { Map as maplibreMap, SymbolLayerSpecification } from "maplibre-gl";
+
 import { ACTIVE_MARKER_COLOR, COLOR_WHITE, MARKER_COLOR } from "./constants";
 import { createMarker } from "./createMarker";
 import { getPopupRenderFunction } from "./popupRender";
 import { isCoordinates } from "./utils";
+import type { Coordinates, UnclusteredOptions } from "./types";
 
 const HIDE_TIP = "amplify-tip";
 
@@ -33,7 +35,7 @@ export function drawUnclusteredLayer(
 
   addUnclusteredMarkerImages(map, options);
 
-  const defaultUnclusteredPoint: SymbolLayer = {
+  const defaultUnclusteredPoint: SymbolLayerSpecification = {
     id: unclusteredLayerId,
     type: "symbol",
     source: sourceName,
