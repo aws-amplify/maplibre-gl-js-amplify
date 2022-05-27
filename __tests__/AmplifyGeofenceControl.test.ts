@@ -72,7 +72,7 @@ describe("AmplifyGeofenceControl", () => {
     const control = new AmplifyGeofenceControl({
       geofenceCollectionId: "anyString",
     });
-    control._map = new maplibreMap();
+    control._map = new maplibreMap({ container: '', style: '' });
     control._ui = AmplifyGeofenceControlUI(
       control,
       {} as unknown as HTMLElement
