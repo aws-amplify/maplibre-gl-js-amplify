@@ -10,11 +10,11 @@ Lastly, run the test command from the console:
 
 ## Deploying
 
-Follow this deploy process after all changes for the release are merged into master. You will copy and paste this checklist in the comment of the release pull request.
+Follow this deploy process after all changes for the release are merged into main. You will copy and paste this checklist in the comment of the release pull request.
 
 ```
 ## Release checklist
 
-1. Create a branch off `master` and a pull request with the following changes. Copy this checklist in the comment of the pull request.
-2. Request a PR review and then merge it into `master`.
+1. Create a branch off `main` and a pull request with the following changes. Copy this checklist in the comment of the pull request.
+2. Request a PR review and then merge it into `main`.
 ```
