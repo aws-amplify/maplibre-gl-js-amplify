@@ -82,9 +82,9 @@ export function createAmplifyGeocoder(options?: any): IControl {
     maplibregl: maplibregl,
     showResultMarkers: { element: createDefaultIcon() },
     marker: { element: createDefaultIcon() },
-    // autocomplete temporarily disabled by default until CLI is updated
-    showResultsWhileTyping: options?.autocomplete,
-    // showResultsWhileTyping: options?.autocomplete === false ? false : true,
+    showResultsWhileTyping: options?.autocomplete === false ? false : true,
+    showSuggestionsOnlyWhileTyping:
+      options?.autocomplete === false ? false : true,
     ...options,
   });
 }
