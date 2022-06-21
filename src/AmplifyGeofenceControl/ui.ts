@@ -683,6 +683,11 @@ export function AmplifyGeofenceControlUI(
     deletePopdownText.innerHTML = success
       ? "Geofence was deleted successfully"
       : "Geofence failed to delete";
+
+    // Remove delete popdown after 5 seconds
+    window.setTimeout(() => {
+      removeElement(_deletePopdownContainer);
+    }, 5000);
   }
 
   /************************************************************
