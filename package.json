@@ -80,6 +80,7 @@
     "jest": "^27.0.3",
     "jest-transform-stub": "^2.0.0",
     "jest-webgl-canvas-mock": "^0.2.3",
+    "jsdom-worker-fix": "^0.1.8",
     "maplibre-gl": "^1.14.0",
     "prettier": "^2.3.0",
     "rollup": "^2.55.1",

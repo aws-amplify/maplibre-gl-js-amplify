@@ -25,7 +25,7 @@ describe('createMap', () => {
 
   test("createMap returns a map object", async () => {
     (Geo.getDefaultMap as jest.Mock).mockReturnValueOnce({
-      mapName: "",
+      mapName: "map1ff111f1-staging",
       region: "us-east-1",
       style: "VectorEsriStreets"
     } as AmazonLocationServiceMapStyle);

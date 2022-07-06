@@ -17,7 +17,7 @@ module.exports = {
     },
     {
       preset: "ts-jest",
-      setupFiles: ["./jest.setup.dom.ts", "jest-webgl-canvas-mock"],
+      setupFiles: ["./jest.setup.dom.ts", "jest-webgl-canvas-mock", "jsdom-worker-fix"], // workarounds for jsdom and node env conflicts
       testEnvironment: "jsdom",
       testMatch: ["<rootDir>/__tests__/**/*.test.dom.ts"],
     },
