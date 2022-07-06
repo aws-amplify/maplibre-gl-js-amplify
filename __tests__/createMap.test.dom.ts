@@ -1,6 +1,3 @@
-/**
- * @jest-environment jsdom
- */
 import { Amplify } from "@aws-amplify/core"; 
 import { Geo } from "@aws-amplify/geo";
 import type { AmazonLocationServiceMapStyle } from "@aws-amplify/geo";
