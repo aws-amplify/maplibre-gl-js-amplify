@@ -9,8 +9,9 @@ if (typeof window.URL.createObjectURL === "undefined") {
 /**
  * Below are polyfills to allow the JSDOM tests to run
  */
- import FetchMock from 'jest-fetch-mock';
- FetchMock.enableMocks();
+import FetchMock from "jest-fetch-mock";
+FetchMock.enableMocks();
+
 class MockWorker {
   addEventListener = () => null;
   dispatchEvent = () => null;
