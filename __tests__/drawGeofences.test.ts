@@ -5,7 +5,7 @@ jest.mock("maplibre-gl");
 
 describe("drawGeofences", () => {
   test("drawPoints default options", () => {
-    const map = new maplibreMap();
+    const map = new maplibreMap({ container: '', style: '' });
     const data: any = [
       [
         [

@@ -10,11 +10,16 @@ import { Geo, AmazonLocationServiceMapStyle } from "@aws-amplify/geo";
 import {
   Map as MaplibreMap,
   RequestParameters,
-  MapboxOptions,
+  MapOptions,
 } from "maplibre-gl";
 import { urlEncodePeriods } from "./utils";
 
-interface CreateMapOptions extends MapboxOptions {
+/**
+ * The upgrade from maplibre v1 to maplibre v2 changed the `style` property from optional to required.
+ * We keep the property optional here since we default to the map name for the maplibre style field and
+ * it maintains backwards compatibility with the upgrade to maplibre v2.
+ */
+interface CreateMapOptions extends Omit<MapOptions, 'style'>, Partial<Pick<MapOptions, 'style'>> {
   region?: string;
   mapConstructor?: typeof MaplibreMap;
 }

@@ -35,7 +35,7 @@ describe("drawPoints", () => {
   });
 
   test("drawPoints default options", () => {
-    const map = new maplibreMap();
+    const map = new maplibreMap({ container: '', style: '' });
     drawPoints(
       "foo",
       [
@@ -54,7 +54,7 @@ describe("drawPoints", () => {
   });
 
   test("drawPoints autoFit false", () => {
-    const map = new maplibreMap();
+    const map = new maplibreMap({ container: '', style: '' });
     drawPoints(
       "foo",
       [
@@ -78,7 +78,7 @@ describe("drawPoints", () => {
     const icon1 = "foobar";
     const icon2 = "barbaz";
 
-    const map = new maplibreMap();
+    const map = new maplibreMap({ container: '', style: '' });
     drawPoints(
       "foo",
       [
@@ -107,7 +107,7 @@ describe("drawPoints", () => {
   test("drawPoints custom markers, if active marker not passed used same as regular", () => {
     const icon = "foobar";
 
-    const map = new maplibreMap();
+    const map = new maplibreMap({ container: '', style: '' });
     drawPoints(
       "foo",
       [

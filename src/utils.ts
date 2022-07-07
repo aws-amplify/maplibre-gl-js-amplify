@@ -1,6 +1,7 @@
 import { Feature } from "geojson";
-import { AnySourceImpl, GeoJSONSource } from "maplibre-gl";
-import { Coordinates, NamedLocation, Geofence, Polygon } from "./types";
+import type { GeoJSONSource, Source } from "maplibre-gl";
+
+import type { Coordinates, NamedLocation, Geofence, Polygon } from "./types";
 
 export function isCoordinates(array: unknown): array is Coordinates {
   return (
@@ -48,7 +49,7 @@ export function isPolygonArray(array: unknown): array is Polygon[] {
 }
 
 export function isGeoJsonSource(
-  source: AnySourceImpl
+  source: Source
 ): source is GeoJSONSource {
   return source.type === "geojson";
 }
