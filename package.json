@@ -107,7 +107,9 @@
     "debounce": "^1.2.1",
     "fs": "npm:empty-npm-package@1.0.0",
     "maplibre-gl-draw-circle": "^0.0.1",
-    "path": "npm:empty-npm-package@1.0.0"
+    "minimist": "^1.2.6",
+    "path": "npm:empty-npm-package@1.0.0",
+    "underscore": "^1.12.1"
   },
   "resolutions": {
     "maplibre-gl-draw-circle/**/minimist": "^1.2.6",
