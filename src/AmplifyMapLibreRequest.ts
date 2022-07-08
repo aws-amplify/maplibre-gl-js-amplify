@@ -1,20 +1,14 @@
-import {
-  Amplify,
-  Hub,
-  ICredentials,
-  Signer,
-  jitteredExponentialRetry,
-  getAmplifyUserAgent,
-} from "@aws-amplify/core";
+import { Amplify, Hub, ICredentials, Signer, jitteredExponentialRetry, getAmplifyUserAgent } from "@aws-amplify/core";
 import { Geo, AmazonLocationServiceMapStyle } from "@aws-amplify/geo";
-import {
-  Map as MaplibreMap,
-  RequestParameters,
-  MapOptions,
-} from "maplibre-gl";
+import { Map as MaplibreMap, RequestParameters, MapOptions } from "maplibre-gl";
 import { urlEncodePeriods } from "./utils";
 
-interface CreateMapOptions extends MapOptions {
+/**
+ * The upgrade from maplibre v1 to maplibre v2 changed the `style` property from optional to required.
+ * We keep the property optional here since we default to the map name for the maplibre style field and
+ * it maintains backwards compatibility with the upgrade to maplibre v2.
+ */
+interface CreateMapOptions extends Omit<MapOptions, "style">, Partial<Pick<MapOptions, "style">> {
   region?: string;
   mapConstructor?: typeof MaplibreMap;
 }
@@ -48,16 +42,11 @@ export default class AmplifyMapLibreRequest {
     });
   }
 
-  static createMapLibreMap = async (
-    options: CreateMapOptions
-  ): Promise<MaplibreMap> => {
+  static createMapLibreMap = async (options: CreateMapOptions): Promise<MaplibreMap> => {
     const { region, mapConstructor = MaplibreMap, ...maplibreOption } = options;
     const defaultMap = Geo.getDefaultMap() as AmazonLocationServiceMapStyle;
 
-    const amplifyRequest = new AmplifyMapLibreRequest(
-      await Amplify.Auth.currentCredentials(),
-      region || defaultMap.region
-    );
+    const amplifyRequest = new AmplifyMapLibreRequest(await Amplify.Auth.currentCredentials(), region || defaultMap.region);
     const transformRequest = amplifyRequest.transformRequest;
     const map = new mapConstructor({
       ...maplibreOption,
@@ -86,10 +75,7 @@ export default class AmplifyMapLibreRequest {
       this.activeTimeout && clearTimeout(this.activeTimeout);
       const expiration = new Date(this.credentials.expiration);
       const timeout = expiration.getTime() - new Date().getTime() - 10000; // Adds a 10 second buffer time before the next refresh
-      this.activeTimeout = window.setTimeout(
-        this.refreshCredentialsWithRetry,
-        timeout
-      );
+      this.activeTimeout = window.setTimeout(this.refreshCredentialsWithRetry, timeout);
     } catch (e) {
       console.error(`Failed to refresh credentials: ${e}`);
     }
@@ -113,11 +99,7 @@ export default class AmplifyMapLibreRequest {
 
     if (url.includes("amazonaws.com")) {
       // only sign AWS requests (with the signature as part of the query string)
-      const urlWithUserAgent =
-        url +
-        `?x-amz-user-agent=${encodeURIComponent(
-          urlEncodePeriods(getAmplifyUserAgent())
-        )}`;
+      const urlWithUserAgent = url + `?x-amz-user-agent=${encodeURIComponent(urlEncodePeriods(getAmplifyUserAgent()))}`;
       return {
         url: Signer.signUrl(urlWithUserAgent, {
           access_key: this.credentials.accessKeyId,
@@ -129,8 +111,6 @@ export default class AmplifyMapLibreRequest {
   };
 }
 
-export const createMap = async (
-  options: CreateMapOptions
-): Promise<MaplibreMap> => {
+export const createMap = async (options: CreateMapOptions): Promise<MaplibreMap> => {
   return AmplifyMapLibreRequest.createMapLibreMap(options);
 };

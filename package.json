@@ -63,9 +63,8 @@
     "@commitlint/config-conventional": "^16.2.1",
     "@types/debounce": "^1.2.1",
     "@types/geojson": "^7946.0.7",
-    "@types/jest": "^26.0.23",
+    "@types/jest": "^27.0.2",
     "@types/mapbox__mapbox-gl-draw": "^1.2.3",
-    "@types/maplibre-gl": "^1.13.1",
     "@types/node": "^15.6.1",
     "@typescript-eslint/eslint-plugin": "^4.25.0",
     "@typescript-eslint/parser": "^4.25.0",
@@ -78,7 +77,9 @@
     "eslint-plugin-promise": "^5.1.0",
     "husky": "^7.0.4",
     "jest": "^27.0.3",
+    "jest-fetch-mock": "^3.0.3",
     "jest-transform-stub": "^2.0.0",
+    "jest-webgl-canvas-mock": "^0.2.3",
     "maplibre-gl": "^2.1.9",
     "prettier": "^2.3.0",
     "rollup": "^2.55.1",
@@ -96,7 +97,7 @@
   },
   "dependencies": {
     "@mapbox/mapbox-gl-draw": "^1.3.0",
-    "@maplibre/maplibre-gl-geocoder": "^1.3.0",
+    "@maplibre/maplibre-gl-geocoder": "^1.4.0",
     "@turf/along": "^6.5.0",
     "@turf/circle": "^6.5.0",
     "@turf/distance": "^6.5.0",
@@ -106,6 +107,16 @@
     "debounce": "^1.2.1",
     "fs": "npm:empty-npm-package@1.0.0",
     "maplibre-gl-draw-circle": "^0.0.1",
-    "path": "npm:empty-npm-package@1.0.0"
+    "minimist": "^1.2.6",
+    "path": "npm:empty-npm-package@1.0.0",
+    "underscore": "^1.12.1"
+  },
+  "resolutions": {
+    "maplibre-gl-draw-circle/**/minimist": "^1.2.6",
+    "maplibre-gl-draw-circle/**/underscore": "^1.12.1"
+  },
+  "overrides": {
+    "minimist": "^1.2.6",
+    "underscore": "^1.12.1"
   }
 }
