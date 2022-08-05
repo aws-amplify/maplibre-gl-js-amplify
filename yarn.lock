@@ -2645,10 +2645,10 @@
   resolved "https://registry.npmjs.org/@mapbox/whoots-js/-/whoots-js-3.1.0.tgz"
   integrity sha512-Es6WcD0nO5l+2BOQS4uLfNPYQaNDfbot3X1XUoloz+x0mPDS3eeORZJl06HXjwBG1fOGwCRnzK88LMdxKRrd6Q==
 
-"@maplibre/maplibre-gl-geocoder@^1.4.0":
-  version "1.4.0"
-  resolved "https://registry.npmjs.org/@maplibre/maplibre-gl-geocoder/-/maplibre-gl-geocoder-1.4.0.tgz"
-  integrity sha512-bUDYTMfYAm5gVYnnpnbWafNTlirNOZ/TIluL56Q5UHzonPQczVzee78tFE350g2rmolUPwFMeBST+BpGeDjSPQ==
+"@maplibre/maplibre-gl-geocoder@^1.4.1":
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/@maplibre/maplibre-gl-geocoder/-/maplibre-gl-geocoder-1.4.1.tgz#2f309639169a004b825854d1aafb2f9daf935697"
+  integrity sha512-+L5gKqkj3QRHHtEjZr/jUEfril2ZUTat7b8g+khT6u4S/+I1HuxTMjxg2WDUx0InGPGD8gqnheCt+dgqydteyg==
   dependencies:
     lodash.debounce "^4.0.6"
     subtag "^0.5.0"
