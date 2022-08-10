@@ -99,6 +99,7 @@ jobs:
             echo $SSH_HOST_PUBLIC_KEY >> ~/.ssh/known_hosts
             git clone $AMPLIFY_JS_SAMPLES_STAGING_URL
             cd amplify-js-samples-staging
+            git checkout build/upgrade-dependencies-parent-folder
             yarn
       - save_cache:
           key: maplibre-gl-js-amplify-{{ .Branch }}-{{ checksum "amplify-js-samples-staging/yarn.lock" }}
@@ -205,6 +206,7 @@ releasable_branches: &releasable_branches
       - main
       - release
       - integ-test
+      - test-upgrade-dependencies-parent-folder
 
 workflows:
   integration_test:
