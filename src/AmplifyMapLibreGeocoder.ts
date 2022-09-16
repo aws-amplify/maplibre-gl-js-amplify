@@ -58,6 +58,50 @@ export const AmplifyGeocoderAPI = {
 
     return { features };
   },
+  getSuggestions: async (config) => {
+    const suggestions = [
+      {
+        text: "a suggestion result",
+        placeId: "a1b2c3d4",
+      },
+      {
+        text: "another suggestion result",
+        placeId: "a2b3c4d5",
+      }
+    ];
+    try {
+      // const response = await Geo.searchForSuggestions(config.query, {
+      //   biasPosition: config.proximity,
+      //   searchAreaConstraints: config.bbox,
+      //   countries: config.countries,
+      //   maxResults: config.limit,
+      // });
+      // suggestions.push(...response);
+    } catch (e) {
+      console.error(`Failed to get suggestions with error: ${e}`);
+    }
+
+    return { suggestions };
+  },
+  searchByPlaceId: async (config) => {
+    const place = {
+      addressNumber: "1401",
+      country: "USA",
+      geometry: {
+        point: [
+          -122.32108099999999,
+          47.613897000000065
+        ]
+      }
+    };
+    try {
+      // place = await Geo.searchByPlaceId(config.query);
+    } catch (e) {
+      console.error(`Failed to get place with error: ${e}`);
+    }
+
+    return { place };
+  }
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

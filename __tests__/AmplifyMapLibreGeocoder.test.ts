@@ -7,6 +7,7 @@ describe("AmplifyGeocoderAPI", () => {
   beforeEach(() => {
     (Geo.searchByText as jest.Mock).mockClear();
     (Geo.searchByCoordinates as jest.Mock).mockClear();
+    (Geo.searchForSuggestions as jest.Mock).mockClear();
   });
 
   test("forwardGeocode returns some values in the expected format", async () => {
@@ -138,5 +139,52 @@ describe("AmplifyGeocoderAPI", () => {
       ],
       promixity: [-122.431297, 37.773972],
     };
+  });
+
+  test("getSuggestions returns some values in the expected format", async () => {
+    const config = {
+      query: "a map query",
+    };
+    (Geo.searchForSuggestions as jest.Mock).mockReturnValueOnce([
+      {
+        text: "a suggestion result",
+        placeId: "a1b2c3d4",
+      }
+    ]);
+    const response = await AmplifyGeocoderAPI.getSuggestions(config);
+    expect(Geo.searchForSuggestions).toHaveBeenCalledTimes(1);
+    expect(response.suggestions).toHaveLength(1);
+    expect(response.suggestions[0].text).toBe("a suggestion result");
+    expect(response.suggestions[0].placeId).toBe("a1b2c3d4");
+  });
+
+  test("getSuggestions returns empty array on empty response", async () => {
+    const config = {
+      query: "a map query",
+    };
+    (Geo.searchForSuggestions as jest.Mock).mockReturnValueOnce([]);
+    const response = await AmplifyGeocoderAPI.getSuggestions(config);
+    expect(Geo.searchForSuggestions).toHaveBeenCalledTimes(1);
+    expect(response.suggestions).toHaveLength(0);
+  });
+
+  test("getSuggestions returns empty feature array on undefined response", async () => {
+    const config = {
+      query: "a map query",
+    };
+    (Geo.searchForSuggestions as jest.Mock).mockReturnValueOnce(undefined);
+    const response = await AmplifyGeocoderAPI.getSuggestions(config);
+    expect(Geo.searchForSuggestions).toHaveBeenCalledTimes(1);
+    expect(response.suggestions).toHaveLength(0);
+  });
+
+  test("getSuggestions returns empty feature array on error", async () => {
+    const config = {
+      query: "a map query",
+    };
+    (Geo.searchForSuggestions as jest.Mock).mockRejectedValueOnce("an error");
+    const response = await AmplifyGeocoderAPI.getSuggestions(config);
+    expect(Geo.searchForSuggestions).toHaveBeenCalledTimes(1);
+    expect(response.suggestions).toHaveLength(0);
   });
 });
