@@ -78,14 +78,16 @@ export const AmplifyGeocoderAPI = {
     let feature = undefined;
     try {
       const place = await Geo.searchByPlaceId(config.query);
-      const { geometry, ...otherResults } = place;
-      feature = {
-        type: "Feature",
-        geometry: { type: "Point", coordinates: geometry.point },
-        properties: { ...otherResults },
-        place_name: otherResults.label,
-        text: otherResults.label,
-        center: geometry.point,
+      if (place) {
+        const { geometry, ...otherResults } = place;
+        feature = {
+          type: "Feature",
+          geometry: { type: "Point", coordinates: geometry.point },
+          properties: { ...otherResults },
+          place_name: otherResults.label,
+          text: otherResults.label,
+          center: geometry.point,
+        }
       };
     } catch (e) {
       console.error(`Failed to get place with error: ${e}`);

@@ -10,10 +10,24 @@
     "@jridgewell/gen-mapping" "^0.1.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@aws-amplify/core@4.7.4", "@aws-amplify/core@^4.7.4":
+"@aws-amplify/core@4.7.4":
   version "4.7.4"
   resolved "https://registry.yarnpkg.com/@aws-amplify/core/-/core-4.7.4.tgz#84e081c8451d183bf6db8e4c1f1a7f7c2ad7f3e5"
   integrity sha512-vRlYBBkciRGOZWYXyDhF4rOUpP7MQsElxKzCyo83rVoW9TerIck1GmgRFOS1NSDTOTa91If7I9krx9er7W8B9w==
+  dependencies:
+    "@aws-crypto/sha256-js" "1.0.0-alpha.0"
+    "@aws-sdk/client-cloudwatch-logs" "3.6.1"
+    "@aws-sdk/client-cognito-identity" "3.6.1"
+    "@aws-sdk/credential-provider-cognito-identity" "3.6.1"
+    "@aws-sdk/types" "3.6.1"
+    "@aws-sdk/util-hex-encoding" "3.6.1"
+    universal-cookie "^4.0.4"
+    zen-observable-ts "0.8.19"
+
+"@aws-amplify/core@^4.7.5":
+  version "4.7.5"
+  resolved "https://registry.yarnpkg.com/@aws-amplify/core/-/core-4.7.5.tgz#c48a8b8cd6964ff2d234e0161bcdfa46287ca624"
+  integrity sha512-G1GFkbcHYg95Zqvitp/sRyty2gvNv34mqNji2Fo/hk+LD14r8Ghttzo/xdBYSFjlQU9xnrnT+LiKlPv2KdHAbA==
   dependencies:
     "@aws-crypto/sha256-js" "1.0.0-alpha.0"
     "@aws-sdk/client-cloudwatch-logs" "3.6.1"

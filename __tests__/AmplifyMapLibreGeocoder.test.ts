@@ -193,21 +193,19 @@ describe("AmplifyGeocoderAPI", () => {
     const config = {
       query: "a1b2c3d4",
     };
-    (Geo.searchByPlaceId as jest.Mock).mockReturnValueOnce([
-      {
-        addressNumber: "1401",
-        street: "Broadway",
-        country: "USA",
-        postalCode: "98122",
-        geometry: {
-          point: [
-            -122.32108099999999,
-            47.613897000000065
-          ]
-        },
-        label: "Starbucks"
-      }
-    ]);
+    (Geo.searchByPlaceId as jest.Mock).mockReturnValueOnce({
+      addressNumber: "1401",
+      street: "Broadway",
+      country: "USA",
+      postalCode: "98122",
+      geometry: {
+        point: [
+          -122.32108099999999,
+          47.613897000000065
+        ]
+      },
+      label: "Starbucks"
+    });
     const response = await AmplifyGeocoderAPI.searchByPlaceId(config);
     expect(Geo.searchByPlaceId).toHaveBeenCalledTimes(1);
     expect(response.place?.text).toBe("Starbucks");
