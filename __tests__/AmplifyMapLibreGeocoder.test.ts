@@ -8,6 +8,7 @@ describe("AmplifyGeocoderAPI", () => {
     (Geo.searchByText as jest.Mock).mockClear();
     (Geo.searchByCoordinates as jest.Mock).mockClear();
     (Geo.searchForSuggestions as jest.Mock).mockClear();
+    (Geo.searchByPlaceId as jest.Mock).mockClear();
   });
 
   test("forwardGeocode returns some values in the expected format", async () => {
@@ -186,5 +187,60 @@ describe("AmplifyGeocoderAPI", () => {
     const response = await AmplifyGeocoderAPI.getSuggestions(config);
     expect(Geo.searchForSuggestions).toHaveBeenCalledTimes(1);
     expect(response.suggestions).toHaveLength(0);
+  });
+
+  test("searchByPlaceId returns some values in the expected format", async () => {
+    const config = {
+      query: "a1b2c3d4",
+    };
+    (Geo.searchByPlaceId as jest.Mock).mockReturnValueOnce([
+      {
+        addressNumber: "1401",
+        street: "Broadway",
+        country: "USA",
+        postalCode: "98122",
+        geometry: {
+          point: [
+            -122.32108099999999,
+            47.613897000000065
+          ]
+        },
+        label: "Starbucks"
+      }
+    ]);
+    const response = await AmplifyGeocoderAPI.searchByPlaceId(config);
+    expect(Geo.searchByPlaceId).toHaveBeenCalledTimes(1);
+    expect(response.place?.text).toBe("Starbucks");
+    expect(response.place?.place_name).toBe("Starbucks");
+  });
+
+  test("searchByPlaceId returns place as undefined on empty request", async () => {
+    const config = {
+      query: "",
+    };
+    (Geo.searchByPlaceId as jest.Mock).mockReturnValueOnce(undefined);
+    const response = await AmplifyGeocoderAPI.searchByPlaceId(config);
+    expect(Geo.searchByPlaceId).toHaveBeenCalledTimes(1);
+    expect(response.place).toBe(undefined);
+  });
+
+  test("searchByPlaceId returns place as undefined on undefined request", async () => {
+    const config = {
+      query: undefined,
+    };
+    (Geo.searchByPlaceId as jest.Mock).mockReturnValueOnce(undefined);
+    const response = await AmplifyGeocoderAPI.searchByPlaceId(config);
+    expect(Geo.searchByPlaceId).toHaveBeenCalledTimes(1);
+    expect(response.place).toBe(undefined);
+  });
+
+  test("searchByPlaceId returns place as undefined on error", async () => {
+    const config = {
+      query: "something",
+    };
+    (Geo.searchByPlaceId as jest.Mock).mockRejectedValueOnce("an error");
+    const response = await AmplifyGeocoderAPI.searchByPlaceId(config);
+    expect(Geo.searchByPlaceId).toHaveBeenCalledTimes(1);
+    expect(response.place).toBe(undefined);
   });
 });
