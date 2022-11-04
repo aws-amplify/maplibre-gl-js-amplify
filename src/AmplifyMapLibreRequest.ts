@@ -1,10 +1,10 @@
 import {
-  Amplify,
   Hub,
   ICredentials,
   Signer,
   jitteredExponentialRetry,
   getAmplifyUserAgent,
+  Credentials,
 } from "@aws-amplify/core";
 import { Geo, AmazonLocationServiceMapStyle } from "@aws-amplify/geo";
 import {
@@ -60,7 +60,7 @@ export default class AmplifyMapLibreRequest {
     const defaultMap = Geo.getDefaultMap() as AmazonLocationServiceMapStyle;
 
     const amplifyRequest = new AmplifyMapLibreRequest(
-      await Amplify.Auth.currentCredentials(),
+      await Credentials.get(),
       region || defaultMap.region
     );
     const transformRequest = amplifyRequest.transformRequest;
@@ -75,7 +75,7 @@ export default class AmplifyMapLibreRequest {
 
   refreshCredentials = async (): Promise<void> => {
     try {
-      this.credentials = await Amplify.Auth.currentCredentials();
+      this.credentials = await Credentials.get();
     } catch (e) {
       console.error(`Failed to refresh credentials: ${e}`);
       throw e;
