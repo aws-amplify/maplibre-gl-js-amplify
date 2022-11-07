@@ -18,7 +18,7 @@ yarn add maplibre-gl-js-amplify
 
 ```js
 import { createMap } from "maplibre-gl-js-amplify";
-import Amplify from "aws-amplify";
+import { Amplify } from "aws-amplify";
 import awsconfig from './aws-exports';
 
 Amplify.configure(awsconfig);
@@ -34,7 +34,7 @@ Amplify.configure(awsconfig);
 #### Using AmplifyGeocoderAPI with [maplibre-gl-geocoder](https://github.com/maplibre/maplibre-gl-geocoder)
 
 ```js
-import Amplify from "aws-amplify";
+import { Amplify } from "aws-amplify";
 import { AmplifyGeocoderAPI } from "maplibre-gl-js-amplify";
 import awsconfig from './aws-exports';
 import maplibregl from "maplibre-gl";
