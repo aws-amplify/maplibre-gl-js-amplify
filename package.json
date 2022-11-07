@@ -91,6 +91,8 @@
     "typescript": "^4.3.2"
   },
   "peerDependencies": {
+    "@aws-amplify/core": "next",
+    "@aws-amplify/geo": "next",
     "maplibre-gl": "^2.1.9"
   },
   "dependencies": {
