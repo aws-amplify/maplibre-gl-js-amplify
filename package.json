@@ -91,9 +91,9 @@
     "typescript": "^4.3.2"
   },
   "peerDependencies": {
-    "@aws-amplify/core": "next",
-    "@aws-amplify/geo": "next",
-    "maplibre-gl": "^2.1.9"
+    "@aws-amplify/core": "^4.7.8",
+    "@aws-amplify/geo": "^1.3.20",
+    "maplibre-gl": "1.x.x || 2.x.x"
   },
   "dependencies": {
     "@mapbox/mapbox-gl-draw": "^1.3.0",
