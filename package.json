@@ -92,7 +92,7 @@
   },
   "peerDependencies": {
     "@aws-amplify/core": "4.x.x || 5.x.x",
-    "@aws-amplify/geo": "^1.3.20",
+    "@aws-amplify/geo": "^1.3.20 || 2.x.x",
     "maplibre-gl": "1.x.x || 2.x.x"
   },
   "dependencies": {
