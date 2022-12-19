@@ -43,6 +43,26 @@ describe("AmplifyMapLibreRequest", () => {
     );
   });
 
+  test("transformRequest returned undefined for non amazon and malicious urls", () => {
+    const mockCreds = {
+      accessKeyId: "accessKeyId",
+      sessionToken: "sessionTokenId",
+      secretAccessKey: "secretAccessKey",
+      identityId: "identityId",
+      authenticated: true,
+      expiration: new Date(),
+    };
+    const amplifyRequest = new AmplifyMapLibreRequest(mockCreds, "us-west-2");
+    expect(amplifyRequest.transformRequest("http://maps.geo.evil-amazonaws.com/?x=amazonaws.com", "any")).toBe(
+      undefined
+    );
+    expect(amplifyRequest.transformRequest("http://amazonaws.com.evil-amazonaws.com", "any")).toBe(
+      undefined
+    );
+    const request = amplifyRequest.transformRequest("http://maps.geo.us-east-1.amazonaws.com", "any");
+    expect(request.url).toContain("x-amz-user-agent");
+  });
+
   test("transformRequest queries Amazon Location Service for Style requests and adds sigv4 auth", () => {
     const mockCreds = {
       accessKeyId: "accessKeyId",
