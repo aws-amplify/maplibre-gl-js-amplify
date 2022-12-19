@@ -43,7 +43,7 @@ describe("AmplifyMapLibreRequest", () => {
     );
   });
 
-  test("transformRequest returned undefined for non amazon and malicious urls", () => {
+  test("transformRequest returns undefined for non amazon and malicious urls", () => {
     const mockCreds = {
       accessKeyId: "accessKeyId",
       sessionToken: "sessionTokenId",
