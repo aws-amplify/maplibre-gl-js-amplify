@@ -12,7 +12,6 @@ import {
   RequestParameters,
   MapOptions,
 } from "maplibre-gl";
-import extractDomain from "extract-domain";
 import { urlEncodePeriods } from "./utils";
 
 /**
