@@ -12,6 +12,7 @@ import {
   RequestParameters,
   MapOptions,
 } from "maplibre-gl";
+import extractDomain from "extract-domain";
 import { urlEncodePeriods } from "./utils";
 
 /**
@@ -116,7 +117,7 @@ export default class AmplifyMapLibreRequest {
       url = `https://maps.geo.${this.region}.amazonaws.com/maps/v0/maps/${url}/style-descriptor`;
     }
 
-    if (url.includes("amazonaws.com")) {
+    if (extractDomain(url) === "amazonaws.com") {
       // only sign AWS requests (with the signature as part of the query string)
       const urlWithUserAgent =
         url +
