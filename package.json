@@ -105,7 +105,6 @@
     "@turf/length": "^6.5.0",
     "@turf/line-slice": "^6.5.0",
     "debounce": "^1.2.1",
-    "extract-domain": "^2.4.8",
     "maplibre-gl-draw-circle": "^0.1.1"
   }
 }

@@ -4873,13 +4873,6 @@ expect@^27.5.1:
     jest-matcher-utils "^27.5.1"
     jest-message-util "^27.5.1"
 
-extract-domain@^2.4.8:
-  version "2.4.8"
-  resolved "https://registry.yarnpkg.com/extract-domain/-/extract-domain-2.4.8.tgz#7430cdc7a50d1630983f669c76bff530031e65b8"
-  integrity sha512-a8iBD5igEYApP22uMSkRy02s4IaUaJ54phxHWRxbQXgTkzXfhOMoXN0kWzo8hqfZRZRebuLyKecXZSlMvHOLNg==
-  optionalDependencies:
-    psl "^1.8.0"
-
 fast-base64-decode@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/fast-base64-decode/-/fast-base64-decode-1.0.0.tgz"
@@ -7591,7 +7584,7 @@ protocol-buffers-schema@^3.3.1:
   resolved "https://registry.npmjs.org/protocol-buffers-schema/-/protocol-buffers-schema-3.6.0.tgz"
   integrity sha512-TdDRD+/QNdrCGCE7v8340QyuXd4kIWIgapsE2+n/SaGiSSbomYl4TjHlvIoCWRpE7wFt02EpB35VVA2ImcBVqw==
 
-psl@^1.1.33, psl@^1.8.0:
+psl@^1.1.33:
   version "1.9.0"
   resolved "https://registry.npmjs.org/psl/-/psl-1.9.0.tgz"
   integrity sha512-E/ZsdU4HLs/68gYzgGTkMicWTLPdAftJLfJFlLUAAKZGkStNU72sZjT66SnMDVOfOWY/YAoiD7Jxa9iHvngcag==
