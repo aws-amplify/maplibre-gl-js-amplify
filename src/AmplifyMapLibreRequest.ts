@@ -116,7 +116,7 @@ export default class AmplifyMapLibreRequest {
       url = `https://maps.geo.${this.region}.amazonaws.com/maps/v0/maps/${url}/style-descriptor`;
     }
 
-    if (url.includes("amazonaws.com")) {
+    if (new URL(url).hostname.endsWith(".amazonaws.com")) {
       // only sign AWS requests (with the signature as part of the query string)
       const urlWithUserAgent =
         url +
