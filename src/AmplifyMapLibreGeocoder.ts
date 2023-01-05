@@ -58,6 +58,43 @@ export const AmplifyGeocoderAPI = {
 
     return { features };
   },
+  getSuggestions: async (config) => {
+    const suggestions = [];
+    try {
+      const response = await Geo.searchForSuggestions(config.query, {
+        biasPosition: config.proximity,
+        searchAreaConstraints: config.bbox,
+        countries: config.countries,
+        maxResults: config.limit,
+      });
+      suggestions.push(...response);
+    } catch (e) {
+      console.error(`Failed to get suggestions with error: ${e}`);
+    }
+
+    return { suggestions };
+  },
+  searchByPlaceId: async (config) => {
+    let feature = undefined;
+    try {
+      const place = await Geo.searchByPlaceId(config.query);
+      if (place) {
+        const { geometry, ...otherResults } = place;
+        feature = {
+          type: "Feature",
+          geometry: { type: "Point", coordinates: geometry.point },
+          properties: { ...otherResults },
+          place_name: otherResults.label,
+          text: otherResults.label,
+          center: geometry.point,
+        }
+      };
+    } catch (e) {
+      console.error(`Failed to get place with error: ${e}`);
+    }
+
+    return { place: feature };
+  }
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
