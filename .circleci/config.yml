@@ -99,7 +99,7 @@ jobs:
             echo $SSH_HOST_PUBLIC_KEY >> ~/.ssh/known_hosts
             git clone $AMPLIFY_JS_SAMPLES_STAGING_URL
             cd amplify-js-samples-staging
-            git checkout main
+            git checkout integ-test-fix
             yarn
       - save_cache:
           key: maplibre-gl-js-amplify-{{ .Branch }}-{{ checksum "amplify-js-samples-staging/yarn.lock" }}
