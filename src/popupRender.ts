@@ -36,8 +36,8 @@ export function getPopupRenderFunction(
 
     const titleHtml = `<div class="${unclusteredLayerId}-popup-title" style="font-weight: ${fontWeight};">${title}</div>`;
     const addressHtml = `<div class="${unclusteredLayerId}-popup-address">${address}</div>`;
-const popupHtmlStyle = `background: ${background}; border: ${borderWidth}px solid ${borderColor}; color: ${fontColor}; border-radius: ${radius}px; padding: ${padding}px; word-wrap: break-word; margin: -10px -10px -15px;`
-let popupHtml = `<div class="${unclusteredLayerId}-popup" style="${popupHtmlStyle}">`;
+    const popupHtmlStyle = `background: ${background}; border: ${borderWidth}px solid ${borderColor}; color: ${fontColor}; border-radius: ${radius}px; padding: ${padding}px; word-wrap: break-word; margin: -10px -10px -15px;`;
+    let popupHtml = `<div class="${unclusteredLayerId}-popup" style="${popupHtmlStyle}">`;
     if (title) popupHtml += titleHtml;
     if (address) popupHtml += addressHtml;
     popupHtml += "</div>";

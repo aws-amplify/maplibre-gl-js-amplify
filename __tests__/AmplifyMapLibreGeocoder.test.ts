@@ -140,6 +140,15 @@ describe("AmplifyGeocoderAPI", () => {
       ],
       promixity: [-122.431297, 37.773972],
     };
+    await AmplifyGeocoderAPI.forwardGeocode(config);
+    expect(Geo.searchByText).toHaveBeenCalledWith(config.query, {
+      biasPosition: undefined,
+      searchAreaConstraints: config.bbox,
+    });
+    expect(Geo.searchByText).not.toHaveBeenCalledWith(config.query, {
+      biasPosition: config.promixity,
+      searchAreaConstraints: config.bbox,
+    });
   });
 
   test("getSuggestions returns some values in the expected format", async () => {
