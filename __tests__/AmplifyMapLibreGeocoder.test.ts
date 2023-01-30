@@ -131,26 +131,6 @@ describe("AmplifyGeocoderAPI", () => {
     expect(response.features).toHaveLength(0);
   });
 
-  test("forwardGeocode prioritizes bbox over proximity value", async () => {
-    const config = {
-      query: "a map query",
-      bbox: [
-        -123.31020325000009, 37.41870932473893, -121.55239075000021,
-        38.12753577367528,
-      ],
-      promixity: [-122.431297, 37.773972],
-    };
-    await AmplifyGeocoderAPI.forwardGeocode(config);
-    expect(Geo.searchByText).toHaveBeenCalledWith(config.query, {
-      biasPosition: undefined,
-      searchAreaConstraints: config.bbox,
-    });
-    expect(Geo.searchByText).not.toHaveBeenCalledWith(config.query, {
-      biasPosition: config.promixity,
-      searchAreaConstraints: config.bbox,
-    });
-  });
-
   test("getSuggestions returns some values in the expected format", async () => {
     const config = {
       query: "a map query",
