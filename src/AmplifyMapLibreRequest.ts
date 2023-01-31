@@ -87,7 +87,8 @@ export default class AmplifyMapLibreRequest {
 
       // Refresh credentials on a timer because HubEvents do not trigger on credential refresh currently
       this.activeTimeout && clearTimeout(this.activeTimeout);
-      if (this.credentials.expiration) {
+      // Refresh credentials when expiration time is later than now
+      if (this.credentials.expiration.getTime() > (new Date()).getTime()) {
         const expiration = new Date(this.credentials.expiration);
         const timeout = expiration.getTime() - new Date().getTime() - 10000; // Adds a 10 second buffer time before the next refresh
         this.activeTimeout = window.setTimeout(
