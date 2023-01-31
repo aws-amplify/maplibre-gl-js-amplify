@@ -7,11 +7,7 @@ import {
   Credentials,
 } from "@aws-amplify/core";
 import { Geo, AmazonLocationServiceMapStyle } from "@aws-amplify/geo";
-import {
-  Map as MaplibreMap,
-  RequestParameters,
-  MapOptions,
-} from "maplibre-gl";
+import { Map as MaplibreMap, RequestParameters, MapOptions } from "maplibre-gl";
 import { urlEncodePeriods } from "./utils";
 
 /**
@@ -19,7 +15,9 @@ import { urlEncodePeriods } from "./utils";
  * We keep the property optional here since we default to the map name for the maplibre style field and
  * it maintains backwards compatibility with the upgrade to maplibre v2.
  */
-interface CreateMapOptions extends Omit<MapOptions, 'style'>, Partial<Pick<MapOptions, 'style'>> {
+interface CreateMapOptions
+  extends Omit<MapOptions, "style">,
+    Partial<Pick<MapOptions, "style">> {
   region?: string;
   mapConstructor?: typeof MaplibreMap;
 }
@@ -89,12 +87,14 @@ export default class AmplifyMapLibreRequest {
 
       // Refresh credentials on a timer because HubEvents do not trigger on credential refresh currently
       this.activeTimeout && clearTimeout(this.activeTimeout);
-      const expiration = new Date(this.credentials.expiration);
-      const timeout = expiration.getTime() - new Date().getTime() - 10000; // Adds a 10 second buffer time before the next refresh
-      this.activeTimeout = window.setTimeout(
-        this.refreshCredentialsWithRetry,
-        timeout
-      );
+      if (this.credentials.expiration) {
+        const expiration = new Date(this.credentials.expiration);
+        const timeout = expiration.getTime() - new Date().getTime() - 10000; // Adds a 10 second buffer time before the next refresh
+        this.activeTimeout = window.setTimeout(
+          this.refreshCredentialsWithRetry,
+          Math.min(timeout, 3600000) // Set timeout to an hour if we somehow don't have a value for timeout
+        );
+      }
     } catch (e) {
       console.error(`Failed to refresh credentials: ${e}`);
     }
