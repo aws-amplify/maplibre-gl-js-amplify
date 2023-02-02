@@ -162,18 +162,24 @@ jobs:
           category: geo
           sample_name: cra5-display-map
           spec: display-map
+          browser: chrome
+          build: prod
       - integ_test_js:
           test_name: "CRA5 TS React Geo Display Map"
           framework: react
           category: geo
           sample_name: cra5-ts-display-map
           spec: display-map
+          browser: chrome
+          build: prod
       - integ_test_js:
           test_name: "CRA5 React Geo Geofence Control Map"
           framework: react
           category: geo
           sample_name: cra5-geofence-control-map
           spec: geofence-control-map
+          browser: chrome
+          build: prod
 
   integ_test_vite:
     executor: integ-test-executor
