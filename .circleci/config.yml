@@ -53,12 +53,15 @@ commands:
       browser:
         type: string
         default: ""
+      build:
+        type: string
+        default: ""
     steps:
       - run:
           name: "Run cypress test << parameters.test_name >>"
           command: |
             cd ~/amplify-js-samples-staging
-            yarn ci:test << parameters.framework >> << parameters.category >> << parameters.sample_name >> << parameters.spec >> << parameters.browser >>
+            yarn ci:test << parameters.framework >> << parameters.category >> << parameters.sample_name >> << parameters.spec >> << parameters.browser >> << parameters.build >>
       - store_artifacts:
           path: ~/amplify-js-samples-staging/cypress/videos
       - store_artifacts:
@@ -121,24 +124,32 @@ jobs:
           category: geo
           sample_name: cra4-display-map
           spec: display-map
+          browser: chrome
+          build: prod
       - integ_test_js:
           test_name: "CRA4 React Geo Search Outside Map"
           framework: react
           category: geo
           sample_name: cra4-search-outside-map
           spec: search-outside-map
+          browser: chrome
+          build: prod
       - integ_test_js:
           test_name: "CRA4 React Geo Geofence Control Map"
           framework: react
           category: geo
           sample_name: cra4-geofence-control-map
           spec: geofence-control-map
+          browser: chrome
+          build: prod
       - integ_test_js:
           test_name: "CRA4 TS React Geo Geofence Control Map"
           framework: react
           category: geo
           sample_name: cra4-ts-geofence-control-map
           spec: geofence-control-map
+          browser: chrome
+          build: prod
 
   integ_test_cra5:
     executor: integ-test-executor
@@ -151,18 +162,24 @@ jobs:
           category: geo
           sample_name: cra5-display-map
           spec: display-map
+          browser: chrome
+          build: prod
       - integ_test_js:
           test_name: "CRA5 TS React Geo Display Map"
           framework: react
           category: geo
           sample_name: cra5-ts-display-map
           spec: display-map
+          browser: chrome
+          build: prod
       - integ_test_js:
           test_name: "CRA5 React Geo Geofence Control Map"
           framework: react
           category: geo
           sample_name: cra5-geofence-control-map
           spec: geofence-control-map
+          browser: chrome
+          build: prod
 
   integ_test_vite:
     executor: integ-test-executor
