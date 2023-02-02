@@ -53,6 +53,9 @@ commands:
       browser:
         type: string
         default: ""
+      build:
+        type: string
+        default: ""
     steps:
       - run:
           name: "Run cypress test << parameters.test_name >>"
