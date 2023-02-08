@@ -1,5 +1,5 @@
 import AmplifyMapLibreRequest from "../src/AmplifyMapLibreRequest";
-import { Credentials } from "@aws-amplify/core";
+import { Credentials, Hub } from "@aws-amplify/core";
 
 Credentials.get = jest.fn().mockImplementation(() => {
   return {
@@ -43,6 +43,26 @@ describe("AmplifyMapLibreRequest", () => {
     );
   });
 
+  test("transformRequest returns undefined for non amazon and malicious urls", () => {
+    const mockCreds = {
+      accessKeyId: "accessKeyId",
+      sessionToken: "sessionTokenId",
+      secretAccessKey: "secretAccessKey",
+      identityId: "identityId",
+      authenticated: true,
+      expiration: new Date(),
+    };
+    const amplifyRequest = new AmplifyMapLibreRequest(mockCreds, "us-west-2");
+    expect(amplifyRequest.transformRequest("http://maps.geo.evil-amazonaws.com/?x=amazonaws.com", "any")).toBe(
+      undefined
+    );
+    expect(amplifyRequest.transformRequest("http://amazonaws.com.evil-amazonaws.com", "any")).toBe(
+      undefined
+    );
+    const request = amplifyRequest.transformRequest("http://maps.geo.us-east-1.amazonaws.com", "any");
+    expect(request.url).toContain("x-amz-user-agent");
+  });
+
   test("transformRequest queries Amazon Location Service for Style requests and adds sigv4 auth", () => {
     const mockCreds = {
       accessKeyId: "accessKeyId",
@@ -72,5 +92,37 @@ describe("AmplifyMapLibreRequest", () => {
     expect(() =>
       amplifyRequest.transformRequest("amazon.com", "Style")
     ).toThrow();
+  });
+
+  test("refreshCredentialsWithRetry is called until credentials are not expired", () => {
+    const mockCreds = {
+      accessKeyId: "accessKeyId",
+      sessionToken: "sessionTokenId",
+      secretAccessKey: "secretAccessKey",
+      identityId: "identityId",
+      authenticated: true,
+      expiration: new Date(2030, 2, 2),
+    };
+    const amplifyRequest = new AmplifyMapLibreRequest(mockCreds, "us-east-1");
+    const spy = jest.spyOn(amplifyRequest, 'refreshCredentialsWithRetry');
+    amplifyRequest.refreshCredentialsWithRetry();
+    // should only be called once as the timeout is set to 10 seconds before credentials expire
+    expect(spy).toBeCalledTimes(1);
+  });
+
+  test("refreshCredentialsWithRetry is called once after sign out", () => {
+    const mockCreds = {
+      accessKeyId: "accessKeyId",
+      sessionToken: "sessionTokenId",
+      secretAccessKey: "secretAccessKey",
+      identityId: "identityId",
+      authenticated: true,
+      expiration: new Date(),
+    };
+    const amplifyRequest = new AmplifyMapLibreRequest(mockCreds, "us-east-1");
+    const spy = jest.spyOn(amplifyRequest, 'refreshCredentialsWithRetry');
+    Hub.dispatch('auth', { event: 'signOut' });
+    // should only be called once as the credentials expire soon after
+    expect(spy).toBeCalledTimes(1);
   });
 });
