@@ -73,6 +73,7 @@ describe("AmplifyMapLibreRequest", () => {
       expiration: new Date(),
     };
     const amplifyRequest = new AmplifyMapLibreRequest(mockCreds, "us-west-2");
+
     let request = amplifyRequest.transformRequest("http://maps.geo.us-east-1.amazonaws.com?tsi=0", "any");
     let searchParams = new URL(request.url).searchParams;
     expect(searchParams.has('tsi')).toBe(true);
@@ -80,6 +81,17 @@ describe("AmplifyMapLibreRequest", () => {
 
     request = amplifyRequest.transformRequest("http://maps.geo.us-east-1.amazonaws.com?", "any");
     searchParams = new URL(request.url).searchParams;
+    expect(searchParams.has('x-amz-user-agent')).toBe(true);
+
+    request = amplifyRequest.transformRequest("http://maps.geo.us-east-1.amazonaws.com?param1=1&", "any");
+    searchParams = new URL(request.url).searchParams;
+    expect(searchParams.has('param1')).toBe(true);
+    expect(searchParams.has('x-amz-user-agent')).toBe(true);
+
+    request = amplifyRequest.transformRequest("http://maps.geo.us-east-1.amazonaws.com?param1=1&param2=2", "any");
+    searchParams = new URL(request.url).searchParams;
+    expect(searchParams.has('param1')).toBe(true);
+    expect(searchParams.has('param2')).toBe(true);
     expect(searchParams.has('x-amz-user-agent')).toBe(true);
   });
 
