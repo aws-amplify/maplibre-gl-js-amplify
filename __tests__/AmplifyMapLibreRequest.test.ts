@@ -75,6 +75,10 @@ describe("AmplifyMapLibreRequest", () => {
     const amplifyRequest = new AmplifyMapLibreRequest(mockCreds, "us-west-2");
 
     let request = amplifyRequest.transformRequest("http://maps.geo.us-east-1.amazonaws.com?tsi=0", "any");
+    const queryStringStartIndex = request.url.indexOf('?');
+    const anotherQueryStringStartIndexExists = request.url.indexOf('?', queryStringStartIndex + 1) !== -1;
+    expect(anotherQueryStringStartIndexExists).toEqual(false);
+
     let searchParams = new URL(request.url).searchParams;
     expect(searchParams.has('tsi')).toBe(true);
     expect(searchParams.has('x-amz-user-agent')).toBe(true);
