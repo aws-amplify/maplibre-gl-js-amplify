@@ -63,6 +63,42 @@ describe("AmplifyMapLibreRequest", () => {
     expect(request.url).toContain("x-amz-user-agent");
   });
 
+  test("transformRequest appends query params to existing query params if any", () => {
+    const mockCreds = {
+      accessKeyId: "accessKeyId",
+      sessionToken: "sessionTokenId",
+      secretAccessKey: "secretAccessKey",
+      identityId: "identityId",
+      authenticated: true,
+      expiration: new Date(),
+    };
+    const amplifyRequest = new AmplifyMapLibreRequest(mockCreds, "us-west-2");
+
+    let request = amplifyRequest.transformRequest("http://maps.geo.us-east-1.amazonaws.com?tsi=0", "any");
+    const queryStringStartIndex = request.url.indexOf('?');
+    const anotherQueryStringStartIndexExists = request.url.indexOf('?', queryStringStartIndex + 1) !== -1;
+    expect(anotherQueryStringStartIndexExists).toEqual(false);
+
+    let searchParams = new URL(request.url).searchParams;
+    expect(searchParams.has('tsi')).toBe(true);
+    expect(searchParams.has('x-amz-user-agent')).toBe(true);
+
+    request = amplifyRequest.transformRequest("http://maps.geo.us-east-1.amazonaws.com?", "any");
+    searchParams = new URL(request.url).searchParams;
+    expect(searchParams.has('x-amz-user-agent')).toBe(true);
+
+    request = amplifyRequest.transformRequest("http://maps.geo.us-east-1.amazonaws.com?param1=1&", "any");
+    searchParams = new URL(request.url).searchParams;
+    expect(searchParams.has('param1')).toBe(true);
+    expect(searchParams.has('x-amz-user-agent')).toBe(true);
+
+    request = amplifyRequest.transformRequest("http://maps.geo.us-east-1.amazonaws.com?param1=1&param2=2", "any");
+    searchParams = new URL(request.url).searchParams;
+    expect(searchParams.has('param1')).toBe(true);
+    expect(searchParams.has('param2')).toBe(true);
+    expect(searchParams.has('x-amz-user-agent')).toBe(true);
+  });
+
   test("transformRequest queries Amazon Location Service for Style requests and adds sigv4 auth", () => {
     const mockCreds = {
       accessKeyId: "accessKeyId",
