@@ -121,7 +121,8 @@ export default class AmplifyMapLibreRequest {
       // only sign AWS requests (with the signature as part of the query string)
       const urlWithUserAgent =
         url +
-        `?x-amz-user-agent=${encodeURIComponent(
+        (url.search.length === 0 ? '?' : '&') +
+        `x-amz-user-agent=${encodeURIComponent(
           urlEncodePeriods(getAmplifyUserAgent())
         )}`;
       return {
