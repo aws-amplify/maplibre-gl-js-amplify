@@ -117,13 +117,13 @@ export default class AmplifyMapLibreRequest {
       url = `https://maps.geo.${this.region}.amazonaws.com/maps/v0/maps/${url}/style-descriptor`;
     }
 
-    if (new URL(url).hostname.endsWith(".amazonaws.com")) {
+    const urlObject = new URL(url);
+    if (urlObject.hostname.endsWith(".amazonaws.com")) {
       // only sign AWS requests (with the signature as part of the query string)
-      const urlWithUserAgent =
-        url +
-        `?x-amz-user-agent=${encodeURIComponent(
-          urlEncodePeriods(getAmplifyUserAgent())
-        )}`;
+      urlObject.searchParams.append('x-amz-user-agent', encodeURIComponent(
+        urlEncodePeriods(getAmplifyUserAgent())
+      ));
+      const urlWithUserAgent = urlObject.href;
       return {
         url: Signer.signUrl(urlWithUserAgent, {
           access_key: this.credentials.accessKeyId,
