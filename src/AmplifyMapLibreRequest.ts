@@ -103,8 +103,8 @@ export default class AmplifyMapLibreRequest {
 
   /**
    * A callback function that can be passed to a maplibre map object that is run before the map makes a request for an external URL. This transform request is used to sign the request with AWS Sigv4 Auth. [https://maplibre.org/maplibre-gl-js-docs/api/map/](https://maplibre.org/maplibre-gl-js-docs/api/map/)
-   * @param {string} url The function to use as a render function. This function accepts a single [Carmen GeoJSON](https://github.com/mapbox/carmen/blob/master/carmen-geojson.md) object as input and returns a string.
-   * @param {string} resourceType The function to use as a render function. This function accepts a single [Carmen GeoJSON](https://github.com/mapbox/carmen/blob/master/carmen-geojson.md) object as input and returns a string.
+   * @param {string} url
+   * @param {string} resourceType
    * @returns {RequestParameters} [https://maplibre.org/maplibre-gl-js-docs/api/properties/#requestparameters](https://maplibre.org/maplibre-gl-js-docs/api/properties/#requestparameters)
    */
   transformRequest = (url: string, resourceType: string): RequestParameters => {
@@ -123,9 +123,8 @@ export default class AmplifyMapLibreRequest {
       urlObject.searchParams.append('x-amz-user-agent', encodeURIComponent(
         urlEncodePeriods(getAmplifyUserAgent())
       ));
-      const urlWithUserAgent = urlObject.href;
       return {
-        url: Signer.signUrl(urlWithUserAgent, {
+        url: Signer.signUrl(urlObject.href, {
           access_key: this.credentials.accessKeyId,
           secret_key: this.credentials.secretAccessKey,
           session_token: this.credentials.sessionToken,

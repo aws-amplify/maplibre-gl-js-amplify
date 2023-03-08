@@ -43,6 +43,19 @@ describe("AmplifyMapLibreRequest", () => {
     );
   });
 
+  test("transformRequest throws an error when url is invalid", () => {
+    const mockCreds = {
+      accessKeyId: "accessKeyId",
+      sessionToken: "sessionTokenId",
+      secretAccessKey: "secretAccessKey",
+      identityId: "identityId",
+      authenticated: true,
+      expiration: new Date(),
+    };
+    const amplifyRequest = new AmplifyMapLibreRequest(mockCreds, "us-west-2");
+    expect(() => amplifyRequest.transformRequest("example", "any")).toThrow();
+  });
+
   test("transformRequest returns undefined for non amazon and malicious urls", () => {
     const mockCreds = {
       accessKeyId: "accessKeyId",
