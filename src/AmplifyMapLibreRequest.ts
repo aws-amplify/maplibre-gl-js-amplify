@@ -108,16 +108,17 @@ export default class AmplifyMapLibreRequest {
    * @returns {RequestParameters} [https://maplibre.org/maplibre-gl-js-docs/api/properties/#requestparameters](https://maplibre.org/maplibre-gl-js-docs/api/properties/#requestparameters)
    */
   transformRequest = (url: string, resourceType: string): RequestParameters => {
+    let styleUrl = url;
     if (resourceType === "Style" && !url.includes("://")) {
       if (this.region == undefined) {
         throw new Error(
           "AWS region for map is undefined. Please verify that the region is set in aws-exports.js or that you are providing an AWS region parameter to createMap"
         );
       }
-      url = `https://maps.geo.${this.region}.amazonaws.com/maps/v0/maps/${url}/style-descriptor`;
+      styleUrl = `https://maps.geo.${this.region}.amazonaws.com/maps/v0/maps/${url}/style-descriptor`;
     }
 
-    const urlObject = new URL(url);
+    const urlObject = new URL(styleUrl);
     if (urlObject.hostname.endsWith(".amazonaws.com")) {
       // only sign AWS requests (with the signature as part of the query string)
       urlObject.searchParams.append('x-amz-user-agent', encodeURIComponent(
