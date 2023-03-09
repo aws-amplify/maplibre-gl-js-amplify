@@ -103,29 +103,29 @@ export default class AmplifyMapLibreRequest {
 
   /**
    * A callback function that can be passed to a maplibre map object that is run before the map makes a request for an external URL. This transform request is used to sign the request with AWS Sigv4 Auth. [https://maplibre.org/maplibre-gl-js-docs/api/map/](https://maplibre.org/maplibre-gl-js-docs/api/map/)
-   * @param {string} url The function to use as a render function. This function accepts a single [Carmen GeoJSON](https://github.com/mapbox/carmen/blob/master/carmen-geojson.md) object as input and returns a string.
-   * @param {string} resourceType The function to use as a render function. This function accepts a single [Carmen GeoJSON](https://github.com/mapbox/carmen/blob/master/carmen-geojson.md) object as input and returns a string.
+   * @param {string} url
+   * @param {string} resourceType
    * @returns {RequestParameters} [https://maplibre.org/maplibre-gl-js-docs/api/properties/#requestparameters](https://maplibre.org/maplibre-gl-js-docs/api/properties/#requestparameters)
    */
   transformRequest = (url: string, resourceType: string): RequestParameters => {
+    let styleUrl = url;
     if (resourceType === "Style" && !url.includes("://")) {
       if (this.region == undefined) {
         throw new Error(
           "AWS region for map is undefined. Please verify that the region is set in aws-exports.js or that you are providing an AWS region parameter to createMap"
         );
       }
-      url = `https://maps.geo.${this.region}.amazonaws.com/maps/v0/maps/${url}/style-descriptor`;
+      styleUrl = `https://maps.geo.${this.region}.amazonaws.com/maps/v0/maps/${url}/style-descriptor`;
     }
 
-    if (new URL(url).hostname.endsWith(".amazonaws.com")) {
+    const urlObject = new URL(styleUrl);
+    if (urlObject.hostname.endsWith(".amazonaws.com")) {
       // only sign AWS requests (with the signature as part of the query string)
-      const urlWithUserAgent =
-        url +
-        `?x-amz-user-agent=${encodeURIComponent(
-          urlEncodePeriods(getAmplifyUserAgent())
-        )}`;
+      urlObject.searchParams.append('x-amz-user-agent', encodeURIComponent(
+        urlEncodePeriods(getAmplifyUserAgent())
+      ));
       return {
-        url: Signer.signUrl(urlWithUserAgent, {
+        url: Signer.signUrl(urlObject.href, {
           access_key: this.credentials.accessKeyId,
           secret_key: this.credentials.secretAccessKey,
           session_token: this.credentials.sessionToken,
