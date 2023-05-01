@@ -28,7 +28,7 @@ describe("AmplifyMapLibreRequest", () => {
     expect(typeof amplifyRequest.transformRequest).toBe("function");
   });
 
-  test("transformRequest returned undefined for non amazon related urls", () => {
+  test("transformRequest returned undefined for non-amazon related urls", () => {
     const mockCreds = {
       accessKeyId: "accessKeyId",
       sessionToken: "sessionTokenId",
