@@ -9,6 +9,7 @@ import {
 import { Geo, AmazonLocationServiceMapStyle } from "@aws-amplify/geo";
 import { Map as MaplibreMap, RequestParameters, MapOptions } from "maplibre-gl";
 import { urlEncodePeriods } from "./utils";
+import { UserAgent as AWSUserAgent } from "@aws-sdk/types";
 
 /**
  * The upgrade from maplibre v1 to maplibre v2 changed the `style` property from optional to required.
@@ -88,7 +89,7 @@ export default class AmplifyMapLibreRequest {
       // Refresh credentials on a timer because HubEvents do not trigger on credential refresh currently
       this.activeTimeout && clearTimeout(this.activeTimeout);
       // Refresh credentials when expiration time is later than now
-      if (this.credentials.expiration.getTime() > (new Date()).getTime()) {
+      if (this.credentials.expiration.getTime() > new Date().getTime()) {
         const expiration = new Date(this.credentials.expiration);
         const timeout = expiration.getTime() - new Date().getTime() - 10000; // Adds a 10 second buffer time before the next refresh
         this.activeTimeout = window.setTimeout(
@@ -121,9 +122,10 @@ export default class AmplifyMapLibreRequest {
     const urlObject = new URL(styleUrl);
     if (urlObject.hostname.endsWith(".amazonaws.com")) {
       // only sign AWS requests (with the signature as part of the query string)
-      urlObject.searchParams.append('x-amz-user-agent', encodeURIComponent(
-        urlEncodePeriods(getAmplifyUserAgent())
-      ));
+      urlObject.searchParams.append(
+        "x-amz-user-agent",
+        encodeURIComponent(urlEncodePeriods(getAmplifyUserAgentString()))
+      );
       return {
         url: Signer.signUrl(urlObject.href, {
           access_key: this.credentials.accessKeyId,
@@ -140,3 +142,14 @@ export const createMap = async (
 ): Promise<MaplibreMap> => {
   return AmplifyMapLibreRequest.createMapLibreMap(options);
 };
+
+// TODO - Delete this and import from @aws-amplify/core when it is released
+function getAmplifyUserAgentString() {
+  const userAgent = getAmplifyUserAgent();
+  if (userAgent && typeof userAgent === "object") {
+    return (userAgent as AWSUserAgent[])
+      .map(([agentKey, agentValue]) => `${agentKey}/${agentValue}`)
+      .join(" ");
+  }
+  return userAgent;
+}
