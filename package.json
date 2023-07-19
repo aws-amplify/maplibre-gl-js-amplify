@@ -58,7 +58,7 @@
   "devDependencies": {
     "@aws-amplify/core": "latest",
     "@aws-amplify/geo": "latest",
-    "@babel/preset-env": "^7.16.4",
+    "@babel/preset-env": "^7.22.9",
     "@commitlint/cli": "^17.6.6",
     "@commitlint/config-conventional": "^17.6.6",
     "@types/debounce": "^1.2.1",
@@ -99,6 +99,7 @@
     "maplibre-gl-draw-circle": "^0.1.1"
   },
   "resolutions": {
-    "json5": "^2.2.2"
+    "json5": "^2.2.2",
+    "optionator": "^0.9.3"
   }
 }
