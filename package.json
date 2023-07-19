@@ -59,22 +59,14 @@
     "@aws-amplify/core": "latest",
     "@aws-amplify/geo": "latest",
     "@babel/preset-env": "^7.16.4",
-    "@commitlint/cli": "^16.2.1",
-    "@commitlint/config-conventional": "^16.2.1",
+    "@commitlint/cli": "^17.6.6",
+    "@commitlint/config-conventional": "^17.6.6",
     "@types/debounce": "^1.2.1",
     "@types/geojson": "^7946.0.7",
     "@types/jest": "^27.0.2",
     "@types/mapbox__mapbox-gl-draw": "^1.2.3",
     "@types/node": "^15.6.1",
-    "@typescript-eslint/eslint-plugin": "^4.25.0",
-    "@typescript-eslint/parser": "^4.25.0",
     "babel-jest": "^27.3.1",
-    "eslint": "^7.16.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-config-standard": "^16.0.3",
-    "eslint-plugin-import": "^2.23.3",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^5.1.0",
     "husky": "^7.0.4",
     "jest": "^27.0.3",
     "jest-fetch-mock": "^3.0.3",
@@ -107,7 +99,6 @@
     "maplibre-gl-draw-circle": "^0.1.1"
   },
   "resolutions": {
-    "json5": "^2.2.2",
-    "yaml": "2.2.2"
+    "json5": "^2.2.2"
   }
 }
