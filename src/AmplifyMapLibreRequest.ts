@@ -95,7 +95,6 @@ export default class AmplifyMapLibreRequest {
         this.activeTimeout = window.setTimeout(
           this.refreshCredentialsWithRetry,
           Math.min(timeout, 3600000) // Set timeout to an hour if we somehow don't have a value for timeout
-      
         );
       }
     } catch (e) {
