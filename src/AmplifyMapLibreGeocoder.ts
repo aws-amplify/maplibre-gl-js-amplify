@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Geo } from "@aws-amplify/geo";
 import MaplibreGeocoder from "@maplibre/maplibre-gl-geocoder";
 import maplibregl, { IControl } from "maplibre-gl";
@@ -87,17 +86,16 @@ export const AmplifyGeocoderAPI = {
           place_name: otherResults.label,
           text: otherResults.label,
           center: geometry.point,
-        }
-      };
+        };
+      }
     } catch (e) {
       console.error(`Failed to get place with error: ${e}`);
     }
 
     return { place: feature };
-  }
+  },
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function createAmplifyGeocoder(options?: any): IControl {
   return new MaplibreGeocoder(AmplifyGeocoderAPI, {
     maplibregl: maplibregl,
