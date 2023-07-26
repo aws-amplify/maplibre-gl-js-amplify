@@ -24,7 +24,8 @@
     "test": "jest",
     "test:coverage": "jest --coverage",
     "tsc": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "ssh",
@@ -80,8 +81,9 @@
     "jest-fetch-mock": "^3.0.3",
     "jest-transform-stub": "^2.0.0",
     "jest-webgl-canvas-mock": "^0.2.3",
+    "lint-staged": ">=10",
     "maplibre-gl": "^2.1.9",
-    "prettier": "^2.3.0",
+    "prettier": "^3.0.0",
     "rollup": "^2.55.1",
     "rollup-plugin-import-css": "^3.0.2",
     "rollup-plugin-svg": "^2.0.0",
@@ -109,5 +111,9 @@
   "resolutions": {
     "json5": "^2.2.2",
     "optionator": "^0.9.3"
+  },
+  "lint-staged": {
+    "*.{js,ts}": "npm run lint",
+    "*.{ts,tsx,js,css,md}": "prettier --write"
   }
 }
