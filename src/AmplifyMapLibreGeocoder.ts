@@ -28,6 +28,7 @@ export const AmplifyGeocoderAPI = {
         });
       }
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.error(`Failed to forwardGeocode with error: ${e}`);
     }
 
@@ -52,6 +53,7 @@ export const AmplifyGeocoderAPI = {
         });
       }
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.error(`Failed to reverseGeocode with error: ${e}`);
     }
 
@@ -68,6 +70,7 @@ export const AmplifyGeocoderAPI = {
       });
       suggestions.push(...response);
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.error(`Failed to get suggestions with error: ${e}`);
     }
 
@@ -89,6 +92,7 @@ export const AmplifyGeocoderAPI = {
         };
       }
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.error(`Failed to get place with error: ${e}`);
     }
 

@@ -11,6 +11,8 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
+    'no-console': 'error',
+    'no-debugger': 'error',
     'no-undef': 'off',
     'no-unused-vars': 'off', // prefer @typescript-eslint version
   },
