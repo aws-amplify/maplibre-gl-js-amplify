@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { Geo } from "@aws-amplify/geo";
-import MaplibreGeocoder from "@maplibre/maplibre-gl-geocoder";
-import maplibregl, { IControl } from "maplibre-gl";
-import { createDefaultIcon } from "./createDefaultIcon";
+import { Geo } from '@aws-amplify/geo';
+import MaplibreGeocoder from '@maplibre/maplibre-gl-geocoder';
+import maplibregl, { IControl } from 'maplibre-gl';
+import { createDefaultIcon } from './createDefaultIcon';
 
 export const AmplifyGeocoderAPI = {
   forwardGeocode: async (config) => {
@@ -19,8 +18,8 @@ export const AmplifyGeocoderAPI = {
         data.forEach((result) => {
           const { geometry, ...otherResults } = result;
           features.push({
-            type: "Feature",
-            geometry: { type: "Point", coordinates: geometry.point },
+            type: 'Feature',
+            geometry: { type: 'Point', coordinates: geometry.point },
             properties: { ...otherResults },
             place_name: otherResults.label,
             text: otherResults.label,
@@ -29,6 +28,7 @@ export const AmplifyGeocoderAPI = {
         });
       }
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.error(`Failed to forwardGeocode with error: ${e}`);
     }
 
@@ -44,8 +44,8 @@ export const AmplifyGeocoderAPI = {
       if (data && data.geometry) {
         const { geometry, ...otherResults } = data;
         features.push({
-          type: "Feature",
-          geometry: { type: "Point", coordinates: geometry.point },
+          type: 'Feature',
+          geometry: { type: 'Point', coordinates: geometry.point },
           properties: { ...otherResults },
           place_name: otherResults.label,
           text: otherResults.label,
@@ -53,6 +53,7 @@ export const AmplifyGeocoderAPI = {
         });
       }
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.error(`Failed to reverseGeocode with error: ${e}`);
     }
 
@@ -69,6 +70,7 @@ export const AmplifyGeocoderAPI = {
       });
       suggestions.push(...response);
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.error(`Failed to get suggestions with error: ${e}`);
     }
 
@@ -81,23 +83,23 @@ export const AmplifyGeocoderAPI = {
       if (place) {
         const { geometry, ...otherResults } = place;
         feature = {
-          type: "Feature",
-          geometry: { type: "Point", coordinates: geometry.point },
+          type: 'Feature',
+          geometry: { type: 'Point', coordinates: geometry.point },
           properties: { ...otherResults },
           place_name: otherResults.label,
           text: otherResults.label,
           center: geometry.point,
-        }
-      };
+        };
+      }
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.error(`Failed to get place with error: ${e}`);
     }
 
     return { place: feature };
-  }
+  },
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function createAmplifyGeocoder(options?: any): IControl {
   return new MaplibreGeocoder(AmplifyGeocoderAPI, {
     maplibregl: maplibregl,

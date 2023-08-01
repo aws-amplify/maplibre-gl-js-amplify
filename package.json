@@ -17,13 +17,15 @@
     "clean": "rimraf dist && rimraf lib",
     "compile": "npm run tsc",
     "copy:files": "mkdir -p dist/public/ lib/cjs/public lib/esm/public && cp src/public/* dist/public/ && cp src/public/* lib/cjs/public/ && cp src/public/* lib/esm/public/",
+    "lint": "eslint src --ext .js,.ts",
     "prepublish": "npm run build",
     "publish:release": "yarn publish --access=public --non-interactive",
     "publish:geo": "yarn publish --access=public --non-interactive --tag geo",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "tsc": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "ssh",
@@ -66,14 +68,22 @@
     "@types/jest": "^27.0.2",
     "@types/mapbox__mapbox-gl-draw": "^1.2.3",
     "@types/node": "^15.6.1",
+    "@typescript-eslint/eslint-plugin": "^6.1.0",
+    "@typescript-eslint/parser": "^6.1.0",
     "babel-jest": "^27.3.1",
+    "eslint": "^8.45.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jest": "^27.2.3",
+    "eslint-plugin-prettier": "^5.0.0",
     "husky": "^7.0.4",
     "jest": "^27.0.3",
     "jest-fetch-mock": "^3.0.3",
     "jest-transform-stub": "^2.0.0",
-    "jest-webgl-canvas-mock": "^0.2.3",
+    "jest-webgl-canvas-mock": "^2.5.0",
+    "lint-staged": ">=10",
     "maplibre-gl": "^2.1.9",
-    "prettier": "^2.3.0",
+    "prettier": "^3.0.0",
     "rollup": "^2.55.1",
     "rollup-plugin-import-css": "^3.0.2",
     "rollup-plugin-svg": "^2.0.0",
@@ -101,5 +111,9 @@
   "resolutions": {
     "json5": "^2.2.2",
     "optionator": "^0.9.3"
+  },
+  "lint-staged": {
+    "*.{js,ts}": "npm run lint",
+    "*.{ts,tsx,js,css,md}": "prettier --write"
   }
 }
