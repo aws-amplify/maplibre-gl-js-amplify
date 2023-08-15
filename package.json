@@ -1,6 +1,6 @@
 {
   "name": "maplibre-gl-js-amplify",
-  "version": "2.0.1",
+  "version": "0.0.0-unstable-0e359a8",
   "description": "MapLibre Plugin to Support Amplify Geo Integration",
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.js",
@@ -21,6 +21,7 @@
     "prepublish": "npm run build",
     "publish:release": "yarn publish --access=public --non-interactive",
     "publish:geo": "yarn publish --access=public --non-interactive --tag geo",
+    "publish:unstable": "yarn publish --new-version 0.0.0-unstable-$(git rev-parse --short=7 HEAD) --access=public --non-interactive --tag unstable",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "tsc": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
