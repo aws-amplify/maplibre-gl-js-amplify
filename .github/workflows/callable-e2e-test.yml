@@ -68,7 +68,7 @@ jobs:
         uses: ./maplibre-gl-js-amplify/.github/actions/load-verdaccio-with-maplibre-gl-js-amplify
       - name: Run cypress tests for ${{ inputs.test_name }} dev
         shell: bash
-        working-directory: amplify-js-samples-staging
+        working-directory: ./amplify-js-samples-staging
         env:
           E2E_FRAMEWORK: ${{ inputs.framework }}
           E2E_CATEGORY: ${{ inputs.category }}
@@ -90,7 +90,7 @@ jobs:
 
       - name: Run cypress tests for ${{ inputs.test_name }} prod
         shell: bash
-        working-directory: amplify-js-samples-staging
+        working-directory: ./amplify-js-samples-staging
         env:
           E2E_FRAMEWORK: ${{ inputs.framework }}
           E2E_CATEGORY: ${{ inputs.category }}
