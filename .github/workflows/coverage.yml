@@ -12,12 +12,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@24cb9080177205b6e8c946b17badbe402adc938f
+        uses: actions/checkout@24cb9080177205b6e8c946b17badbe402adc938f # v3.4.0 https://github.com/actions/checkout/commit/24cb9080177205b6e8c946b17badbe402adc938f
         with:
           fetch-depth: 2
 
       - name: Set up Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
+        uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v3.6.0 https://github.com/actions/setup-node/commit/64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -28,4 +28,4 @@ jobs:
         run: yarn test:coverage
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@e1dd05cde2ed37d100f658b34ea423728ba1812e
+        uses: codecov/codecov-action@e1dd05cde2ed37d100f658b34ea423728ba1812e # v2.12.2 https://github.com/codecov/codecov-action/commit/e1dd05cde2ed37d100f658b34ea423728ba1812e
