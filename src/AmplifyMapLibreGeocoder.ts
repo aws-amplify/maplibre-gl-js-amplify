@@ -1,4 +1,4 @@
-import { Geo } from '@aws-amplify/geo';
+import { Geo } from 'aws-amplify/geo';
 import MaplibreGeocoder from '@maplibre/maplibre-gl-geocoder';
 import maplibregl, { IControl } from 'maplibre-gl';
 import { createDefaultIcon } from './createDefaultIcon';

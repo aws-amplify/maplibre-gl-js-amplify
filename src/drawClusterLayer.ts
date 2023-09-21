@@ -1,16 +1,16 @@
-import { Geo } from "@aws-amplify/geo";
-import { Point } from "geojson";
+import { Geo } from 'aws-amplify/geo';
+import { Point } from 'geojson';
 import type {
   CircleLayerSpecification,
   LngLatLike,
   Map as maplibreMap,
   SymbolLayerSpecification,
-} from "maplibre-gl";
+} from 'maplibre-gl';
 
-import { COLOR_WHITE, MARKER_COLOR } from "./constants";
-import { isGeoJsonSource } from "./utils";
-import { FONT_DEFAULT_BY_STYLE } from "./constants";
-import type { ClusterOptions } from "./types";
+import { COLOR_WHITE, MARKER_COLOR } from './constants';
+import { isGeoJsonSource } from './utils';
+import { FONT_DEFAULT_BY_STYLE } from './constants';
+import type { ClusterOptions } from './types';
 
 export function drawClusterLayer(
   sourceName: string,
@@ -38,10 +38,10 @@ export function drawClusterLayer(
   const clusterSymbolLayerId = `${sourceName}-layer-cluster-count`;
 
   // Use step expressions for clusters (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-step)
-  const paintOptions: CircleLayerSpecification["paint"] = {
-    "circle-color": [
-      "step",
-      ["get", "point_count"],
+  const paintOptions: CircleLayerSpecification['paint'] = {
+    'circle-color': [
+      'step',
+      ['get', 'point_count'],
       markerColor,
       smallThreshold,
       markerColor,
@@ -50,9 +50,9 @@ export function drawClusterLayer(
       largeThreshold,
       markerColor,
     ],
-    "circle-radius": [
-      "step",
-      ["get", "point_count"],
+    'circle-radius': [
+      'step',
+      ['get', 'point_count'],
       smallSize,
       smallThreshold,
       mediumSize,
@@ -61,15 +61,15 @@ export function drawClusterLayer(
       largeThreshold,
       extraLargeSize,
     ],
-    "circle-stroke-width": borderWidth,
-    "circle-stroke-color": borderColor,
+    'circle-stroke-width': borderWidth,
+    'circle-stroke-color': borderColor,
     ...clusterPaint,
   };
   const defaultClusterLayer: CircleLayerSpecification = {
     id: clusterLayerId,
-    type: "circle",
+    type: 'circle',
     source: sourceName,
-    filter: ["has", "point_count"],
+    filter: ['has', 'point_count'],
     paint: paintOptions,
   };
   map.addLayer({
@@ -79,8 +79,8 @@ export function drawClusterLayer(
   /*
    * Inspect cluster on click
    */
-  map.on("click", clusterLayerId, function (e) {
-    if (typeof onClick === "function") onClick(e);
+  map.on('click', clusterLayerId, function (e) {
+    if (typeof onClick === 'function') onClick(e);
 
     const features = map.queryRenderedFeatures(e.point, {
       layers: [clusterLayerId],
@@ -104,13 +104,13 @@ export function drawClusterLayer(
    */
   if (showCount) {
     const defaultLayoutOptions = {
-      "text-field": "{point_count_abbreviated}",
-      "text-size": 24,
+      'text-field': '{point_count_abbreviated}',
+      'text-size': 24,
     };
 
     const locationServiceStyle = mapStyle || Geo.getDefaultMap().style;
     if (locationServiceStyle) {
-      defaultLayoutOptions["text-font"] = [
+      defaultLayoutOptions['text-font'] = [
         FONT_DEFAULT_BY_STYLE[locationServiceStyle],
       ];
     }
@@ -118,13 +118,13 @@ export function drawClusterLayer(
     const layoutOptions = { ...defaultLayoutOptions, ...clusterCountLayout };
 
     const paintOptions = {
-      "text-color": fontColor,
+      'text-color': fontColor,
     };
     const defaultClusterCount: SymbolLayerSpecification = {
       id: clusterSymbolLayerId,
-      type: "symbol",
+      type: 'symbol',
       source: sourceName,
-      filter: ["has", "point_count"],
+      filter: ['has', 'point_count'],
       layout: layoutOptions,
       paint: paintOptions,
     };

@@ -1,15 +1,14 @@
+import { Hub, fetchAuthSession } from '@aws-amplify/core';
 import {
-  Hub,
-  ICredentials,
   Signer,
   jitteredExponentialRetry,
   getAmplifyUserAgent,
-  Credentials,
-} from '@aws-amplify/core';
-import { Geo, AmazonLocationServiceMapStyle } from '@aws-amplify/geo';
+} from '@aws-amplify/core/internals/utils';
+import { Geo, AmazonLocationServiceMapStyle } from 'aws-amplify/geo';
 import { Map as MaplibreMap, RequestParameters, MapOptions } from 'maplibre-gl';
 import { urlEncodePeriods } from './utils';
 import { UserAgent as AWSUserAgent } from '@aws-sdk/types';
+import { AuthSession } from '@aws-amplify/core/lib-esm/singleton/Auth/types';
 
 /**
  * The upgrade from maplibre v1 to maplibre v2 changed the `style` property from optional to required.
@@ -32,10 +31,10 @@ interface CreateMapOptions
  */
 
 export default class AmplifyMapLibreRequest {
-  credentials: ICredentials;
+  credentials: AuthSession['credentials'];
   region: string;
   activeTimeout: number;
-  constructor(currentCredentials: ICredentials, region: string) {
+  constructor(currentCredentials: AuthSession['credentials'], region: string) {
     this.credentials = currentCredentials;
     this.region = region;
     this.activeTimeout = null;
@@ -43,8 +42,9 @@ export default class AmplifyMapLibreRequest {
 
     Hub.listen('auth', (data) => {
       switch (data.payload.event) {
-        case 'signIn':
-        case 'signOut':
+        // This was removed from v6 but will be added back before GA
+        // case 'signIn':
+        // case 'signOut':
         case 'tokenRefresh':
           this.refreshCredentialsWithRetry();
           break;
@@ -59,7 +59,7 @@ export default class AmplifyMapLibreRequest {
     const defaultMap = Geo.getDefaultMap() as AmazonLocationServiceMapStyle;
 
     const amplifyRequest = new AmplifyMapLibreRequest(
-      await Credentials.get(),
+      (await fetchAuthSession()).credentials,
       region || defaultMap.region
     );
     const transformRequest = amplifyRequest.transformRequest;
@@ -74,7 +74,7 @@ export default class AmplifyMapLibreRequest {
 
   refreshCredentials = async (): Promise<void> => {
     try {
-      this.credentials = await Credentials.get();
+      this.credentials = (await fetchAuthSession()).credentials;
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(`Failed to refresh credentials: ${e}`);
