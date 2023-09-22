@@ -1,14 +1,14 @@
-import { Point } from "geojson";
+import { Point } from 'geojson';
 import { Popup } from 'maplibre-gl';
-import type { Map as maplibreMap, SymbolLayerSpecification } from "maplibre-gl";
+import type { Map as maplibreMap, SymbolLayerSpecification } from 'maplibre-gl';
 
-import { ACTIVE_MARKER_COLOR, COLOR_WHITE, MARKER_COLOR } from "./constants";
-import { createMarker } from "./createMarker";
-import { getPopupRenderFunction } from "./popupRender";
-import { isCoordinates } from "./utils";
-import type { Coordinates, UnclusteredOptions } from "./types";
+import { ACTIVE_MARKER_COLOR, COLOR_WHITE, MARKER_COLOR } from './constants';
+import { createMarker } from './createMarker';
+import { getPopupRenderFunction } from './popupRender';
+import { isCoordinates } from './utils';
+import type { Coordinates, UnclusteredOptions } from './types';
 
-const HIDE_TIP = "amplify-tip";
+const HIDE_TIP = 'amplify-tip';
 
 export function drawUnclusteredLayer(
   sourceName: string,
@@ -22,8 +22,8 @@ export function drawUnclusteredLayer(
     if (selectedId !== null) {
       map.setLayoutProperty(
         unclusteredLayerId,
-        "icon-image",
-        "inactive-marker"
+        'icon-image',
+        'inactive-marker'
       );
       selectedId = null;
     }
@@ -37,11 +37,11 @@ export function drawUnclusteredLayer(
 
   const defaultUnclusteredPoint: SymbolLayerSpecification = {
     id: unclusteredLayerId,
-    type: "symbol",
+    type: 'symbol',
     source: sourceName,
-    filter: ["!", ["has", "point_count"]],
+    filter: ['!', ['has', 'point_count']],
     layout: {
-      "icon-image": "inactive-marker",
+      'icon-image': 'inactive-marker',
     },
   };
   map.addLayer({ ...defaultUnclusteredPoint });
@@ -52,31 +52,31 @@ export function drawUnclusteredLayer(
   if (showMarkerPopup) {
     const element = document.getElementById(HIDE_TIP);
     if (!element) {
-      const style = document.createElement("style");
-      style.setAttribute("id", HIDE_TIP);
+      const style = document.createElement('style');
+      style.setAttribute('id', HIDE_TIP);
       document.head.append(style);
-      style.textContent = ".mapboxgl-popup-tip { display: none; }";
+      style.textContent = '.mapboxgl-popup-tip { display: none; }';
     }
   }
 
-  map.on("click", function () {
+  map.on('click', function () {
     deselectPoint();
   });
 
   /*
    * Set active state on markers when clicked
    */
-  map.on("click", unclusteredLayerId, function (e) {
-    if (typeof options.onClick === "function") options.onClick(e);
+  map.on('click', unclusteredLayerId, function (e) {
+    if (typeof options.onClick === 'function') options.onClick(e);
 
     selectedId = e.features[0].id;
 
-    map.setLayoutProperty(unclusteredLayerId, "icon-image", [
-      "match",
-      ["id"],
+    map.setLayoutProperty(unclusteredLayerId, 'icon-image', [
+      'match',
+      ['id'],
       selectedId, // check if the clicked id matches
-      "active-marker", //image when id is the clicked feature id
-      "inactive-marker", // default
+      'active-marker', //image when id is the clicked feature id
+      'inactive-marker', // default
     ]);
 
     // If popup option is set show a popup on click
@@ -91,7 +91,7 @@ export function drawUnclusteredLayer(
           .setOffset(15)
           .addTo(map);
 
-        popup.on("close", function () {
+        popup.on('close', function () {
           if (selectedId === selectedFeature.id) deselectPoint();
         });
       }
@@ -101,15 +101,15 @@ export function drawUnclusteredLayer(
   /*
    * Set cursor style to pointer when mousing over point layer
    */
-  map.on("mouseover", unclusteredLayerId, function () {
-    map.getCanvas().style.cursor = "pointer";
+  map.on('mouseover', unclusteredLayerId, function () {
+    map.getCanvas().style.cursor = 'pointer';
   });
 
   /*
    * Reset cursor style when the point layer
    */
-  map.on("mouseleave", unclusteredLayerId, () => {
-    map.getCanvas().style.cursor = "";
+  map.on('mouseleave', unclusteredLayerId, () => {
+    map.getCanvas().style.cursor = '';
   });
 
   return { unclusteredLayerId };
@@ -147,6 +147,6 @@ function addUnclusteredMarkerImages(
       lineWidth: selectedBorderWidth,
     });
 
-  map.addImage("inactive-marker", inactiveMarker, { pixelRatio: 2 });
-  map.addImage("active-marker", activeMarker, { pixelRatio: 2 });
+  map.addImage('inactive-marker', inactiveMarker, { pixelRatio: 2 });
+  map.addImage('active-marker', activeMarker, { pixelRatio: 2 });
 }

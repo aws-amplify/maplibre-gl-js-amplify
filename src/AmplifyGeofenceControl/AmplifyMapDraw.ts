@@ -1,28 +1,28 @@
-import MapboxDraw from "@mapbox/mapbox-gl-draw";
-import { IControl, Map } from "maplibre-gl";
+import MapboxDraw from '@mapbox/mapbox-gl-draw';
+import { IControl, Map } from 'maplibre-gl';
 import {
   CircleMode,
   SimpleSelectMode,
   DirectMode,
-} from "maplibre-gl-draw-circle";
-import { Coordinates } from "../types";
-import { Feature, Geometry } from "geojson";
+} from 'maplibre-gl-draw-circle';
+import { Coordinates } from '../types';
+import { Feature, Geometry } from 'geojson';
 import {
   getPolygonFeatureFromBounds,
   getCircleFeatureFromCoords,
-} from "../geofenceUtils";
+} from '../geofenceUtils';
 import {
   GEOFENCE_BORDER_COLOR,
   GEOFENCE_COLOR,
   GEOFENCE_VERTEX_COLOR,
-} from "../constants";
+} from '../constants';
 
 export class AmplifyMapDraw {
   _map: Map;
   _ui;
   _mapBoxDraw: MapboxDraw = new MapboxDraw({
     displayControlsDefault: false,
-    defaultMode: "simple_select",
+    defaultMode: 'simple_select',
     userProperties: true,
     controls: {
       trash: true,
@@ -37,54 +37,54 @@ export class AmplifyMapDraw {
       // ACTIVE (being drawn)
       // polygon fill
       {
-        id: "gl-draw-polygon-fill",
-        type: "fill",
-        filter: ["all", ["==", "$type", "Polygon"], ["!=", "mode", "static"]],
+        id: 'gl-draw-polygon-fill',
+        type: 'fill',
+        filter: ['all', ['==', '$type', 'Polygon'], ['!=', 'mode', 'static']],
         paint: {
-          "fill-color": GEOFENCE_COLOR,
-          "fill-outline-color": GEOFENCE_COLOR,
-          "fill-opacity": 0.3,
+          'fill-color': GEOFENCE_COLOR,
+          'fill-outline-color': GEOFENCE_COLOR,
+          'fill-opacity': 0.3,
         },
       },
       // polygon mid points
       {
-        id: "gl-draw-polygon-midpoint",
-        type: "circle",
-        filter: ["all", ["==", "$type", "Point"], ["==", "meta", "midpoint"]],
+        id: 'gl-draw-polygon-midpoint',
+        type: 'circle',
+        filter: ['all', ['==', '$type', 'Point'], ['==', 'meta', 'midpoint']],
         paint: {
-          "circle-radius": 5,
-          "circle-color": GEOFENCE_VERTEX_COLOR,
+          'circle-radius': 5,
+          'circle-color': GEOFENCE_VERTEX_COLOR,
         },
       },
       // polygon border
       {
-        id: "gl-draw-polygon-stroke-active",
-        type: "line",
-        filter: ["all", ["==", "$type", "Polygon"], ["!=", "mode", "static"]],
+        id: 'gl-draw-polygon-stroke-active',
+        type: 'line',
+        filter: ['all', ['==', '$type', 'Polygon'], ['!=', 'mode', 'static']],
         layout: {
-          "line-cap": "round",
-          "line-join": "round",
+          'line-cap': 'round',
+          'line-join': 'round',
         },
         paint: {
-          "line-color": GEOFENCE_BORDER_COLOR,
-          "line-width": 4,
+          'line-color': GEOFENCE_BORDER_COLOR,
+          'line-width': 4,
         },
       },
       // vertex circle
       {
-        id: "gl-draw-polygon-and-line-vertex-active",
-        type: "circle",
+        id: 'gl-draw-polygon-and-line-vertex-active',
+        type: 'circle',
         filter: [
-          "all",
-          ["==", "meta", "vertex"],
-          ["==", "$type", "Point"],
-          ["!=", "mode", "static"],
+          'all',
+          ['==', 'meta', 'vertex'],
+          ['==', '$type', 'Point'],
+          ['!=', 'mode', 'static'],
         ],
         paint: {
-          "circle-radius": 8,
-          "circle-color": GEOFENCE_VERTEX_COLOR,
-          "circle-stroke-color": GEOFENCE_BORDER_COLOR,
-          "circle-stroke-width": 1,
+          'circle-radius': 8,
+          'circle-color': GEOFENCE_VERTEX_COLOR,
+          'circle-stroke-color': GEOFENCE_BORDER_COLOR,
+          'circle-stroke-width': 1,
         },
       },
     ],
@@ -119,7 +119,7 @@ export class AmplifyMapDraw {
     const isCircle = data.properties.isCircle;
     this.enable(isCircle);
     this._mapBoxDraw.add(data);
-    this._mapBoxDraw.changeMode("direct_select" as any, {
+    this._mapBoxDraw.changeMode('direct_select' as any, {
       featureId: data.id as string,
     });
   }
@@ -141,7 +141,7 @@ export class AmplifyMapDraw {
     }
     this._map.addControl(
       this._mapBoxDraw as unknown as IControl,
-      "bottom-right"
+      'bottom-right'
     );
     this._ui.createGeofenceCreateContainer(isCircle);
   }

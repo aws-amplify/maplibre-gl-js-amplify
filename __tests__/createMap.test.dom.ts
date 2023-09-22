@@ -1,18 +1,18 @@
-import { Credentials } from "@aws-amplify/core"; 
-import { Geo } from "@aws-amplify/geo";
-import type { AmazonLocationServiceMapStyle } from "@aws-amplify/geo";
- 
-import { createMap } from "../src/AmplifyMapLibreRequest";
+import { Credentials } from '@aws-amplify/core';
+import { Geo } from '@aws-amplify/geo';
+import type { AmazonLocationServiceMapStyle } from '@aws-amplify/geo';
 
-jest.mock("@aws-amplify/geo");
+import { createMap } from '../src/AmplifyMapLibreRequest';
+
+jest.mock('@aws-amplify/geo');
 
 describe('createMap', () => {
   Credentials.get = jest.fn().mockImplementation(() => {
     return {
-      accessKeyId: "accessKeyId",
-      sessionToken: "sessionTokenId",
-      secretAccessKey: "secretAccessKey",
-      identityId: "identityId",
+      accessKeyId: 'accessKeyId',
+      sessionToken: 'sessionTokenId',
+      secretAccessKey: 'secretAccessKey',
+      identityId: 'identityId',
       authenticated: true,
       expiration: new Date(),
     };
@@ -22,19 +22,19 @@ describe('createMap', () => {
     (Geo.getDefaultMap as jest.Mock).mockClear();
   });
 
-  test("createMap returns a map object", async () => {
+  test('createMap returns a map object', async () => {
     (Geo.getDefaultMap as jest.Mock).mockReturnValueOnce({
-      mapName: "map1ff111f1-staging",
-      region: "us-east-1",
-      style: "VectorEsriStreets"
+      mapName: 'map1ff111f1-staging',
+      region: 'us-east-1',
+      style: 'VectorEsriStreets',
     } as AmazonLocationServiceMapStyle);
 
-    const el = document.createElement("div");
-    el.setAttribute("id", "map");
+    const el = document.createElement('div');
+    el.setAttribute('id', 'map');
     document.body.appendChild(el);
 
     const map = await createMap({
-      container: "map",
+      container: 'map',
       center: [-123.1187, 49.2819],
       zoom: 11,
     });
