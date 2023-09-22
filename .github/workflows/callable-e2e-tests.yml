@@ -1,0 +1,42 @@
+# Copied from https://github.com/aws-amplify/amplify-js/blob/main/.github/workflows/callable-e2e-tests.yml
+
+name: E2E Tests
+
+on: workflow_call
+
+jobs:
+  e2e-prep:
+    name: Get required configs to run e2e tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@24cb9080177205b6e8c946b17badbe402adc938f # v3.4.0 https://github.com/actions/checkout/commit/24cb9080177205b6e8c946b17badbe402adc938f
+        with:
+          path: maplibre-gl-js-amplify
+      - name: Read integ config files
+        id: load_config
+        run: |
+          echo "INTEG_CONFIG=$(cat .github/integ-config/integ-all.yml | yq '.tests' -o=json | jq -c .)" >> $GITHUB_OUTPUT
+        working-directory: ./maplibre-gl-js-amplify
+    outputs:
+      integ-config: ${{ steps.load_config.outputs.INTEG_CONFIG }}
+
+  e2e-test-runner:
+    name: E2E test runnner
+    needs: e2e-prep
+    secrets: inherit
+    strategy:
+      matrix:
+        integ-config: ${{ fromJson(needs.e2e-prep.outputs.integ-config) }}
+      fail-fast: false
+    uses: ./.github/workflows/callable-e2e-test.yml
+    with:
+      test_name: ${{ matrix.integ-config.test_name }}
+      framework: ${{ matrix.integ-config.framework }}
+      category: ${{ matrix.integ-config.category }}
+      spec: ${{ matrix.integ-config.spec || '' }}
+      amplifyjs_dir: ${{ matrix.integ-config.amplifyjs_dir || false }}
+      sample_name: ${{ toJSON(matrix.integ-config.sample_name) || '[""]' }}
+      browser: ${{ toJSON(matrix.integ-config.browser) || '[""]' }}
+      timeout_minutes: ${{ matrix.integ-config.timeout_minutes || 35 }}
+      retry_count: ${{ matrix.integ-config.retry_count || 3 }}

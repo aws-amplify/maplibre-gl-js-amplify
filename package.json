@@ -21,6 +21,7 @@
     "prepublish": "npm run build",
     "publish:release": "yarn publish --access=public --non-interactive",
     "publish:geo": "yarn publish --access=public --non-interactive --tag geo",
+    "publish:unstable": "yarn publish --new-version 0.0.0-unstable-$(git rev-parse --short=7 HEAD) --access=public --non-interactive --tag unstable",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "tsc": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
