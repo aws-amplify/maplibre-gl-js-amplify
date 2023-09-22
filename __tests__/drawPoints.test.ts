@@ -1,13 +1,13 @@
-import { Map as maplibreMap } from "maplibre-gl";
-import { MAP_STYLES } from "../src/constants";
-import { drawPoints } from "../src/drawPoints";
+import { Map as maplibreMap } from 'maplibre-gl';
+import { MAP_STYLES } from '../src/constants';
+import { drawPoints } from '../src/drawPoints';
 
 const addSourceMock = jest.fn();
 const addLayerMock = jest.fn();
 const fitBoundsMock = jest.fn();
 const addImageMock = jest.fn();
 
-jest.mock("maplibre-gl", () => {
+jest.mock('maplibre-gl', () => {
   return {
     Map: jest.fn().mockImplementation(() => {
       return {
@@ -26,7 +26,7 @@ jest.mock("maplibre-gl", () => {
   };
 });
 
-describe("drawPoints", () => {
+describe('drawPoints', () => {
   beforeEach(() => {
     addSourceMock.mockClear();
     addLayerMock.mockClear();
@@ -34,10 +34,10 @@ describe("drawPoints", () => {
     addImageMock.mockClear();
   });
 
-  test("drawPoints default options", () => {
+  test('drawPoints default options', () => {
     const map = new maplibreMap({ container: '', style: '' });
     drawPoints(
-      "foo",
+      'foo',
       [
         [-123.1187, 49.2819],
         [-122.849, 49.1913],
@@ -47,16 +47,16 @@ describe("drawPoints", () => {
       MAP_STYLES.ESRI_NAVIGATION
     );
 
-    expect(addSourceMock.mock.calls[0][0]).toEqual("foo");
+    expect(addSourceMock.mock.calls[0][0]).toEqual('foo');
     expect(addSourceMock.mock.calls[0][1].data.features.length).toEqual(2);
     expect(addLayerMock).toHaveBeenCalledTimes(2);
     expect(fitBoundsMock).toHaveBeenCalledTimes(1);
   });
 
-  test("drawPoints autoFit false", () => {
+  test('drawPoints autoFit false', () => {
     const map = new maplibreMap({ container: '', style: '' });
     drawPoints(
-      "foo",
+      'foo',
       [
         [-123.1187, 49.2819],
         [-122.849, 49.1913],
@@ -68,19 +68,19 @@ describe("drawPoints", () => {
       MAP_STYLES.ESRI_NAVIGATION
     );
 
-    expect(addSourceMock.mock.calls[0][0]).toEqual("foo");
+    expect(addSourceMock.mock.calls[0][0]).toEqual('foo');
     expect(addSourceMock.mock.calls[0][1].data.features.length).toEqual(2);
     expect(addLayerMock).toHaveBeenCalledTimes(2);
     expect(fitBoundsMock).toHaveBeenCalledTimes(0);
   });
 
-  test("drawPoints custom markers", () => {
-    const icon1 = "foobar";
-    const icon2 = "barbaz";
+  test('drawPoints custom markers', () => {
+    const icon1 = 'foobar';
+    const icon2 = 'barbaz';
 
     const map = new maplibreMap({ container: '', style: '' });
     drawPoints(
-      "foo",
+      'foo',
       [
         [-123.1187, 49.2819],
         [-122.849, 49.1913],
@@ -104,12 +104,12 @@ describe("drawPoints", () => {
     expect(addImageMock.mock.calls[1][1]).toEqual(icon2);
   });
 
-  test("drawPoints custom markers, if active marker not passed used same as regular", () => {
-    const icon = "foobar";
+  test('drawPoints custom markers, if active marker not passed used same as regular', () => {
+    const icon = 'foobar';
 
     const map = new maplibreMap({ container: '', style: '' });
     drawPoints(
-      "foo",
+      'foo',
       [
         [-123.1187, 49.2819],
         [-122.849, 49.1913],

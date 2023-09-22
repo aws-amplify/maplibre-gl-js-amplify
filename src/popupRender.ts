@@ -1,7 +1,7 @@
-import { Feature, Point, Position } from "geojson";
-import { strHasLength } from "./utils";
-import { PopupRenderFunction, UnclusteredOptions } from "./types";
-import { COLOR_BLACK, COLOR_WHITE, POPUP_BORDER_COLOR } from "./constants";
+import { Feature, Point, Position } from 'geojson';
+import { strHasLength } from './utils';
+import { PopupRenderFunction, UnclusteredOptions } from './types';
+import { COLOR_BLACK, COLOR_WHITE, POPUP_BORDER_COLOR } from './constants';
 
 export function getPopupRenderFunction(
   unclusteredLayerId: string,
@@ -12,7 +12,7 @@ export function getPopupRenderFunction(
     popupFontColor: fontColor = COLOR_BLACK,
     popupPadding: padding = 20,
     popupBorderRadius: radius = 4,
-    popupTitleFontWeight: fontWeight = "bold",
+    popupTitleFontWeight: fontWeight = 'bold',
   }: UnclusteredOptions
 ): PopupRenderFunction {
   return (selectedFeature: Feature) => {
@@ -20,9 +20,9 @@ export function getPopupRenderFunction(
 
     // Try to get Title and address from existing feature properties
     if (strHasLength(selectedFeature.properties.place_name)) {
-      const placeName = selectedFeature.properties.place_name.split(",");
+      const placeName = selectedFeature.properties.place_name.split(',');
       title = placeName[0];
-      address = placeName.splice(1, placeName.length).join(",");
+      address = placeName.splice(1, placeName.length).join(',');
     } else if (
       strHasLength(selectedFeature.properties.title) ||
       strHasLength(selectedFeature.properties.address)
@@ -30,7 +30,7 @@ export function getPopupRenderFunction(
       title = selectedFeature.properties.title;
       address = selectedFeature.properties.address;
     } else {
-      title = "Coordinates";
+      title = 'Coordinates';
       address = (selectedFeature.geometry as Point).coordinates;
     }
 
@@ -40,7 +40,7 @@ export function getPopupRenderFunction(
     let popupHtml = `<div class="${unclusteredLayerId}-popup" style="${popupHtmlStyle}">`;
     if (title) popupHtml += titleHtml;
     if (address) popupHtml += addressHtml;
-    popupHtml += "</div>";
+    popupHtml += '</div>';
 
     return popupHtml;
   };

@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: 16
           architecture: x64
-          registry-url: "https://registry.npmjs.org"
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Install build dependencies
         run: |

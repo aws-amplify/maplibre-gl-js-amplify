@@ -1,4 +1,4 @@
-import { Feature } from "geojson";
+import { Feature } from 'geojson';
 
 export type Latitude = number;
 export type Longitude = number;
