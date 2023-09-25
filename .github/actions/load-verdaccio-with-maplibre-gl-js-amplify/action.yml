@@ -1,0 +1,52 @@
+# Copied from https://raw.githubusercontent.com/aws-amplify/amplify-js/main/.github/actions/load-verdaccio-with-amplify-js/action.yml
+
+name: Load Verdaccio with maplibre-gl-js-amplify
+description: Turn on Verdaccio and load up all of the maplibre-gl-js-amplify build artifacts
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Start verdaccio
+      run: |
+        npx verdaccio@5.25.0 &
+        while ! nc -z localhost 4873; do
+          echo "Verdaccio not running yet"
+          sleep 1
+        done
+
+        # Run your commands after verdaccio is up and running
+        echo "Verdaccio is up and running, proceeding with the script..."
+      shell: bash
+    - name: Install and run npm-cli-login
+      shell: bash
+      env:
+        NPM_REGISTRY: http://localhost:4873/
+        NPM_USER: verdaccio
+        NPM_PASS: verdaccio
+        NPM_EMAIL: verdaccio@amplify.js
+      run: |
+        npm i -g npm-cli-adduser
+        npm-cli-adduser
+        sleep 1
+    - name: Configure registry and git
+      shell: bash
+      working-directory: ./maplibre-gl-js-amplify
+      env:
+        NPM_REGISTRY: http://localhost:4873/
+        NPM_USER: verdaccio
+        NPM_PASS: verdaccio
+        NPM_EMAIL: verdaccio@amplify.js
+      run: |
+        yarn config set registry $NPM_REGISTRY
+        npm set registry $NPM_REGISTRY
+        git config --global user.email $NPM_EMAIL
+        git config --global user.name $NPM_USER
+        git status
+        git --no-pager diff
+    - name: Publish to verdaccio
+      shell: bash
+      working-directory: ./maplibre-gl-js-amplify
+      run: |
+        YARN_REGISTRY=http://localhost:4873/ yarn publish:unstable
+        YARN_REGISTRY=http://localhost:4873/ yarn info maplibre-gl-js-amplify@unstable description
+        NPM_CONFIG_REGISTRY=http://localhost:4873 npm info maplibre-gl-js-amplify@unstable version

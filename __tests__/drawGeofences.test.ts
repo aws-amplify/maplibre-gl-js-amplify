@@ -1,10 +1,10 @@
-import { Map as maplibreMap } from "maplibre-gl";
-import { drawGeofences } from "../src/drawGeofences";
+import { Map as maplibreMap } from 'maplibre-gl';
+import { drawGeofences } from '../src/drawGeofences';
 
-jest.mock("maplibre-gl");
+jest.mock('maplibre-gl');
 
-describe("drawGeofences", () => {
-  test("drawPoints default options", () => {
+describe('drawGeofences', () => {
+  test('drawPoints default options', () => {
     const map = new maplibreMap({ container: '', style: '' });
     const data: any = [
       [
@@ -17,11 +17,11 @@ describe("drawGeofences", () => {
         ],
       ],
     ];
-    const { hide } = drawGeofences("my-geofence", data, map);
+    const { hide } = drawGeofences('my-geofence', data, map);
 
     const mockInstance = (maplibreMap as jest.Mock).mock.instances[0];
 
-    expect(mockInstance.addSource.mock.calls[0][0]).toEqual("my-geofence");
+    expect(mockInstance.addSource.mock.calls[0][0]).toEqual('my-geofence');
     expect(
       mockInstance.addSource.mock.calls[0][1].data.geometry.coordinates.length
     ).toEqual(1);

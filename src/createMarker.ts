@@ -1,5 +1,5 @@
-import { COLOR_WHITE, MARKER_COLOR, LOCATION_MARKER } from "./constants";
-import { CreateMarkerOptions, ImageMarker } from "./types";
+import { COLOR_WHITE, MARKER_COLOR, LOCATION_MARKER } from './constants';
+import { CreateMarkerOptions, ImageMarker } from './types';
 
 export function createMarker(options?: CreateMarkerOptions): ImageMarker {
   const fillColor = options?.fillColor ? options.fillColor : MARKER_COLOR;
@@ -11,10 +11,10 @@ export function createMarker(options?: CreateMarkerOptions): ImageMarker {
     data: new Uint8Array(64 * 64 * 4),
 
     onAdd: function () {
-      const canvas = document.createElement("canvas");
+      const canvas = document.createElement('canvas');
       canvas.width = this.width;
       canvas.height = this.height;
-      this.context = canvas.getContext("2d");
+      this.context = canvas.getContext('2d');
     },
 
     render: function () {
