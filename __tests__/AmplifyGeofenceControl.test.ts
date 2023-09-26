@@ -3,13 +3,13 @@ import { AmplifyGeofenceControl } from '../src/AmplifyGeofenceControl';
 import { getGeofenceFeatureFromPolygon } from '../src/geofenceUtils';
 import { AmplifyGeofenceControlUI } from '../src/AmplifyGeofenceControl/ui';
 import { AmplifyMapDraw } from '../src/AmplifyGeofenceControl/AmplifyMapDraw';
-import { Geo } from 'aws-amplify/geo';
+import { Geo } from '@aws-amplify/geo';
 
 jest.mock('../src/AmplifyGeofenceControl/AmplifyMapDraw');
 
 jest.mock('../src/AmplifyGeofenceControl/ui');
 jest.mock('maplibre-gl');
-jest.mock('aws-amplify/geo');
+jest.mock('@aws-amplify/geo');
 
 const mockDrawGeofencesOutput = {
   sourceId: 'sourceId',

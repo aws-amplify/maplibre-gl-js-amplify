@@ -4,7 +4,7 @@ import {
   jitteredExponentialRetry,
   getAmplifyUserAgent,
 } from '@aws-amplify/core/internals/utils';
-import { Geo, AmazonLocationServiceMapStyle } from 'aws-amplify/geo';
+import { Geo, AmazonLocationServiceMapStyle } from '@aws-amplify/geo';
 import { Map as MaplibreMap, RequestParameters, MapOptions } from 'maplibre-gl';
 import { urlEncodePeriods } from './utils';
 import { UserAgent as AWSUserAgent } from '@aws-sdk/types';

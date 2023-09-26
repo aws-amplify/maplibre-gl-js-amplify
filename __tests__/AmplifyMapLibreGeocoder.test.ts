@@ -1,7 +1,7 @@
 import { AmplifyGeocoderAPI } from '../src/AmplifyMapLibreGeocoder';
-import { Geo } from 'aws-amplify/geo';
+import { Geo } from '@aws-amplify/geo';
 
-jest.mock('aws-amplify/geo');
+jest.mock('@aws-amplify/geo');
 
 describe('AmplifyGeocoderAPI', () => {
   beforeEach(() => {

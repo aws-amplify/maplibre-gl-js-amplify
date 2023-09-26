@@ -1,10 +1,10 @@
 import { fetchAuthSession } from '@aws-amplify/core';
-import { Geo } from 'aws-amplify/geo';
-import type { AmazonLocationServiceMapStyle } from 'aws-amplify/geo';
+import { Geo } from '@aws-amplify/geo';
+import type { AmazonLocationServiceMapStyle } from '@aws-amplify/geo';
 
 import { createMap } from '../src/AmplifyMapLibreRequest';
 
-jest.mock('aws-amplify/geo');
+jest.mock('@aws-amplify/geo');
 
 jest.mock('@aws-amplify/core', () => {
   const originalModule = jest.requireActual('@aws-amplify/core');

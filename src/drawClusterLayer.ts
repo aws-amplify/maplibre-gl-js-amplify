@@ -1,4 +1,4 @@
-import { Geo } from 'aws-amplify/geo';
+import { Geo } from '@aws-amplify/geo';
 import { Point } from 'geojson';
 import type {
   CircleLayerSpecification,
