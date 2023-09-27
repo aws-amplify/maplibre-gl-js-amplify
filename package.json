@@ -1,6 +1,6 @@
 {
   "name": "maplibre-gl-js-amplify",
-  "version": "2.0.1",
+  "version": "3.0.0-thadd",
   "description": "MapLibre Plugin to Support Amplify Geo Integration",
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.js",
@@ -59,8 +59,8 @@
     ]
   },
   "devDependencies": {
-    "@aws-amplify/geo": "3.0.1-console-preview.4b7d177.0",
     "@aws-amplify/core": "6.0.1-console-preview.4b7d177.0",
+    "@aws-amplify/geo": "3.0.1-console-preview.4b7d177.0",
     "@babel/preset-env": "^7.22.9",
     "@commitlint/cli": "^17.6.6",
     "@commitlint/config-conventional": "^17.6.6",
