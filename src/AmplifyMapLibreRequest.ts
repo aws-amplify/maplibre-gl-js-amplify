@@ -43,8 +43,8 @@ export default class AmplifyMapLibreRequest {
     Hub.listen('auth', (data) => {
       switch (data.payload.event) {
         // This was removed from v6 but will be added back before GA
-        // case 'signIn':
-        // case 'signOut':
+        case 'signedIn':
+        case 'signedOut':
         case 'tokenRefresh':
           this.refreshCredentialsWithRetry();
           break;

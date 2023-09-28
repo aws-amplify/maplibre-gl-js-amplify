@@ -204,8 +204,7 @@ describe('AmplifyMapLibreRequest', () => {
     expect(spy).toBeCalledTimes(1);
   });
 
-  // add this back after auth v6 re-includes auth hub events
-  test.skip('refreshCredentialsWithRetry is called once after sign out', () => {
+  test('refreshCredentialsWithRetry is called once after sign out', () => {
     const mockCreds = {
       accessKeyId: 'accessKeyId',
       sessionToken: 'sessionTokenId',
@@ -216,7 +215,7 @@ describe('AmplifyMapLibreRequest', () => {
     };
     const amplifyRequest = new AmplifyMapLibreRequest(mockCreds, 'us-east-1');
     const spy = jest.spyOn(amplifyRequest, 'refreshCredentialsWithRetry');
-    Hub.dispatch('auth', { event: 'signOut' });
+    Hub.dispatch('auth', { event: 'signedOut' });
     // should only be called once as the credentials expire soon after
     expect(spy).toBeCalledTimes(1);
   });
