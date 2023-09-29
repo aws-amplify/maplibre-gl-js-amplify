@@ -1,15 +1,28 @@
 import AmplifyMapLibreRequest from '../src/AmplifyMapLibreRequest';
-import { Credentials, Hub } from '@aws-amplify/core';
+import { fetchAuthSession, Hub } from '@aws-amplify/core';
 
-Credentials.get = jest.fn().mockImplementation(() => {
+jest.mock('@aws-amplify/core', () => {
+  const originalModule = jest.requireActual('@aws-amplify/core');
   return {
-    accessKeyId: 'accessKeyId',
-    sessionToken: 'sessionTokenId',
-    secretAccessKey: 'secretAccessKey',
-    identityId: 'identityId',
-    authenticated: true,
-    expiration: new Date(),
+    ...originalModule,
+    fetchAuthSession: jest.fn(),
+    Amplify: {
+      getConfig: jest.fn(),
+    },
   };
+});
+
+(fetchAuthSession as jest.Mock).mockImplementation(() => {
+  return Promise.resolve({
+    credentials: {
+      accessKeyId: 'accessKeyId',
+      sessionToken: 'sessionTokenId',
+      secretAccessKey: 'secretAccessKey',
+      identityId: 'identityId',
+      authenticated: true,
+      expiration: new Date(),
+    },
+  });
 });
 
 describe('AmplifyMapLibreRequest', () => {
@@ -166,7 +179,10 @@ describe('AmplifyMapLibreRequest', () => {
       authenticated: true,
       expiration: new Date(),
     };
-    const amplifyRequest = new AmplifyMapLibreRequest(mockCreds, undefined);
+    const amplifyRequest = new AmplifyMapLibreRequest(
+      mockCreds,
+      undefined as unknown as string
+    );
     expect(() =>
       amplifyRequest.transformRequest('amazon.com', 'Style')
     ).toThrow();
@@ -199,7 +215,7 @@ describe('AmplifyMapLibreRequest', () => {
     };
     const amplifyRequest = new AmplifyMapLibreRequest(mockCreds, 'us-east-1');
     const spy = jest.spyOn(amplifyRequest, 'refreshCredentialsWithRetry');
-    Hub.dispatch('auth', { event: 'signOut' });
+    Hub.dispatch('auth', { event: 'signedOut' });
     // should only be called once as the credentials expire soon after
     expect(spy).toBeCalledTimes(1);
   });

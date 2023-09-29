@@ -1,4 +1,4 @@
-import { Credentials } from '@aws-amplify/core';
+import { fetchAuthSession } from '@aws-amplify/core';
 import { Geo } from '@aws-amplify/geo';
 import type { AmazonLocationServiceMapStyle } from '@aws-amplify/geo';
 
@@ -6,24 +6,37 @@ import { createMap } from '../src/AmplifyMapLibreRequest';
 
 jest.mock('@aws-amplify/geo');
 
-describe('createMap', () => {
-  Credentials.get = jest.fn().mockImplementation(() => {
-    return {
+jest.mock('@aws-amplify/core', () => {
+  const originalModule = jest.requireActual('@aws-amplify/core');
+  return {
+    ...originalModule,
+    fetchAuthSession: jest.fn(),
+    Amplify: {
+      getConfig: jest.fn(),
+    },
+  };
+});
+
+(fetchAuthSession as jest.Mock).mockImplementation(() => {
+  return Promise.resolve({
+    credentials: {
       accessKeyId: 'accessKeyId',
       sessionToken: 'sessionTokenId',
       secretAccessKey: 'secretAccessKey',
       identityId: 'identityId',
       authenticated: true,
       expiration: new Date(),
-    };
+    },
   });
+});
 
+describe('createMap', () => {
   beforeEach(() => {
     (Geo.getDefaultMap as jest.Mock).mockClear();
   });
 
   test('createMap returns a map object', async () => {
-    (Geo.getDefaultMap as jest.Mock).mockReturnValueOnce({
+    (Geo.getDefaultMap as jest.Mock).mockReturnValue({
       mapName: 'map1ff111f1-staging',
       region: 'us-east-1',
       style: 'VectorEsriStreets',
