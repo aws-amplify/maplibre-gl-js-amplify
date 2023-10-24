@@ -6,6 +6,7 @@ on:
       - release
       - main
       - geo
+      - next-geo
 
 jobs:
   e2e:
