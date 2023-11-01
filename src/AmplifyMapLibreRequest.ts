@@ -112,7 +112,6 @@ export default class AmplifyMapLibreRequest {
    */
   transformRequest = (url: string, resourceType: string): RequestParameters => {
     let styleUrl = url;
-    console.log('transformrequest')
     if (resourceType === 'Style' && !url.includes('://')) {
       if (this.region == undefined) {
         throw new Error(
