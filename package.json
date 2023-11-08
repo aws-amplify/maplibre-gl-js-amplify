@@ -59,8 +59,8 @@
     ]
   },
   "devDependencies": {
-    "@aws-amplify/core": "6.0.1-unstable.ad5c83e.0",
-    "@aws-amplify/geo": "3.0.1-unstable.ad5c83e.0",
+    "@aws-amplify/core": "^6.0.1-unstable.5b52c3a.0",
+    "@aws-amplify/geo": "^3.0.1-unstable.5b52c3a.0",
     "@babel/preset-env": "^7.22.9",
     "@commitlint/cli": "^17.6.6",
     "@commitlint/config-conventional": "^17.6.6",
@@ -71,7 +71,7 @@
     "@types/node": "^15.6.1",
     "@typescript-eslint/eslint-plugin": "^6.1.0",
     "@typescript-eslint/parser": "^6.1.0",
-    "aws-amplify": "6.0.1-unstable.ad5c83e.0",
+    "aws-amplify": "^6.0.1-unstable.5b52c3a.0",
     "babel-jest": "^27.3.1",
     "eslint": "^8.45.0",
     "eslint-config-prettier": "^8.8.0",
