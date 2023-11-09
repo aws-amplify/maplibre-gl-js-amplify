@@ -39,6 +39,7 @@ export default class AmplifyMapLibreRequest {
     this.region = region;
     this.activeTimeout = null;
     this.refreshCredentialsWithRetry();
+    console.log('hello');
 
     Hub.listen('auth', (data) => {
       switch (data.payload.event) {
