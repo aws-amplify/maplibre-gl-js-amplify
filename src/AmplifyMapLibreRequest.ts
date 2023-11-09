@@ -3,12 +3,12 @@ import {
   Signer,
   jitteredExponentialRetry,
   getAmplifyUserAgent,
+  AWSCredentials,
 } from '@aws-amplify/core/internals/utils';
 import { Geo, AmazonLocationServiceMapStyle } from '@aws-amplify/geo';
 import { Map as MaplibreMap, RequestParameters, MapOptions } from 'maplibre-gl';
 import { urlEncodePeriods } from './utils';
 import { UserAgent as AWSUserAgent } from '@aws-sdk/types';
-import { AuthSession } from '@aws-amplify/core/lib-esm/singleton/Auth/types';
 
 /**
  * The upgrade from maplibre v1 to maplibre v2 changed the `style` property from optional to required.
@@ -31,10 +31,10 @@ interface CreateMapOptions
  */
 
 export default class AmplifyMapLibreRequest {
-  credentials: AuthSession['credentials'];
+  credentials: AWSCredentials;
   region: string;
   activeTimeout: number;
-  constructor(currentCredentials: AuthSession['credentials'], region: string) {
+  constructor(currentCredentials: AWSCredentials, region: string) {
     this.credentials = currentCredentials;
     this.region = region;
     this.activeTimeout = null;
