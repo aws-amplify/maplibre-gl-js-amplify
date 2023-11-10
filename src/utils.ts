@@ -1,13 +1,13 @@
-import { Feature } from "geojson";
-import type { GeoJSONSource, Source } from "maplibre-gl";
+import { Feature } from 'geojson';
+import type { GeoJSONSource, Source } from 'maplibre-gl';
 
-import type { Coordinates, NamedLocation, Geofence, Polygon } from "./types";
+import type { Coordinates, NamedLocation, Geofence, Polygon } from './types';
 
 export function isCoordinates(array: unknown): array is Coordinates {
   return (
     Array.isArray(array) &&
-    typeof array[0] === "number" &&
-    typeof array[1] === "number"
+    typeof array[0] === 'number' &&
+    typeof array[1] === 'number'
   );
 }
 
@@ -19,8 +19,8 @@ export function isNamedLocation(object: unknown): object is NamedLocation {
   return (
     object &&
     Array.isArray((object as NamedLocation).coordinates) &&
-    typeof (object as NamedLocation).coordinates[0] === "number" &&
-    typeof (object as NamedLocation).coordinates[1] === "number"
+    typeof (object as NamedLocation).coordinates[0] === 'number' &&
+    typeof (object as NamedLocation).coordinates[1] === 'number'
   );
 }
 
@@ -31,8 +31,8 @@ export function isNamedLocationArray(array: unknown): array is NamedLocation[] {
 export function isGeofence(object: unknown): object is Geofence {
   return (
     object &&
-    typeof (object as Geofence).geofenceId === "string" &&
-    typeof (object as Geofence).geometry === "object"
+    typeof (object as Geofence).geofenceId === 'string' &&
+    typeof (object as Geofence).geometry === 'object'
   );
 }
 
@@ -48,14 +48,12 @@ export function isPolygonArray(array: unknown): array is Polygon[] {
   return Array.isArray(array) && isPolygon(array[0]);
 }
 
-export function isGeoJsonSource(
-  source: Source
-): source is GeoJSONSource {
-  return source.type === "geojson";
+export function isGeoJsonSource(source: Source): source is GeoJSONSource {
+  return source.type === 'geojson';
 }
 
 export const strHasLength = (str: unknown): str is string =>
-  typeof str === "string" && str.length > 0;
+  typeof str === 'string' && str.length > 0;
 
 export const getFeaturesFromData = (
   data: Coordinates[] | Feature[] | NamedLocation[]
@@ -64,16 +62,16 @@ export const getFeaturesFromData = (
   if (isCoordinatesArray(data)) {
     features = data.map((point) => {
       return {
-        type: "Feature",
-        geometry: { type: "Point", coordinates: point },
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: point },
         properties: { place_name: `Coordinates,${point}` },
       };
     });
   } else if (isNamedLocationArray(data)) {
     features = data.map((location) => {
       return {
-        type: "Feature",
-        geometry: { type: "Point", coordinates: location.coordinates },
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: location.coordinates },
         properties: { title: location.title, address: location.address },
       };
     });
@@ -84,7 +82,7 @@ export const getFeaturesFromData = (
 };
 
 export const urlEncodePeriods = (str: string): string => {
-  return str.replace(/\./g, "%2E");
+  return str.replace(/\./g, '%2E');
 };
 
 export function validateCoordinates(coordinates: Coordinates): void {
@@ -94,12 +92,14 @@ export function validateCoordinates(coordinates: Coordinates): void {
   }
   if (lat < -90 || lat > 90) {
     const errorString =
-      "Latitude must be between -90 and 90 degrees inclusive.";
+      'Latitude must be between -90 and 90 degrees inclusive.';
+    // eslint-disable-next-line no-console
     console.warn(errorString);
     throw new Error(errorString);
   } else if (lng < -180 || lng > 180) {
     const errorString =
-      "Longitude must be between -180 and 180 degrees inclusive.";
+      'Longitude must be between -180 and 180 degrees inclusive.';
+    // eslint-disable-next-line no-console
     console.warn(errorString);
     throw new Error(errorString);
   }

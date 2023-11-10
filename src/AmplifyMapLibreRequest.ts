@@ -1,15 +1,14 @@
+import { Hub, fetchAuthSession } from '@aws-amplify/core';
 import {
-  Hub,
-  ICredentials,
   Signer,
   jitteredExponentialRetry,
   getAmplifyUserAgent,
-  Credentials,
-} from "@aws-amplify/core";
-import { Geo, AmazonLocationServiceMapStyle } from "@aws-amplify/geo";
-import { Map as MaplibreMap, RequestParameters, MapOptions } from "maplibre-gl";
-import { urlEncodePeriods } from "./utils";
-import { UserAgent as AWSUserAgent } from "@aws-sdk/types";
+  AWSCredentials,
+} from '@aws-amplify/core/internals/utils';
+import { Geo, AmazonLocationServiceMapStyle } from '@aws-amplify/geo';
+import { Map as MaplibreMap, RequestParameters, MapOptions } from 'maplibre-gl';
+import { urlEncodePeriods } from './utils';
+import { UserAgent as AWSUserAgent } from '@aws-sdk/types';
 
 /**
  * The upgrade from maplibre v1 to maplibre v2 changed the `style` property from optional to required.
@@ -17,8 +16,8 @@ import { UserAgent as AWSUserAgent } from "@aws-sdk/types";
  * it maintains backwards compatibility with the upgrade to maplibre v2.
  */
 interface CreateMapOptions
-  extends Omit<MapOptions, "style">,
-    Partial<Pick<MapOptions, "style">> {
+  extends Omit<MapOptions, 'style'>,
+    Partial<Pick<MapOptions, 'style'>> {
   region?: string;
   mapConstructor?: typeof MaplibreMap;
 }
@@ -32,20 +31,21 @@ interface CreateMapOptions
  */
 
 export default class AmplifyMapLibreRequest {
-  credentials: ICredentials;
+  credentials: AWSCredentials;
   region: string;
   activeTimeout: number;
-  constructor(currentCredentials: ICredentials, region: string) {
+  constructor(currentCredentials: AWSCredentials, region: string) {
     this.credentials = currentCredentials;
     this.region = region;
     this.activeTimeout = null;
     this.refreshCredentialsWithRetry();
 
-    Hub.listen("auth", (data) => {
+    Hub.listen('auth', (data) => {
       switch (data.payload.event) {
-        case "signIn":
-        case "signOut":
-        case "tokenRefresh":
+        // This was removed from v6 but will be added back before GA
+        case 'signedIn':
+        case 'signedOut':
+        case 'tokenRefresh':
           this.refreshCredentialsWithRetry();
           break;
       }
@@ -59,7 +59,7 @@ export default class AmplifyMapLibreRequest {
     const defaultMap = Geo.getDefaultMap() as AmazonLocationServiceMapStyle;
 
     const amplifyRequest = new AmplifyMapLibreRequest(
-      await Credentials.get(),
+      (await fetchAuthSession()).credentials,
       region || defaultMap.region
     );
     const transformRequest = amplifyRequest.transformRequest;
@@ -74,8 +74,9 @@ export default class AmplifyMapLibreRequest {
 
   refreshCredentials = async (): Promise<void> => {
     try {
-      this.credentials = await Credentials.get();
+      this.credentials = (await fetchAuthSession()).credentials;
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.error(`Failed to refresh credentials: ${e}`);
       throw e;
     }
@@ -98,6 +99,7 @@ export default class AmplifyMapLibreRequest {
         );
       }
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.error(`Failed to refresh credentials: ${e}`);
     }
   };
@@ -110,20 +112,20 @@ export default class AmplifyMapLibreRequest {
    */
   transformRequest = (url: string, resourceType: string): RequestParameters => {
     let styleUrl = url;
-    if (resourceType === "Style" && !url.includes("://")) {
+    if (resourceType === 'Style' && !url.includes('://')) {
       if (this.region == undefined) {
         throw new Error(
-          "AWS region for map is undefined. Please verify that the region is set in aws-exports.js or that you are providing an AWS region parameter to createMap"
+          'AWS region for map is undefined. Please verify that the region is set in aws-exports.js or that you are providing an AWS region parameter to createMap'
         );
       }
       styleUrl = `https://maps.geo.${this.region}.amazonaws.com/maps/v0/maps/${url}/style-descriptor`;
     }
 
     const urlObject = new URL(styleUrl);
-    if (urlObject.hostname.endsWith(".amazonaws.com")) {
+    if (urlObject.hostname.endsWith('.amazonaws.com')) {
       // only sign AWS requests (with the signature as part of the query string)
       urlObject.searchParams.append(
-        "x-amz-user-agent",
+        'x-amz-user-agent',
         encodeURIComponent(urlEncodePeriods(getAmplifyUserAgentString()))
       );
       return {
@@ -146,10 +148,10 @@ export const createMap = async (
 // TODO - Delete this and import from @aws-amplify/core when it is released
 function getAmplifyUserAgentString() {
   const userAgent = getAmplifyUserAgent();
-  if (userAgent && typeof userAgent === "object") {
+  if (userAgent && typeof userAgent === 'object') {
     return (userAgent as AWSUserAgent[])
       .map(([agentKey, agentValue]) => `${agentKey}/${agentValue}`)
-      .join(" ");
+      .join(' ');
   }
   return userAgent;
 }

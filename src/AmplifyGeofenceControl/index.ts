@@ -1,19 +1,19 @@
-import maplibregl, { Map } from "maplibre-gl";
-import { Geo } from "@aws-amplify/geo";
-import { drawGeofences, DrawGeofencesOutput } from "../drawGeofences";
-import { Geofence } from "../types";
-import { Feature } from "geojson";
+import maplibregl, { Map } from 'maplibre-gl';
+import { Geo } from '@aws-amplify/geo';
+import { drawGeofences, DrawGeofencesOutput } from '../drawGeofences';
+import { Geofence } from '../types';
+import { Feature } from 'geojson';
 import {
   isValidGeofenceId,
   getGeofenceFeatureFromPolygon,
   getGeofenceFeatureArray,
   isExistingGeofenceId,
   getDistanceBetweenCoordinates,
-} from "../geofenceUtils";
-import { GEOFENCE_COLOR, GEOFENCE_BORDER_COLOR } from "../constants";
-import { AmplifyGeofenceControlUI } from "./ui";
-import { AmplifyMapDraw } from "./AmplifyMapDraw";
-import { createElement } from "../utils";
+} from '../geofenceUtils';
+import { GEOFENCE_COLOR, GEOFENCE_BORDER_COLOR } from '../constants';
+import { AmplifyGeofenceControlUI } from './ui';
+import { AmplifyMapDraw } from './AmplifyMapDraw';
+import { createElement } from '../utils';
 
 const FIT_BOUNDS_PADDING = { left: 240 }; // Default to 240px right now because of the left nav
 
@@ -70,7 +70,7 @@ export class AmplifyGeofenceControl {
    **********************************************************************/
 
   getDefaultPosition(): string {
-    return "full-screen";
+    return 'full-screen';
   }
 
   onRemove(): void {
@@ -80,10 +80,10 @@ export class AmplifyGeofenceControl {
   // Reorders MapLibre canvas class names to fix a mapbox draw bug - https://github.com/mapbox/mapbox-gl-draw/pull/1079
   reorderMapLibreClassNames(): void {
     const mapCanvas = document
-      .getElementsByClassName("maplibregl-canvas")
+      .getElementsByClassName('maplibregl-canvas')
       .item(0);
     if (mapCanvas) {
-      mapCanvas.className = "mapboxgl-canvas maplibregl-canvas";
+      mapCanvas.className = 'mapboxgl-canvas maplibregl-canvas';
     }
   }
 
@@ -92,26 +92,26 @@ export class AmplifyGeofenceControl {
 
     this.reorderMapLibreClassNames();
 
-    this._container = createElement("div", "geofence-ctrl maplibregl-ctrl");
+    this._container = createElement('div', 'geofence-ctrl maplibregl-ctrl');
 
     this._ui = AmplifyGeofenceControlUI(this, this._container);
     this._amplifyDraw = new AmplifyMapDraw(map, this._ui);
 
-    this._ui.registerControlPosition(map, "full-screen");
+    this._ui.registerControlPosition(map, 'full-screen');
 
     this._ui.createGeofenceListContainer();
 
     // Draw the geofences source to the map so we can update it on geofences load/creation
     this._map.once(
-      "load",
+      'load',
       function () {
         // Prevents warnings on multiple re-renders, especially when rendered in react
-        if (this._map.getSource("displayedGeofences")) {
+        if (this._map.getSource('displayedGeofences')) {
           return;
         }
 
         this._drawGeofencesOutput = drawGeofences(
-          "displayedGeofences",
+          'displayedGeofences',
           [],
           this._map,
           {
@@ -121,7 +121,7 @@ export class AmplifyGeofenceControl {
           }
         );
         this._highlightedGeofenceOutput = drawGeofences(
-          "highlightedGeofence",
+          'highlightedGeofence',
           [],
           this._map,
           {
@@ -136,12 +136,12 @@ export class AmplifyGeofenceControl {
 
         map.addControl(
           new maplibregl.NavigationControl({ showCompass: false }),
-          "bottom-right"
+          'bottom-right'
         );
       }.bind(this)
     );
 
-    this._map.on("draw.update", () => {
+    this._map.on('draw.update', () => {
       const coordinates = (
         this._amplifyDraw._mapBoxDraw.getAll().features[0].geometry as any
       ).coordinates[0];
@@ -158,19 +158,19 @@ export class AmplifyGeofenceControl {
 
   async createGeofence(geofenceId?: string): Promise<string | null> {
     if (!geofenceId || geofenceId.length === 0) {
-      this._ui.createAddGeofencePromptError("Geofence ID is empty.");
+      this._ui.createAddGeofencePromptError('Geofence ID is empty.');
       return;
     }
 
     if (!isValidGeofenceId(geofenceId)) {
       this._ui.createAddGeofencePromptError(
-        "Geofence ID contains special characters."
+        'Geofence ID contains special characters.'
       );
       return;
     }
 
     if (isExistingGeofenceId(geofenceId, this._loadedGeofences)) {
-      this._ui.createAddGeofencePromptError("Geofence ID already exists.");
+      this._ui.createAddGeofencePromptError('Geofence ID already exists.');
       return;
     }
 
@@ -182,7 +182,7 @@ export class AmplifyGeofenceControl {
     const idToSave = geofenceId || this._editingGeofenceId;
     const response = await Geo.saveGeofences({
       geofenceId: idToSave,
-      geometry: { polygon: feature.geometry["coordinates"] },
+      geometry: { polygon: feature.geometry['coordinates'] },
     });
 
     if (response.errors[0]) {
@@ -196,7 +196,7 @@ export class AmplifyGeofenceControl {
 
     const savedGeofence: Geofence = {
       geofenceId: success.geofenceId,
-      geometry: { polygon: feature.geometry["coordinates"] },
+      geometry: { polygon: feature.geometry['coordinates'] },
     };
 
     // render geofence to the map and add it to the list
@@ -328,7 +328,7 @@ export class AmplifyGeofenceControl {
     this._displayedGeofences.push(...Object.values(this._loadedGeofences));
     this._updateDisplayedGeofences();
     const checkboxes = document.getElementsByClassName(
-      "geofence-ctrl-list-item-checkbox"
+      'geofence-ctrl-list-item-checkbox'
     ) as HTMLCollectionOf<HTMLInputElement>;
     Array.from(checkboxes).forEach(
       (checkbox) => (checkbox.checked = this._ui.getCheckboxAllValue())
@@ -375,7 +375,7 @@ export class AmplifyGeofenceControl {
     this._displayedGeofences = [];
     this._updateDisplayedGeofences();
     const checkboxes = document.getElementsByClassName(
-      "geofence-ctrl-list-item-checkbox"
+      'geofence-ctrl-list-item-checkbox'
     ) as HTMLCollectionOf<HTMLInputElement>;
     Array.from(checkboxes).forEach(
       (checkbox) => (checkbox.checked = this._ui.getCheckboxAllValue())
@@ -390,6 +390,7 @@ export class AmplifyGeofenceControl {
   displayHighlightedGeofence(geofenceId: string): void {
     const geofence = this._loadedGeofences[geofenceId];
     if (!geofence) {
+      // eslint-disable-next-line no-console
       console.warn(`Geofence with id ${geofenceId} does not exist`);
       return;
     }
@@ -410,7 +411,7 @@ export class AmplifyGeofenceControl {
     // erase existing mapbox draw content
     this._amplifyDraw.delete(this._editingGeofenceId);
 
-    if (mode === "draw_circle") {
+    if (mode === 'draw_circle') {
       this._amplifyDraw.drawCircularGeofence(this._editingGeofenceId);
     } else {
       this._amplifyDraw.drawPolygonGeofence(this._editingGeofenceId);
@@ -447,8 +448,8 @@ export class AmplifyGeofenceControl {
   }
 
   addEditableGeofence(): void {
-    this._editingGeofenceId = "tempGeofence";
-    this._amplifyDraw.drawCircularGeofence("tempGeofence");
+    this._editingGeofenceId = 'tempGeofence';
+    this._amplifyDraw.drawCircularGeofence('tempGeofence');
     this.setEditingModeEnabled(true);
   }
 }

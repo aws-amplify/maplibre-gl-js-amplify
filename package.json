@@ -1,6 +1,6 @@
 {
   "name": "maplibre-gl-js-amplify",
-  "version": "2.0.1",
+  "version": "4.0.0",
   "description": "MapLibre Plugin to Support Amplify Geo Integration",
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.js",
@@ -17,13 +17,16 @@
     "clean": "rimraf dist && rimraf lib",
     "compile": "npm run tsc",
     "copy:files": "mkdir -p dist/public/ lib/cjs/public lib/esm/public && cp src/public/* dist/public/ && cp src/public/* lib/cjs/public/ && cp src/public/* lib/esm/public/",
+    "lint": "eslint src --ext .js,.ts",
     "prepublish": "npm run build",
     "publish:release": "yarn publish --access=public --non-interactive",
     "publish:geo": "yarn publish --access=public --non-interactive --tag geo",
+    "publish:unstable": "yarn publish --new-version 0.0.0-unstable-$(git rev-parse --short=7 HEAD) --access=public --non-interactive --tag unstable",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "tsc": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "ssh",
@@ -56,32 +59,33 @@
     ]
   },
   "devDependencies": {
-    "@aws-amplify/core": "5.0.0",
-    "@aws-amplify/geo": "2.0.0",
-    "@babel/preset-env": "^7.16.4",
-    "@commitlint/cli": "^16.2.1",
-    "@commitlint/config-conventional": "^16.2.1",
+    "@aws-amplify/core": "^6.x.x",
+    "@aws-amplify/geo": "^3.x.x",
+    "@babel/preset-env": "^7.22.9",
+    "@commitlint/cli": "^17.6.6",
+    "@commitlint/config-conventional": "^17.6.6",
     "@types/debounce": "^1.2.1",
     "@types/geojson": "^7946.0.7",
     "@types/jest": "^27.0.2",
     "@types/mapbox__mapbox-gl-draw": "^1.2.3",
     "@types/node": "^15.6.1",
-    "@typescript-eslint/eslint-plugin": "^4.25.0",
-    "@typescript-eslint/parser": "^4.25.0",
+    "@typescript-eslint/eslint-plugin": "^6.1.0",
+    "@typescript-eslint/parser": "^6.1.0",
+    "aws-amplify": "^6.x.x",
     "babel-jest": "^27.3.1",
-    "eslint": "^7.16.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-config-standard": "^16.0.3",
-    "eslint-plugin-import": "^2.23.3",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^5.1.0",
+    "eslint": "^8.45.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jest": "^27.2.3",
+    "eslint-plugin-prettier": "^5.0.0",
     "husky": "^7.0.4",
     "jest": "^27.0.3",
     "jest-fetch-mock": "^3.0.3",
     "jest-transform-stub": "^2.0.0",
-    "jest-webgl-canvas-mock": "^0.2.3",
+    "jest-webgl-canvas-mock": "^2.5.0",
+    "lint-staged": ">=10",
     "maplibre-gl": "^2.1.9",
-    "prettier": "^2.3.0",
+    "prettier": "^3.0.0",
     "rollup": "^2.55.1",
     "rollup-plugin-import-css": "^3.0.2",
     "rollup-plugin-svg": "^2.0.0",
@@ -91,7 +95,8 @@
     "typescript": "^4.3.2"
   },
   "peerDependencies": {
-    "aws-amplify": "5.x.x",
+    "@aws-amplify/geo": "3.x.x",
+    "aws-amplify": "6.x.x",
     "maplibre-gl": "1.x.x || 2.x.x"
   },
   "dependencies": {
@@ -108,6 +113,10 @@
   },
   "resolutions": {
     "json5": "^2.2.2",
-    "yaml": "2.2.2"
+    "optionator": "^0.9.3"
+  },
+  "lint-staged": {
+    "*.{js,ts}": "npm run lint",
+    "*.{ts,tsx,js,css,md}": "prettier --write"
   }
 }

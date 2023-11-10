@@ -1,19 +1,13 @@
 {
-    "compilerOptions": {
-        "module": "esnext",
-        "target": "es2015",
-        "moduleResolution": "node",
-        "declaration": true,
-        "sourceMap": false,  
-        "esModuleInterop": true,
-        "outDir": "./lib/esm",
-    },
-    "include": [
-        "src/**/*"
-    ],
-    "exclude": [
-        "lib",
-        "dist",
-        "node_modules"
-    ]
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "es2015",
+    "moduleResolution": "node",
+    "declaration": true,
+    "sourceMap": false,
+    "esModuleInterop": true,
+    "outDir": "./lib/esm"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["lib", "dist", "node_modules"]
 }

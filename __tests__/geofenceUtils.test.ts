@@ -1,16 +1,16 @@
-import { Polygon } from "@turf/helpers";
-import { LngLatBounds } from "maplibre-gl";
-import { Geofence, Polygon as Poly } from "../src/types";
+import { Polygon } from '@turf/helpers';
+import { LngLatBounds } from 'maplibre-gl';
+import { Geofence, Polygon as Poly } from '../src/types';
 import {
   getGeofenceFeatureArray,
   getCircleFeatureFromCoords,
   getPolygonFeatureFromBounds,
-} from "../src/geofenceUtils";
+} from '../src/geofenceUtils';
 
-describe("geofence utils", () => {
-  test("getCircleFeatureFromCoords - creates circle from center point and bounds", () => {
+describe('geofence utils', () => {
+  test('getCircleFeatureFromCoords - creates circle from center point and bounds', () => {
     const bounds = new LngLatBounds([-114, 50], [-134, 30]);
-    const feature = getCircleFeatureFromCoords("any", [-100, 30], { bounds });
+    const feature = getCircleFeatureFromCoords('any', [-100, 30], { bounds });
 
     expect(feature.properties.center).toStrictEqual([-100, 30]);
     expect((feature.geometry as Polygon).coordinates[0].length).toBe(65);
@@ -22,9 +22,9 @@ describe("geofence utils", () => {
     ]);
   });
 
-  test("getCircleFeatureFromCoords - center point outside bounds, bounds are just used to determine radius", () => {
+  test('getCircleFeatureFromCoords - center point outside bounds, bounds are just used to determine radius', () => {
     const bounds = new LngLatBounds([-114, 50], [-134, 30]);
-    const feature = getCircleFeatureFromCoords("any", [-180, 90], { bounds });
+    const feature = getCircleFeatureFromCoords('any', [-180, 90], { bounds });
 
     expect(feature.properties.center).toStrictEqual([-180, 90]);
     expect((feature.geometry as Polygon).coordinates[0].length).toBe(65);
@@ -36,16 +36,16 @@ describe("geofence utils", () => {
     ]);
   });
 
-  test("getCircleFeatureFromCoords - fails with improper coordinates", () => {
+  test('getCircleFeatureFromCoords - fails with improper coordinates', () => {
     const bounds = new LngLatBounds([-114, 50], [-134, 30]);
     expect(() =>
-      getCircleFeatureFromCoords("any", [-900, 1000], { bounds })
+      getCircleFeatureFromCoords('any', [-900, 1000], { bounds })
     ).toThrow();
   });
 
-  test("getPolygonFeatureFromBounds - creates polygon within the bounds", () => {
+  test('getPolygonFeatureFromBounds - creates polygon within the bounds', () => {
     const bounds = new LngLatBounds([-114, 50], [-134, 30]);
-    const feature = getPolygonFeatureFromBounds("any", bounds);
+    const feature = getPolygonFeatureFromBounds('any', bounds);
 
     expect((feature.geometry as Polygon).coordinates[0].length).toBe(5);
     expect((feature.geometry as Polygon).coordinates[0][0]).toStrictEqual([
@@ -56,9 +56,9 @@ describe("geofence utils", () => {
     ]);
   });
 
-  test("getPolygonFeatureFromBounds - bounds same coordinates", () => {
+  test('getPolygonFeatureFromBounds - bounds same coordinates', () => {
     const bounds = new LngLatBounds([-114, 50], [-114, 50]);
-    const feature = getPolygonFeatureFromBounds("any", bounds);
+    const feature = getPolygonFeatureFromBounds('any', bounds);
 
     expect((feature.geometry as Polygon).coordinates[0].length).toBe(5);
     expect((feature.geometry as Polygon).coordinates[0][0]).toStrictEqual([
@@ -69,9 +69,9 @@ describe("geofence utils", () => {
     ]);
   });
 
-  test("getPolygonFeatureFromBounds - max bounds", () => {
+  test('getPolygonFeatureFromBounds - max bounds', () => {
     const bounds = new LngLatBounds([-180, -90], [180, 90]);
-    const feature = getPolygonFeatureFromBounds("any", bounds);
+    const feature = getPolygonFeatureFromBounds('any', bounds);
 
     expect((feature.geometry as Polygon).coordinates[0].length).toBe(5);
     expect((feature.geometry as Polygon).coordinates[0][0]).toStrictEqual([
@@ -82,7 +82,7 @@ describe("geofence utils", () => {
     ]);
   });
 
-  test("getGeofenceFeatureFromArray - both data type options work", () => {
+  test('getGeofenceFeatureFromArray - both data type options work', () => {
     const polygons: Poly[] = [
       [
         [
@@ -96,11 +96,11 @@ describe("geofence utils", () => {
     ];
     const fromData = getGeofenceFeatureArray(polygons);
 
-    expect(fromData.type).toEqual("Feature");
+    expect(fromData.type).toEqual('Feature');
     expect((fromData.geometry as Polygon).coordinates).toEqual(polygons);
   });
 
-  test("getGeofenceFeatureFromArray - both data type options work", () => {
+  test('getGeofenceFeatureFromArray - both data type options work', () => {
     const polygons: Poly[] = [
       [
         [
@@ -126,7 +126,7 @@ describe("geofence utils", () => {
             ],
           ],
         },
-        geofenceId: "foobar",
+        geofenceId: 'foobar',
       },
     ];
     const fromData = getGeofenceFeatureArray(polygons);

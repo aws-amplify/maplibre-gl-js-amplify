@@ -1,15 +1,15 @@
-import { Feature, Point } from "geojson";
-import { GeoJSONSource, Map as maplibreMap } from "maplibre-gl";
-import { getFeaturesFromData } from "./utils";
+import { Feature, Point } from 'geojson';
+import { GeoJSONSource, Map as maplibreMap } from 'maplibre-gl';
+import { getFeaturesFromData } from './utils';
 import {
   ClusterOptions,
   Coordinates,
   UnclusteredOptions,
   NamedLocation,
-} from "./types";
-import { drawClusterLayer } from "./drawClusterLayer";
-import { drawUnclusteredLayer } from "./drawUnclusteredLayer";
-import { MAP_STYLES } from "./constants";
+} from './types';
+import { drawClusterLayer } from './drawClusterLayer';
+import { drawUnclusteredLayer } from './drawUnclusteredLayer';
+import { MAP_STYLES } from './constants';
 
 /**
  * @param {boolean} showCluster Default: true, determines whether or not points close together should be clustered into a single point
@@ -64,10 +64,10 @@ export function drawPoints(
 ): DrawPointsOutput {
   if (
     !map ||
-    typeof map.addSource !== "function" ||
-    typeof map.addLayer !== "function"
+    typeof map.addSource !== 'function' ||
+    typeof map.addLayer !== 'function'
   ) {
-    throw new Error("Please use a maplibre map");
+    throw new Error('Please use a maplibre map');
   }
 
   /*
@@ -80,9 +80,9 @@ export function drawPoints(
    */
   const sourceId = sourceName;
   map.addSource(sourceId, {
-    type: "geojson",
+    type: 'geojson',
     data: {
-      type: "FeatureCollection",
+      type: 'FeatureCollection',
       features,
     },
     cluster: showCluster,
@@ -124,27 +124,27 @@ export function drawPoints(
 
   // utility function for setting layer visibility to none
   const hide = () => {
-    map.setLayoutProperty(unclusteredLayerId, "visibility", "none");
+    map.setLayoutProperty(unclusteredLayerId, 'visibility', 'none');
     if (clusterLayerId)
-      map.setLayoutProperty(clusterLayerId, "visibility", "none");
+      map.setLayoutProperty(clusterLayerId, 'visibility', 'none');
     if (clusterSymbolLayerId)
-      map.setLayoutProperty(clusterSymbolLayerId, "visibility", "none");
+      map.setLayoutProperty(clusterSymbolLayerId, 'visibility', 'none');
   };
 
   // utility function for setting layer visibility to visible
   const show = () => {
-    map.setLayoutProperty(unclusteredLayerId, "visibility", "visible");
+    map.setLayoutProperty(unclusteredLayerId, 'visibility', 'visible');
     if (clusterLayerId)
-      map.setLayoutProperty(clusterLayerId, "visibility", "visible");
+      map.setLayoutProperty(clusterLayerId, 'visibility', 'visible');
     if (clusterSymbolLayerId)
-      map.setLayoutProperty(clusterSymbolLayerId, "visibility", "visible");
+      map.setLayoutProperty(clusterSymbolLayerId, 'visibility', 'visible');
   };
 
   // utility function updating the data source
   const setData = (data: Coordinates[] | Feature[] | NamedLocation[]) => {
     const features = getFeaturesFromData(data);
     (map.getSource(sourceId) as GeoJSONSource).setData({
-      type: "FeatureCollection",
+      type: 'FeatureCollection',
       features,
     });
   };

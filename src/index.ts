@@ -1,12 +1,12 @@
-import AmplifyMapLibreRequest, { createMap } from "./AmplifyMapLibreRequest";
-import { drawPoints } from "./drawPoints";
+import AmplifyMapLibreRequest, { createMap } from './AmplifyMapLibreRequest';
+import { drawPoints } from './drawPoints';
 import {
   AmplifyGeocoderAPI,
   createAmplifyGeocoder,
-} from "./AmplifyMapLibreGeocoder";
-import { createDefaultIcon } from "./createDefaultIcon";
-import { drawGeofences } from "./drawGeofences";
-import { AmplifyGeofenceControl } from "./AmplifyGeofenceControl/index";
+} from './AmplifyMapLibreGeocoder';
+import { createDefaultIcon } from './createDefaultIcon';
+import { drawGeofences } from './drawGeofences';
+import { AmplifyGeofenceControl } from './AmplifyGeofenceControl/index';
 
 export {
   AmplifyMapLibreRequest,
