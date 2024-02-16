@@ -10,7 +10,7 @@ A plugin for [maplibre-gl-js](https://github.com/maplibre/maplibre-gl-js) for in
 
 ### Usage
 
-```bash
+```sh
 yarn add maplibre-gl-js-amplify
 ```
 
