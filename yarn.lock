@@ -2426,7 +2426,7 @@
   resolved "https://registry.npmjs.org/@mapbox/whoots-js/-/whoots-js-3.1.0.tgz"
   integrity sha512-Es6WcD0nO5l+2BOQS4uLfNPYQaNDfbot3X1XUoloz+x0mPDS3eeORZJl06HXjwBG1fOGwCRnzK88LMdxKRrd6Q==
 
-"@maplibre/maplibre-gl-geocoder@^1.5.0":
+"@maplibre/maplibre-gl-geocoder@1.5.0":
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/@maplibre/maplibre-gl-geocoder/-/maplibre-gl-geocoder-1.5.0.tgz#6b413525b361b4759df0fd17429e12b78f03b3a4"
   integrity sha512-PsAbV7WFIOu5QYZne95FiXoV7AV1/6ULMjQxgInhZ5DdB0hDLjciQPegnyDgkzI8JfeqoUMZVS/MglZnSZYhyQ==
