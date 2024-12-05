@@ -55,6 +55,11 @@
         "name": "geo",
         "prerelease": "geo",
         "channel": "geo"
+      },
+      {
+        "name": "next-geo",
+        "prerelease": "next-geo",
+        "channel": "next-geo"
       }
     ]
   },
