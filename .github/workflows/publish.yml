@@ -8,6 +8,10 @@ on:
       - geo
       - next-geo
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   e2e:
     secrets: inherit
