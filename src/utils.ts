@@ -121,3 +121,16 @@ export function removeElement(node: HTMLElement): void {
     node.parentNode.removeChild(node);
   }
 }
+
+/**
+ * Escapes HTML special characters to prevent XSS when interpolating
+ * user-controlled strings into HTML markup.
+ */
+export function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}

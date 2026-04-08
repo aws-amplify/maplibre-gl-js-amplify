@@ -1,5 +1,5 @@
 import { Feature, Point, Position } from 'geojson';
-import { strHasLength } from './utils';
+import { escapeHtml, strHasLength } from './utils';
 import { PopupRenderFunction, UnclusteredOptions } from './types';
 import { COLOR_BLACK, COLOR_WHITE, POPUP_BORDER_COLOR } from './constants';
 
@@ -34,8 +34,11 @@ export function getPopupRenderFunction(
       address = (selectedFeature.geometry as Point).coordinates;
     }
 
-    const titleHtml = `<div class="${unclusteredLayerId}-popup-title" style="font-weight: ${fontWeight};">${title}</div>`;
-    const addressHtml = `<div class="${unclusteredLayerId}-popup-address">${address}</div>`;
+    const safeTitle = escapeHtml(String(title));
+    const safeAddress = escapeHtml(String(address));
+
+    const titleHtml = `<div class="${unclusteredLayerId}-popup-title" style="font-weight: ${fontWeight};">${safeTitle}</div>`;
+    const addressHtml = `<div class="${unclusteredLayerId}-popup-address">${safeAddress}</div>`;
     const popupHtmlStyle = `background: ${background}; border: ${borderWidth}px solid ${borderColor}; color: ${fontColor}; border-radius: ${radius}px; padding: ${padding}px; word-wrap: break-word; margin: -10px -10px -15px;`;
     let popupHtml = `<div class="${unclusteredLayerId}-popup" style="${popupHtmlStyle}">`;
     if (title) popupHtml += titleHtml;
