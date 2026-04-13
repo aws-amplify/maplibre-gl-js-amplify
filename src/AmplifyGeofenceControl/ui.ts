@@ -1,6 +1,6 @@
 import { Geofence } from '../types';
 import { debounce } from 'debounce';
-import { createElement, removeElement } from '../utils';
+import { createElement, escapeHtml, removeElement } from '../utils';
 import { createErrorIcon } from './icons';
 import {
   createEditIcon,
@@ -405,7 +405,7 @@ export function AmplifyGeofenceControlUI(
       'geofence-ctrl-list-item-title',
       geofenceTitleContainer
     );
-    geofenceTitle.innerHTML = geofence.geofenceId;
+    geofenceTitle.innerHTML = escapeHtml(geofence.geofenceId);
 
     const editButton = createElement(
       'div',
@@ -604,7 +604,9 @@ export function AmplifyGeofenceControlUI(
       'geofence-ctrl-delete-geofence-title',
       deleteGeofencePrompt
     );
-    title.innerHTML = `Are you sure you want to delete <strong>${geofenceId}</strong>?`;
+    title.innerHTML = `Are you sure you want to delete <strong>${escapeHtml(
+      geofenceId
+    )}</strong>?`;
 
     createDeleteButtonsContainer(deleteGeofencePrompt, geofenceId);
   }
