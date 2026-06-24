@@ -4,13 +4,16 @@ name: E2E Tests
 
 on: workflow_call
 
+permissions:
+  contents: read
+
 jobs:
   e2e-prep:
     name: Get required configs to run e2e tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@24cb9080177205b6e8c946b17badbe402adc938f # v3.4.0 https://github.com/actions/checkout/commit/24cb9080177205b6e8c946b17badbe402adc938f
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0 https://github.com/actions/checkout/commit/9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           path: maplibre-gl-js-amplify
       - name: Read integ config files

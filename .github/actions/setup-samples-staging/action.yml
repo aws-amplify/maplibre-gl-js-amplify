@@ -12,7 +12,7 @@ runs:
   using: 'composite'
   steps:
     - name: Create cache
-      uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # v3.3.1 https://github.com/actions/cache/commit/88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8
+      uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5 https://github.com/actions/cache/commit/27d5ce7f107fe9357f9df03efb73ab90386fccae
       id: cache-samples-staging-build
       with:
         key: aws-amplify-js-samples-staging-build-${{ github.sha }}
@@ -22,7 +22,7 @@ runs:
       env:
         SEGMENT_DOWNLOAD_TIMEOUT_MINS: 2
     - name: Checkout staging repo
-      uses: actions/checkout@24cb9080177205b6e8c946b17badbe402adc938f # v3.4.0 https://github.com/actions/checkout/commit/24cb9080177205b6e8c946b17badbe402adc938f
+      uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0 https://github.com/actions/checkout/commit/9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       with:
         repository: ${{ github.repository_owner }}/amplify-js-samples-staging
         path: amplify-js-samples-staging
@@ -34,7 +34,7 @@ runs:
       shell: bash
       working-directory: ./amplify-js-samples-staging
       env:
-        BRANCH: next-geo
+        BRANCH: ${{ github.ref_name }}
       run: |
         if git ls-remote --exit-code --heads origin $BRANCH >/dev/null 2>&1; then
             # Branch exists, checkout and echo success message
