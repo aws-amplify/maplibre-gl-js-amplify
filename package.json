@@ -1,6 +1,6 @@
 {
   "name": "maplibre-gl-js-amplify",
-  "version": "4.0.0",
+  "version": "4.0.3",
   "description": "MapLibre Plugin to Support Amplify Geo Integration",
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.js",
