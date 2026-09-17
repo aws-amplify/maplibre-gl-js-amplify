@@ -88,14 +88,17 @@ export function drawClusterLayer(
     const clusterId = features[0].properties.cluster_id;
     const source = map.getSource(sourceName);
     if (isGeoJsonSource(source)) {
-      source.getClusterExpansionZoom(clusterId, function (err, zoom) {
-        if (err) return;
-
-        map.easeTo({
-          center: (features[0].geometry as Point).coordinates as LngLatLike,
-          zoom: zoom,
+      source
+        .getClusterExpansionZoom(clusterId)
+        .then((zoom) => {
+          map.easeTo({
+            center: (features[0].geometry as Point).coordinates as LngLatLike,
+            zoom: zoom,
+          });
+        })
+        .catch(() => {
+          // Ignore errors resolving the cluster expansion zoom
         });
-      });
     }
   });
 
