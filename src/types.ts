@@ -1,4 +1,5 @@
 import { Feature } from 'geojson';
+import type { MapMouseEvent } from 'maplibre-gl';
 
 export type Latitude = number;
 export type Longitude = number;
@@ -50,7 +51,7 @@ export interface UnclusteredOptions {
   markerImageElement?: HTMLImageElement;
   activeMarkerImageElement?: HTMLImageElement;
   popupRender?: (selectedFeature: Feature) => string;
-  onClick?: (e: maplibregl.MapMouseEvent) => void;
+  onClick?: (e: MapMouseEvent) => void;
 }
 
 /**
@@ -85,7 +86,7 @@ export interface ClusterOptions {
   lgThreshold?: number;
   lgCircleSize?: number;
   xlCircleSize?: number;
-  onClick?: (e: maplibregl.MapMouseEvent) => void;
+  onClick?: (e: MapMouseEvent) => void;
   clusterPaint?: Record<string, unknown>;
   clusterCountLayout?: Record<string, unknown>;
 }
