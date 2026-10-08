@@ -194,38 +194,38 @@ describe('AmplifyGeocoderAPI', () => {
     });
     const response = await AmplifyGeocoderAPI.searchByPlaceId(config);
     expect(Geo.searchByPlaceId).toHaveBeenCalledTimes(1);
-    expect(response.place?.text).toBe('Starbucks');
-    expect(response.place?.place_name).toBe('Starbucks');
+    expect(response.place?.[0]?.text).toBe('Starbucks');
+    expect(response.place?.[0]?.place_name).toBe('Starbucks');
   });
 
-  test('searchByPlaceId returns place as undefined on empty request', async () => {
+  test('searchByPlaceId returns place as empty array on empty request', async () => {
     const config = {
       query: '',
     };
     (Geo.searchByPlaceId as jest.Mock).mockReturnValueOnce(undefined);
     const response = await AmplifyGeocoderAPI.searchByPlaceId(config);
     expect(Geo.searchByPlaceId).toHaveBeenCalledTimes(1);
-    expect(response.place).toBe(undefined);
+    expect(response.place).toEqual([]);
   });
 
-  test('searchByPlaceId returns place as undefined on undefined request', async () => {
+  test('searchByPlaceId returns place as empty array on undefined request', async () => {
     const config = {
       query: undefined,
     };
     (Geo.searchByPlaceId as jest.Mock).mockReturnValueOnce(undefined);
     const response = await AmplifyGeocoderAPI.searchByPlaceId(config);
     expect(Geo.searchByPlaceId).toHaveBeenCalledTimes(1);
-    expect(response.place).toBe(undefined);
+    expect(response.place).toEqual([]);
   });
 
-  test('searchByPlaceId returns place as undefined on error', async () => {
+  test('searchByPlaceId returns place as empty array on error', async () => {
     const config = {
       query: 'something',
     };
     (Geo.searchByPlaceId as jest.Mock).mockRejectedValueOnce('an error');
     const response = await AmplifyGeocoderAPI.searchByPlaceId(config);
     expect(Geo.searchByPlaceId).toHaveBeenCalledTimes(1);
-    expect(response.place).toBe(undefined);
+    expect(response.place).toEqual([]);
   });
 
   test('getSuggestions returns some values in the expected format', async () => {
@@ -291,37 +291,37 @@ describe('AmplifyGeocoderAPI', () => {
     });
     const response = await AmplifyGeocoderAPI.searchByPlaceId(config);
     expect(Geo.searchByPlaceId).toHaveBeenCalledTimes(1);
-    expect(response.place?.text).toBe('Starbucks');
-    expect(response.place?.place_name).toBe('Starbucks');
+    expect(response.place?.[0]?.text).toBe('Starbucks');
+    expect(response.place?.[0]?.place_name).toBe('Starbucks');
   });
 
-  test('searchByPlaceId returns place as undefined on empty request', async () => {
+  test('searchByPlaceId returns place as empty array on empty request', async () => {
     const config = {
       query: '',
     };
     (Geo.searchByPlaceId as jest.Mock).mockReturnValueOnce(undefined);
     const response = await AmplifyGeocoderAPI.searchByPlaceId(config);
     expect(Geo.searchByPlaceId).toHaveBeenCalledTimes(1);
-    expect(response.place).toBe(undefined);
+    expect(response.place).toEqual([]);
   });
 
-  test('searchByPlaceId returns place as undefined on undefined request', async () => {
+  test('searchByPlaceId returns place as empty array on undefined request', async () => {
     const config = {
       query: undefined,
     };
     (Geo.searchByPlaceId as jest.Mock).mockReturnValueOnce(undefined);
     const response = await AmplifyGeocoderAPI.searchByPlaceId(config);
     expect(Geo.searchByPlaceId).toHaveBeenCalledTimes(1);
-    expect(response.place).toBe(undefined);
+    expect(response.place).toEqual([]);
   });
 
-  test('searchByPlaceId returns place as undefined on error', async () => {
+  test('searchByPlaceId returns place as empty array on error', async () => {
     const config = {
       query: 'something',
     };
     (Geo.searchByPlaceId as jest.Mock).mockRejectedValueOnce('an error');
     const response = await AmplifyGeocoderAPI.searchByPlaceId(config);
     expect(Geo.searchByPlaceId).toHaveBeenCalledTimes(1);
-    expect(response.place).toBe(undefined);
+    expect(response.place).toEqual([]);
   });
 });

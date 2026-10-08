@@ -1,4 +1,5 @@
-import maplibregl, { Map } from 'maplibre-gl';
+import * as maplibregl from 'maplibre-gl';
+import type { Map } from 'maplibre-gl';
 import { Geo } from '@aws-amplify/geo';
 import { drawGeofences, DrawGeofencesOutput } from '../drawGeofences';
 import { Geofence } from '../types';
@@ -73,7 +74,7 @@ export class AmplifyGeofenceControl {
     return 'full-screen';
   }
 
-  onRemove(): void {
+  onRemove(_map?: Map): void {
     this._ui.removeElement(this._container);
   }
 
@@ -141,7 +142,11 @@ export class AmplifyGeofenceControl {
       }.bind(this)
     );
 
-    this._map.on('draw.update', () => {
+    // 'draw.update' is a custom event emitted by @mapbox/mapbox-gl-draw, not a
+    // native MapLibre event. MapLibre GL JS v6 types Map.on() strictly to
+    // `keyof MapEventType`, so the custom Draw event name is asserted to that
+    // type to register the listener.
+    this._map.on('draw.update' as Parameters<Map['on']>[0], () => {
       const coordinates = (
         this._amplifyDraw._mapBoxDraw.getAll().features[0].geometry as any
       ).coordinates[0];

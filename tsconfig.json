@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
     "module": "esnext",
-    "target": "es2015",
+    "target": "es2020",
+    "lib": ["es2020", "dom", "dom.iterable"],
     "moduleResolution": "node",
     "declaration": true,
     "sourceMap": false,
     "esModuleInterop": true,
+    "skipLibCheck": true,
     "outDir": "./lib/esm"
   },
   "include": ["src/**/*"],
