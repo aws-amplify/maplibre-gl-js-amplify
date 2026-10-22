@@ -11,6 +11,8 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  # Required for npm trusted publishing (OIDC)
+  id-token: write
 
 jobs:
   e2e:
