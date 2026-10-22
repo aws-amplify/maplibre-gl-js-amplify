@@ -25,6 +25,8 @@ jobs:
     environment: npm-publish
     permissions:
       contents: write
+      # Required by semantic-release to comment on and label released issues, and to open/close its failure issue
+      issues: write
       pull-requests: write
       # Required for npm trusted publishing (OIDC)
       id-token: write
